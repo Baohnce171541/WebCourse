@@ -1,8 +1,8 @@
 @model WebLibrary.Models.Voucher
 @{
     ViewData["Title"] = "Create Voucher";
+
     Layout = "~/Views/Shared/_Layout.cshtml";
-    
 }
 
 <link rel="stylesheet" href="~/fonts/boxicons.css" />
@@ -24,10 +24,6 @@
                 <input asp-for="PercentDiscount" type="number" class="form-control">
                 <span asp-validation-for="PercentDiscount" class="text-danger"></span>
             </div>
-            @* <div class="mb-3">
-                <label asp-for="CodeVoucher" class="form-label">Percentage Discount</label>
-                <input asp-for="CodeVoucher" type="number" class="form-control" readonly>
-            </div> *@
             <div class="mb-3 text-theme">
                 <label asp-for="StartAt" class="form-label">Start Date</label>
                 <input asp-for="StartAt" type="datetime-local" class="form-control">
@@ -39,11 +35,15 @@
                 <span asp-validation-for="EndAt" class="text-danger"></span>
             </div>
             <div class="mx-3 text-theme form-check">
-                <label asp-for="IsActive" class="form-check-label font-weight-bold mr-4"></label>
-                <input asp-for="IsActive" class="form-check-input">
+                <label asp-for="IsActive" class="form-check-label font-weight-bold mr-4">Active?</label>
+                <select asp-for="IsActive" class="form-control">
+                    <option value="">-- Select --</option>
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                </select>
                 <span asp-validation-for="IsActive" class="text-danger"></span>
             </div>
-            
+
             <p class="text-danger">@ViewBag.err</p>
             <button type="submit" class="btn btn-primary">Create</button>
         </form>
@@ -55,6 +55,9 @@
 }
 
 @if (!string.IsNullOrEmpty(errorMessage))
+
+
+
 {
     <div class="alert alert-danger">@errorMessage</div>
 }

@@ -59,23 +59,23 @@ namespace Project_Group3.Controllers
             try
             {
 
-                if (!ModelState.IsValid)
-                {
-                    return View(model);
-                }
+                if (!ModelState.IsValid)  return View(model);
 
                 var instructor = instructorRepository.GetInstructorByEmailOrUser(model.EmailOrUsername);
+
                 var learner = learnerRepository.GetLearnerByEmailOrUser(model.EmailOrUsername);
 
 
                 if (instructor != null && instructor.Password == model.Password)
                 {
-                    // HttpContext.Session.SetString("UserRole", "Instructor");
                     HttpContext.Session.SetInt32("InsID", instructor.InstructorId);
-                    if(instructor.Status == "Wait"){
+                    if (instructor.Status == "Wait")
+                    {
                         ViewBag.err = "The account has not been moderated!!!";
                         return View();
-                    }else if(instructor.Status == "Delete"){
+                    }
+                    else if (instructor.Status == "Delete")
+                    {
                         ViewBag.err = "The account no longer exists!!!";
                         return View();
                     }
@@ -87,11 +87,9 @@ namespace Project_Group3.Controllers
                 }
                 else if (learner != null && learner.Password == model.Password)
                 {
-                    // HttpContext.Session.SetString("UserRole", "Learner");
-                    Response.Cookies.Append("Role", "learner");
-                    HttpContext.Session.SetInt32("LearnerID", learner.LearnerId);
                     Console.WriteLine($"LearnerID: {HttpContext.Session.GetInt32("LearnerID")}");
-                    // Response.Cookies.Append("MyCookie", learner.LearnerId.ToString());
+                    HttpContext.Session.SetInt32("LearnerID", learner.LearnerId);
+                    Response.Cookies.Append("Role", "learner");
                     Response.Cookies.Append("Name", learner.Username);
                     Response.Cookies.Append("ID", learner.LearnerId.ToString());
                     return RedirectToAction("Index", "Home");
@@ -121,12 +119,8 @@ namespace Project_Group3.Controllers
         {
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    return View(model);
-                }
-
-                // Kiểm tra tuổi
+                if (!ModelState.IsValid)  return View(model);
+           
                 DateTime currentDate = DateTime.Now;
                 DateTime minimumBirthDate = currentDate.AddYears(-18); // Ngày sinh tối thiểu để đủ 18 tuổi
 
@@ -262,7 +256,7 @@ namespace Project_Group3.Controllers
             // TODO: Your code here
             return View();
         }
-        
+
         public IActionResult otp(string email)
         {
             int random = Random();
@@ -367,7 +361,7 @@ namespace Project_Group3.Controllers
                         instructorRepository.UpdatePass(instructor.InstructorId, newPassword);
                     }
                 }
-                
+
                 foreach (var cookie in HttpContext.Request.Cookies.Keys)
                 {
                     Response.Cookies.Delete(cookie);

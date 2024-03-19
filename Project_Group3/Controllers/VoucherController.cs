@@ -33,8 +33,7 @@ namespace Project_Group3.Controllers
         public IActionResult Create(Voucher voucher)
         {
             try
-            { 
-              
+            {
                 if (voucher == null)
                 {
                     ViewBag.err = "voucher cannot be null. Please try again.";
@@ -46,7 +45,6 @@ namespace Project_Group3.Controllers
                     var generatedCode = voucherRepository.GenerateRandomCode();
                     voucher = new Voucher
                     {
-                        
                         CodeVoucher = generatedCode,
                         AdminId = voucher.AdminId,
                         PercentDiscount = voucher.PercentDiscount,
@@ -64,16 +62,11 @@ namespace Project_Group3.Controllers
                     Console.WriteLine(voucherInfo);
                     voucherRepository.CreateVoucher(voucher);
                     return RedirectToAction("Index");
-
                 }
                 else
                 {
-                    // Get the list of properties with validation errors
                     var errorProperties = ModelState.Keys.Where(k => ModelState[k].Errors.Any()).ToList();
-
-                    // Pass the list of error properties to the view
                     ViewBag.ErrorProperties = errorProperties;
-
                     return View(voucher);
                 }
             }
@@ -84,6 +77,17 @@ namespace Project_Group3.Controllers
             }
         }
 
+        public IActionResult Delete(int id)
+        {
+            Voucher voucher = voucherRepository.GetVoucherByID(id);
+
+            if (voucher != null)
+            {
+                VoucherDAO.Instance.Remove(voucher.VoucherId);
+                return RedirectToAction("Index");
+            }
+            return RedirectToAction("Index");
+        }
 
 
 

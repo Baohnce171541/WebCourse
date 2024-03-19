@@ -18,6 +18,7 @@
                     <th>Start At</th>
                     <th>End At</th>
                     <th>Is Active</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -31,6 +32,7 @@
                         <td>@item.StartAt</td>
                         <td>@item.EndAt</td>
                         <td>@item.IsActive</td>
+                        <td><a href="@Url.Action("Delete", "Voucher", new{id = @item.VoucherId})" class="btn btn-danger">Delete</a></td>
                     </tr>
         }
             </tbody>
