@@ -571,7 +571,6 @@ D:\SWP\Project_Group3\obj\Debug\net5.0\Project_Group3.RazorCoreGenerate.cache
 D:\SWP\Project_Group3\obj\Debug\net5.0\Razor\Views\Admin\AccountModeration.cshtml.g.cs
 D:\SWP\Project_Group3\obj\Debug\net5.0\Razor\Views\Admin\Course.cshtml.g.cs
 D:\SWP\Project_Group3\obj\Debug\net5.0\Razor\Views\Admin\courseDetail.cshtml.g.cs
-D:\SWP\Project_Group3\obj\Debug\net5.0\Razor\Views\Admin\CourseModeration.cshtml.g.cs
 D:\SWP\Project_Group3\obj\Debug\net5.0\Razor\Views\Admin\DeleteCourse.cshtml.g.cs
 D:\SWP\Project_Group3\obj\Debug\net5.0\Razor\Views\Admin\DeleteInstructor.cshtml.g.cs
 D:\SWP\Project_Group3\obj\Debug\net5.0\Razor\Views\Admin\DeleteLearner.cshtml.g.cs

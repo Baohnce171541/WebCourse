@@ -146,6 +146,10 @@ namespace Project_Group3.Controllers
                     Status = "Active",
                 };
                 learnerRepository.InsertLearner(LearnerModel);
+                VoucherDAO voucherDAO = new VoucherDAO();
+                var voucher = voucherDAO.GetVoucherByID(1);
+                smtpRepository.sendMail(LearnerModel.Email, "You have registered an online learning account at W3Courses.",
+                 $"We will give you a 20 % voucher code for your first registered course. Your voucher code is here: {voucher.CodeVoucher}.");
                 ViewBag.UserId = LearnerModel.LearnerId.ToString();
                 ViewBag.Role = "Learner";
                 Response.Cookies.Append("MyCookie", LearnerModel.LearnerId.ToString());
@@ -265,7 +269,6 @@ namespace Project_Group3.Controllers
         }
 
         public IActionResult CheckEmail() => View();
-
 
         [HttpPost]
         public IActionResult CheckEmail(string email)
