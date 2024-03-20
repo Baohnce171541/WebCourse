@@ -46,7 +46,7 @@ namespace Project_Group3.Controllers
                     voucher = new Voucher
                     {
                         CodeVoucher = generatedCode,
-                        AdminId = voucher.AdminId,
+                        AdminId = 1,
                         PercentDiscount = voucher.PercentDiscount,
                         EndAt = voucher.EndAt,
                         StartAt = voucher.StartAt,
@@ -88,8 +88,5 @@ namespace Project_Group3.Controllers
             }
             return RedirectToAction("Index");
         }
-
-
-
     }
 }

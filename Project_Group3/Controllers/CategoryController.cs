@@ -9,10 +9,10 @@ using WebLibrary.Models;
 using WebLibrary.Repository;
 namespace Project_Group3.Controllers
 {
-  
+
     public class CategoryController : Controller
     {
-      
+
         CategoryRepository categoryRepository = null;
         public CategoryController() => categoryRepository = new CategoryRepository();
 
@@ -23,16 +23,12 @@ namespace Project_Group3.Controllers
         }
         public ActionResult Detail(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-            var Category= categoryRepository.GetCategoryByID(id.Value);
-            if (Category== null)
-            {
-                return NotFound();
+            if (id == null) return NotFound();
 
-            }
+            var Category = categoryRepository.GetCategoryByID(id.Value);
+
+            if (Category == null) return NotFound();
+
             return View(Category);
         }
 
@@ -47,7 +43,6 @@ namespace Project_Group3.Controllers
                 if (ModelState.IsValid)
                 {
                     categoryRepository.InsertCategory(Category);
-
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -61,15 +56,12 @@ namespace Project_Group3.Controllers
 
         public ActionResult Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-            var Category= categoryRepository.GetCategoryByID(id.Value);
-            if (Category== null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
+
+            var Category = categoryRepository.GetCategoryByID(id.Value);
+
+            if (Category == null) return NotFound();
+
             return View(Category);
         }
 
@@ -79,10 +71,8 @@ namespace Project_Group3.Controllers
         {
             try
             {
-                if (id != Category.CategoryId)
-                {
-                    return NotFound();
-                }
+                if (id != Category.CategoryId) return NotFound();
+
                 if (ModelState.IsValid)
                 {
                     categoryRepository.UpdateCategory(Category);
@@ -93,21 +83,17 @@ namespace Project_Group3.Controllers
             {
                 ViewBag.Message = ex.Message;
                 return View();
-
             }
         }
 
         public ActionResult Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-            var Category= categoryRepository.GetCategoryByID(id.Value);
-            if (Category== null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
+
+            var Category = categoryRepository.GetCategoryByID(id.Value);
+
+            if (Category == null) return NotFound();
+
             return View(Category);
         }
 
@@ -121,7 +107,6 @@ namespace Project_Group3.Controllers
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
-
             {
                 ViewBag.Message = ex.Message;
                 return View();

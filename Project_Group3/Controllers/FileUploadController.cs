@@ -10,7 +10,6 @@ namespace Project_Group3.Controllers
 {
     public class FileUploadController : Controller
     {
-        // GET: FileUpload
         public IActionResult Index()
         {
             return View();
@@ -33,7 +32,6 @@ namespace Project_Group3.Controllers
                         {
                             await file.CopyToAsync(fileStream);
                         }
-
                         ViewBag.FileStatus = "File uploaded successfully.";
                     }
                 }
@@ -42,7 +40,6 @@ namespace Project_Group3.Controllers
                     ViewBag.FileStatus = "Error while uploading the file.";
                 }
             }
-
             return View();
         }
     }

@@ -1,6 +1,7 @@
 @model IEnumerable<WebLibrary.Models.Instructor>
 @{
     ViewData["Title"] = "Instructor Management";
+
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <link rel="stylesheet" href="~/css/style.css" />
@@ -9,17 +10,21 @@
 
 @{
     String iconClass = "";
-    if(ViewBag.IconClass == "bxs-down-arrow")
+
+    if (ViewBag.IconClass == "bxs-down-arrow")
     {
         iconClass = "bxs-up-arrow";
-    }else{
-        iconClass = "bxs-down-arrow";
+    }
+    else
+    {
+       iconClass = "bxs-down-arrow";
     }
 }
 
 @if (TempData["EditSuccess"] != null)
 {
-    <div id="editAlert" class="alert alert-@((bool)TempData["EditSuccess"] ? "success" : "danger") alert-dismissible fade show">
+    <div id="editAlert"
+        class="alert alert-@((bool)TempData["EditSuccess"] ? "success" : "danger") alert-dismissible fade show">
         @((bool)TempData["EditSuccess"] ? "Instructor edited successfully." : "Failed to edit instructor.")
         <div id="progressBar"></div>
     </div>
@@ -27,20 +32,22 @@
 
 @if (TempData["DeleteSuccess"] != null)
 {
-    <div id="deleteAlert" class="alert alert-@((bool)TempData["DeleteSuccess"] ? "success" : "danger") alert-dismissible fade show">
+    <div id="deleteAlert"
+        class="alert alert-@((bool)TempData["DeleteSuccess"] ? "success" : "danger") alert-dismissible fade show">
         @((bool)TempData["DeleteSuccess"] ? "Instructor deleted successfully." : "Failed to delete instructor.")
         <div id="progressBar"></div>
     </div>
 }
 
 
-<div class="card bg-theme p-0 mt-2 mb-5" >
+<div class="card bg-theme p-0 mt-2 mb-5">
     <div class="container no-footer mt-5 mb-3 p-0">
         <div class="row">
             <div class="col-sm-12 col-md-6 d-flex mr-5" style="justify-content: space-between;">
                 <div class="container-fluid">
                     <form class="table-search d-flex" action="/admin/instructor">
-                        <input class="form-control" value="@ViewBag.search" type="search" name="search" placeholder="Search">
+                        <input class="form-control" value="@ViewBag.search" type="search" name="search"
+                            placeholder="Search">
                         <button class="btn btn-primary btn-outline-primary ml-2" type="submit">
                             <i class='bx bx-search-alt-2'></i>
                         </button>
@@ -49,22 +56,29 @@
                 <div class="user-plus">
                     @{
                         int countInstructor = 0;
-                        foreach(var instructor in Model){
-                            if(instructor.Status == "Wait"){
+
+                        foreach (var instructor in Model)
+                        {
+                            if (instructor.Status == "Wait")
+                            {
                                 countInstructor++;
+
                             }
+
                         }
                     }
-                    <button onclick="location.href='@Url.Action("Instructor", new { showOnlyWait = true })'" class="btn">
+                    <button onclick="location.href='@Url.Action("Instructor", new { showOnlyWait = true })'"
+                        class="btn">
                         <i class='bx bxs-user-plus text-theme' style="font-size: 2.5rem;"></i>
-                        <p class="badge-instructor bg-danger rounded-pill text-center text-white" 
-                        style="position: absolute; width: 18px; height: 18px; font-size: .8rem; top: 0;right: 16px;">@countInstructor</p>                    
+                        <p class="badge-instructor bg-danger rounded-pill text-center text-white"
+                            style="position: absolute; width: 18px; height: 18px; font-size: .8rem; top: 0;right: 16px;">
+                            @countInstructor</p>
                     </button>
                 </div>
             </div>
         </div>
     </div>
-    
+
     <div class="container p-0 mt-3">
         <table class="datatables-basic table mb-5">
             <thead>
@@ -80,8 +94,10 @@
             </thead>
             <tbody>
                 @{
-                    if(ViewBag.Status == "Wait"){
-                        foreach (var instructor in Model){
+                    if (ViewBag.Status == "Wait")
+                    {
+                        foreach (var instructor in Model)
+                        {
                             <tr class="">
                                 <td class="  dt-checkboxes-cell">
                                     <input type="checkbox">
@@ -95,7 +111,8 @@
                                         </div>
                                         <div class="d-flex flex-column">
                                             <a href="/admin/userDetail/@instructor.InstructorId?role=instructor">
-                                                <span class="text-truncate text-theme">@instructor.FirstName @instructor.LastName</span><br>
+                                                <span class="text-truncate text-theme">@instructor.FirstName
+                                                    @instructor.LastName</span><br>
                                                 <small class="text-truncate text-muted text-theme">@instructor.Email</small>
                                             </a>
                                         </div>
@@ -109,15 +126,21 @@
                                 </td>
                                 <td class="text-theme">
                                     <div class="action-icon d-flex text-center">
-                                        <a class="btn btn-primary" href="/admin/AccountModeration/@instructor.InstructorId?role=instructor" title="Check account">
+                                        <a class="btn btn-primary"
+                                            href="/admin/AccountModeration/@instructor.InstructorId?role=instructor"
+                                            title="Check account">
                                             <i class='bx bxs-user-pin'></i>
                                         </a>
                                     </div>
                                 </td>
                             </tr>
                         }
-                    }else if(ViewBag.Status == ""){
-                        foreach (var instructor in Model){
+
+                    }
+                    else if (ViewBag.Status == "")
+                    {
+                        foreach (var instructor in Model)
+                        {
                             <tr class="">
                                 <td class="  dt-checkboxes-cell">
                                     <input type="checkbox">
@@ -131,7 +154,8 @@
                                         </div>
                                         <div class="d-flex flex-column">
                                             <a href="/admin/userDetail/@instructor.InstructorId?role=instructor">
-                                                <span class="text-truncate text-theme">@instructor.FirstName @instructor.LastName</span><br>
+                                                <span class="text-truncate text-theme">@instructor.FirstName
+                                                    @instructor.LastName</span><br>
                                                 <small class="text-truncate text-muted text-theme">@instructor.Email</small>
                                             </a>
                                         </div>
@@ -145,16 +169,22 @@
                                 </td>
                                 <td class="text-theme">
                                     <div class="action-icon d-flex text-center">
-                                        <a class="btn btn-warning mr-2" href="/instructor/edit/@instructor.InstructorId" title="Edit">
+                                        <a class="btn btn-warning mr-2" href="/instructor/edit/@instructor.InstructorId"
+                                            title="Edit">
                                             <i class='bx bxs-edit'></i>
                                         </a>
                                         @{
-                                            if(instructor.Status != "Delete"){
-                                                <a class="btn text-theme" style="background-color: rgb(169, 140, 140); cursor: pointer;" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                            if (instructor.Status != "Delete")
+                                            {
+                                                <a class="btn text-theme" style="background-color: rgb(169, 140, 140); cursor: pointer;"
+                                                    data-bs-toggle="modal" data-bs-target="#deleteModal">
                                                     <i class='bx bxs-trash-alt'></i>
                                                 </a>
-                                            }else{
-                                                <a class="btn btn-danger" asp-action="DeleteInstructor" asp-route-id="@instructor.InstructorId" title="Delete">
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-danger" asp-action="DeleteInstructor"
+                                                    asp-route-id="@instructor.InstructorId" title="Delete">
                                                     <i class='bx bxs-trash-alt'></i>
                                                 </a>
                                             }
@@ -163,6 +193,7 @@
                                 </td>
                             </tr>
                         }
+
                     }
                 }
             </tbody>
@@ -172,20 +203,20 @@
 
 <!-- The Modal -->
 <div class="modal" id="deleteModal">
-  <div class="modal-dialog">
-    <div class="modal-content bg-theme">
-      <div class="modal-header">
-        <h3 class="text-danger modal-title">Error</h3>
-        <button type="button" class="btn-close bg-theme text-theme border-0" data-bs-dismiss="modal">x</button>
-      </div>
-      <div class="text-theme modal-body">
-        You can't not delete this account
-      </div>
+    <div class="modal-dialog">
+        <div class="modal-content bg-theme">
+            <div class="modal-header">
+                <h3 class="text-danger modal-title">Error</h3>
+                <button type="button" class="btn-close bg-theme text-theme border-0" data-bs-dismiss="modal">x</button>
+            </div>
+            <div class="text-theme modal-body">
+                You can't not delete this account
+            </div>
 
-      <!-- Modal footer -->
-      <div class="modal-footer">
-        <button type="button" class="btn btn-success" data-bs-dismiss="modal">OK</button>
-      </div>
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal">OK</button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>

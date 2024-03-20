@@ -26,8 +26,6 @@ namespace Project_Group3.Controllers
         IInstructRepository instructRepository = null;
         private int idInstructor;
 
-
-
         public CourseController()
         {
             courseRepository = new CourseRepository();
@@ -55,7 +53,7 @@ namespace Project_Group3.Controllers
                 {
                     courseList = courseList.Where(c => c.CourseName.IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
                 }
-                
+
                 ModelsView modelsView = new ModelsView
                 {
                     CourseList = courseList.ToList(),
@@ -84,20 +82,24 @@ namespace Project_Group3.Controllers
             if (id == null) return NotFound();
 
             var course = courseRepository.GetCourseByID(id.Value);
+
             var chapterList = chapterRepository.GetChapters();
+
             var lessonList = lessonRepository.GetLessons();
+
             var categoryList = categoryRepository.GetCategorys();
+
             var instruct = instructRepository.GetInstructs();
-            if (course == null)
-            {
-                return NotFound();
-            }
+
+            if (course == null) return NotFound();
+
             return View(Tuple.Create(course, chapterList, categoryList, instruct, lessonList));
         }
 
         public ActionResult Create()
         {
             var categoryList = categoryRepository.GetCategorys();
+
             ViewBag.CategoryList = new SelectList(categoryList, "CategoryId", "CategoryName");
 
             return View();
@@ -111,8 +113,6 @@ namespace Project_Group3.Controllers
             {
                 if (ModelState.IsValid)
                 {
-
-                    // Add conditions for additional properties
                     if (string.IsNullOrEmpty(course.CourseName))
                     {
                         ModelState.AddModelError("CourseName", "Course name is required.");
@@ -132,13 +132,13 @@ namespace Project_Group3.Controllers
                     {
                         ModelState.AddModelError("Price", "Price is required.");
                     }
-                    else if (course.Price < 0){
+                    else if (course.Price < 0)
+                    {
                         ModelState.AddModelError("Price", "Price is not negative.");
                     }
 
                     if (ModelState.IsValid)
                     {
-                        // Handle the image file
                         var urlRelative = "/img/courseImg/";
                         var urlAbsolute = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "courseImg");
                         var fileName = Guid.NewGuid() + Path.GetExtension(picture.FileName);

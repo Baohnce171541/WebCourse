@@ -50,12 +50,12 @@ namespace Project_Group3.Controllers
         }
         public ActionResult Detail(int? id)
         {
-            if (id == null)  return NotFound();
-        
+            if (id == null) return NotFound();
+
             var Admin = adminRepository.GetAdminByID(id.Value);
-            
-            if (Admin == null)  return NotFound();
-        
+
+            if (Admin == null) return NotFound();
+
             return View(Admin);
         }
 
@@ -70,7 +70,6 @@ namespace Project_Group3.Controllers
                 if (ModelState.IsValid)
                 {
                     adminRepository.InsertAdmin(Admin);
-
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -84,15 +83,12 @@ namespace Project_Group3.Controllers
 
         public ActionResult Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
+
             var Admin = adminRepository.GetAdminByID(id.Value);
-            if (Admin == null)
-            {
-                return NotFound();
-            }
+
+            if (Admin == null) return NotFound();
+
             return View(Admin);
         }
 
@@ -102,10 +98,8 @@ namespace Project_Group3.Controllers
         {
             try
             {
-                if (id != Admin.AdminId)
-                {
-                    return NotFound();
-                }
+                if (id != Admin.AdminId) return NotFound();
+
                 if (ModelState.IsValid)
                 {
                     adminRepository.UpdateAdmin(Admin);
@@ -122,15 +116,12 @@ namespace Project_Group3.Controllers
 
         public ActionResult Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
+
             var Admin = adminRepository.GetAdminByID(id.Value);
-            if (Admin == null)
-            {
-                return NotFound();
-            }
+
+            if (Admin == null) return NotFound();
+
             return View(Admin);
         }
 
@@ -144,7 +135,6 @@ namespace Project_Group3.Controllers
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
-
             {
                 ViewBag.Message = ex.Message;
                 return View();
@@ -236,29 +226,22 @@ namespace Project_Group3.Controllers
 
         public IActionResult UserDetail(int? id, string role)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
+
             var instructor = instructorRepository.GetInstructorByID(id.Value);
             var learner = learnerRepository.GetLearnerByID(id.Value);
             if (role.Equals("instructor"))
             {
-                if (instructor == null)
-                {
-                    return NotFound();
-                }
+                if (instructor == null) return NotFound();
+
                 ViewBag.Role = role;
             }
             else if (role.Equals("learner"))
             {
-                if (learner == null)
-                {
-                    return NotFound();
-                }
+                if (learner == null) return NotFound();
+
                 ViewBag.Role = role;
             }
-
             return View(Tuple.Create(instructor, learner));
         }
 
@@ -295,7 +278,6 @@ namespace Project_Group3.Controllers
                     return RedirectToAction("UserDetail", new { id = firstLearner.LearnerId, role = role });
                 }
             }
-
             return NotFound();
         }
 
@@ -332,41 +314,32 @@ namespace Project_Group3.Controllers
                     return RedirectToAction("UserDetail", new { id = lastLearner.LearnerId, role = role });
                 }
             }
-
             return NotFound();
         }
 
         public IActionResult courseDetail(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
+
             var course = courseRepository.GetCourseByID(id.Value);
             var chapterList = chapterRepository.GetChapters();
             var lessonList = lessonRepository.GetLessons();
             var categoryList = categoryRepository.GetCategorys();
             var instruct = instructRepository.GetInstructs();
             var instructor = instructorRepository.GetInstructors();
-            if (course == null)
-            {
-                return NotFound();
+            if (course == null) return NotFound();
 
-            }
             return View(Tuple.Create(course, chapterList, categoryList, instruct, lessonList, instructor));
         }
 
         public IActionResult AccountModeration(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
+
             var instructor = instructorRepository.GetInstructorByID(id.Value);
-            if (instructor == null)
-            {
-                return NotFound();
-            }
+
+            if (instructor == null) return NotFound();
+
             return View(instructor);
         }
 
@@ -376,10 +349,8 @@ namespace Project_Group3.Controllers
         {
             try
             {
-                if (id != instructor.InstructorId)
-                {
-                    return NotFound();
-                }
+                if (id != instructor.InstructorId) return NotFound();
+
                 if (ModelState.IsValid)
                 {
                     instructor.Status = "Active";
@@ -398,30 +369,23 @@ namespace Project_Group3.Controllers
 
         public IActionResult Logout()
         {
-            // Xóa cookie
             foreach (var cookie in HttpContext.Request.Cookies.Keys)
             {
                 Response.Cookies.Delete(cookie);
             }
+            HttpContext.Session.Clear();
 
-            // Xóa session
-            HttpContext.Session.Clear(); // Hoặc HttpContext.Session.Remove("UserId");
-
-            // Chuyển hướng đến trang login hoặc trang chính
             return RedirectToAction("Login", "Admin");
         }
 
         public IActionResult DeleteInstructor(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
+
             var instructor = instructorRepository.GetInstructorByID(id.Value);
-            if (instructor == null)
-            {
-                return NotFound();
-            }
+
+            if (instructor == null) return NotFound();
+
             return View(instructor);
         }
 
@@ -444,15 +408,12 @@ namespace Project_Group3.Controllers
 
         public IActionResult DeleteLearner(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
+
             var learner = learnerRepository.GetLearnerByID(id.Value);
-            if (learner == null)
-            {
-                return NotFound();
-            }
+
+            if (learner == null) return NotFound();
+
             return View(learner);
         }
 
@@ -476,15 +437,12 @@ namespace Project_Group3.Controllers
         [HttpGet]
         public ActionResult DeleteCourse(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null)   return NotFound();
+          
             var course = courseRepository.GetCourseByID(id.Value);
-            if (course == null)
-            {
-                return NotFound();
-            }
+            
+            if (course == null) return NotFound();
+         
             return View(course);
         }
         //Post Learnercontroller/delete/5
@@ -498,7 +456,6 @@ namespace Project_Group3.Controllers
                 return RedirectToAction(nameof(Course));
             }
             catch (Exception ex)
-
             {
                 ViewBag.Message = ex.Message;
                 return View();

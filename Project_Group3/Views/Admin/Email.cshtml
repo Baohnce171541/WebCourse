@@ -29,10 +29,12 @@
                         <td class="text-theme">@report.SubmittedTime</td>
                         <td class="text-theme">
                             <div class="action-icon d-flex text-center">
-                                <a class="btn btn-warning mr-2" href="@Url.Action("Edit", "Report", new { id = report.ReportId })" title="Edit">
+                                <a class="btn btn-warning mr-2"
+                                    href="@Url.Action("Edit", "Report", new { id = report.ReportId })" title="Edit">
                                     <i class='bx bxs-edit'></i>
                                 </a>
-                                <a class="btn btn-danger" asp-action="DeleteReport" asp-route-id="@report.ReportId" title="Delete">
+                                <a class="btn btn-danger" asp-action="DeleteReport" asp-route-id="@report.ReportId"
+                                    title="Delete">
                                     <i class='bx bxs-trash-alt'></i>
                                 </a>
                             </div>
