@@ -13,7 +13,7 @@ namespace Project_Group3.Controllers
     {
         public IActionResult  hahahahaha()
         {
-            // TODO: Your code here
+         System.Console.WriteLine("ghahahahahahahahahahahahahahahah");
             return View();
         }
         
