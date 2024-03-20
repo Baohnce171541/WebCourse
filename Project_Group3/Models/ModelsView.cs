@@ -14,7 +14,8 @@ namespace Project_Group3.Models
         public Instruct Instruct { get; set; }
         public Chapter Chapter { get; set; }
         public Lesson Lesson { get; set; }
-
+        public Quiz Quiz { get; set; }
+        public Answer Answer { get; set; }
         public IList<Enrollment> EnrollmentList { get; set; } = new List<Enrollment>();
         public IList<Course> CourseList { get; set; } = new List<Course>();
         public IList<Category> CategoriesList { get; set; } = new List<Category>();

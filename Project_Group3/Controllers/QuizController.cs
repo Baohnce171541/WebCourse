@@ -31,6 +31,7 @@ namespace Project_Group3.Controllers
             lessonRepository = new LessonRepository();
         }
 
+
         public ActionResult Index(int chapterId, int courseId)
         {
             var chapter = chapterRepository.GetChapterByID(chapterId);
@@ -101,6 +102,7 @@ namespace Project_Group3.Controllers
                         return RedirectToAction("Index", new { chapterId = chapterId, courseId = courseId });
                     }
                 }
+
                 var answerList = answerRepository.GetAnswers();
                 ViewBag.Answers = new SelectList(answerList, "AnswerId", "Answer1");
                 return View(quiz);
@@ -129,7 +131,10 @@ namespace Project_Group3.Controllers
             var answerList = answerRepository.GetAnswers();
             var quizList = allQuizzes.Where(q => q.ChapterId == chapterId && q.CourseId == courseId);
 
-            if (quizList.Count() < numberOfQuestions) return RedirectToAction("Error");
+            if (quizList.Count() < numberOfQuestions)
+            {
+                return RedirectToAction("Error");
+            }
 
             var selectedAnswers = new List<Quiz>();
 
@@ -200,7 +205,7 @@ namespace Project_Group3.Controllers
             if (model.CorrectCount > model.WrongCount && currentChapterIndex == chapters.Count - 1)
             {
                 ViewBag.CompletionMessage = "Congratulations! You have completed the course.";
-                return RedirectToAction("CourseDetail", "Home", new { Id = model.Course.CourseId }); // Chuyển về trang chính
+                return RedirectToAction("CourseDetail", "Home", new { Id = model.Course.CourseId });
             }
             else if (model.CorrectCount > model.WrongCount && currentChapterIndex != -1 && currentChapterIndex < chapters.Count - 1)
             {
@@ -211,7 +216,6 @@ namespace Project_Group3.Controllers
                 {
                     var firstLessonInNextChapter = lessonRepository.GetLessons()
                         .FirstOrDefault(l => l.ChapterId == nextChapter.ChapterId);
-
                     return RedirectToAction("LearnerLesson", "Lesson", new { chapterId = nextChapter.ChapterId, courseId = model.Course.CourseId });
                 }
             }
@@ -224,7 +228,79 @@ namespace Project_Group3.Controllers
                 totalCount = model.CorrectCount + model.WrongCount,
             });
         }
+        public ActionResult Edit(int? id)
+        {
+            if (id == null) return NotFound();
 
+            var quiz = quizRepository.GetQuizByID(id.Value);
+
+            if (quiz == null) return NotFound();
+
+            ModelsView modelsView = new ModelsView { Quiz = quiz };
+
+            ViewBag.AnswerId = quiz.AnswerId; // Add this line to pass the answers to the view
+            var answerList = answerRepository.GetAnswers();
+            ViewBag.AnswerList = new SelectList(answerList, "AnswerId", "Answer1");
+            return View(modelsView);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(ModelsView modelsView)
+        {
+            try
+            {
+                var quiz = quizRepository.GetQuizByID(modelsView.Quiz.QuizId);
+                if (quiz != null)
+                {
+                    quizRepository.UpdateQuiz(modelsView.Quiz);
+                    return RedirectToAction("Index", new { chapterId = quiz.ChapterId, courseId = quiz.CourseId });
+                }
+
+                ViewBag.Answers = answerRepository.GetAnswers(); // Add this line to pass the answers to the view
+
+                return View(modelsView);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Message = ex.Message;
+                return View(modelsView);
+            }
+        }
         public ActionResult Error() => View();
+
+        public ActionResult Delete(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var Quiz = quizRepository.GetQuizByID(id.Value);
+            var Answer = answerRepository.GetAnswerByID(Quiz.AnswerId.Value);
+            if (Quiz == null) return NotFound();
+
+            return View(new ModelsView { Quiz = Quiz, Answer = Answer });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(ModelsView modelsView)
+        {
+            try
+            {
+                var quiz = quizRepository.GetQuizByID(modelsView.Quiz.QuizId);
+                if (quiz != null)
+                {
+                    quizRepository.DeleteQuiz(quiz.QuizId);
+                    return RedirectToAction("Index", new { chapterId = quiz.ChapterId, courseId = quiz.CourseId });
+                }
+                return View(modelsView);
+            }
+            catch (Exception ex)
+
+            {
+                ViewBag.Message = ex.Message;
+                return View(modelsView);
+            }
+
+        }
     }
 }
