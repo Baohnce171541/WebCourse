@@ -492,7 +492,23 @@ BEGIN
     DELETE FROM instructor WHERE instructorID IN (SELECT instructorID FROM deleted);
 END;
 GO
+
 ---
+CREATE TRIGGER delete_learner_trigger
+ON learner
+INSTEAD OF DELETE
+AS
+BEGIN
+    -- Xóa các bài đăng ký (enrollment) của người học (learner) bị xóa
+    DELETE FROM enrollment WHERE learnerID IN (SELECT learnerID FROM deleted);
+
+    -- Xóa các đánh giá (review) của người học (learner) bị xóa
+    DELETE FROM review WHERE learnerID IN (SELECT learnerID FROM deleted);
+
+    -- Xóa người học (learner) bị xóa
+    DELETE FROM learner WHERE learnerID IN (SELECT learnerID FROM deleted);
+END;
+
 CREATE TRIGGER delete_course_trigger
 ON courses
 INSTEAD OF DELETE
@@ -500,7 +516,8 @@ AS
 BEGIN
     -- Xóa các bài học (lessons) thuộc về khóa học (course) bị xóa
     DELETE FROM lesson WHERE chapterID IN (SELECT chapterID FROM deleted);
-
+	
+	    DELETE FROM quiz WHERE chapterID IN (SELECT chapterID FROM deleted);
     -- Xóa các chương (chapters) thuộc về khóa học (course) bị xóa
     DELETE FROM chapter WHERE courseID IN (SELECT courseID FROM deleted);
 
@@ -524,28 +541,11 @@ BEGIN
     -- Xóa các bài học (lessons) thuộc về khóa học (course) bị xóa
     DELETE FROM lesson WHERE chapterID IN (SELECT chapterID FROM deleted);
 
+	   DELETE FROM quiz WHERE chapterID IN (SELECT chapterID FROM deleted);
     -- Xóa các chương (chapters) thuộc về khóa học (course) bị xóa
     DELETE FROM chapter WHERE chapterID IN (SELECT chapterID FROM deleted);
 END;
 GO
----
-CREATE TRIGGER delete_learner_trigger
-ON learner
-INSTEAD OF DELETE
-AS
-BEGIN
-    -- Xóa các bài đăng ký (enrollment) của người học (learner) bị xóa
-    DELETE FROM enrollment WHERE learnerID IN (SELECT learnerID FROM deleted);
-
-    -- Xóa các đánh giá (review) của người học (learner) bị xóa
-    DELETE FROM review WHERE learnerID IN (SELECT learnerID FROM deleted);
-
-    -- Xóa người học (learner) bị xóa
-    DELETE FROM learner WHERE learnerID IN (SELECT learnerID FROM deleted);
-END;
-
-
-
 
 INSERT INTO [enrollment] ([learnerID], [courseID], [learnerName], [courseName], [enrollmentDate], [email], [isPaid])
 VALUES (6, 2, 'Sophia Wilson', 'Web Development with HTML & CSS', '2022-01-01', 'wilson@gmail.com', 1);
