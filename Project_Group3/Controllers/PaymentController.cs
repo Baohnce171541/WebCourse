@@ -109,8 +109,6 @@ namespace Project_Group3.Controllers
                     Fullname = paymentViewModel.learnerName,
                     OrderId = new Random().Next(1000, 100000)
                 };
-                System.Console.WriteLine("null voucher");
-
                 return Redirect(_vnpayService.CreatePaymentUrl(HttpContext, VnpayModel));
             }
             else
@@ -120,18 +118,22 @@ namespace Project_Group3.Controllers
                 if (isVoucherUsed == false)
                 {
                     ModelState.AddModelError("", "You have already used this voucher");
-                    return RedirectToAction("PaymentFail");
+                    TempData["invalid"] = "has already been used";
+                    return RedirectToAction("PaymentFail", new { learnerId = learnerID, courseId = HttpContext.Session.GetInt32("courseId") });
+
                 }
                 if (v == null)
                 {
-                    ModelState.AddModelError("", "Invalid voucher"); 
-                    return RedirectToAction("PaymentFail");
+                    TempData["invalid"] = "is invalid";
+                    ModelState.AddModelError("", "Invalid voucher");
+                    return RedirectToAction("PaymentFail", new { learnerId = learnerID, courseId = HttpContext.Session.GetInt32("courseId") });
                 }
                 else
                 {
                     if (DateTime.Now - v.StartAt >= v.EndAt - v.StartAt)
                     {
-                        return RedirectToAction("PaymentFail");
+                        TempData["invalid"] = "is expired";
+                        return RedirectToAction("PaymentFail", new { learnerId = learnerID, courseId = HttpContext.Session.GetInt32("courseId") });
                     }
                     VoucherUsageDAO.Instance.SaveVoucherUsage(voucher, paymentViewModel.LeanrerId);
                     var VnpayModel = new VnPaymentRequestModel

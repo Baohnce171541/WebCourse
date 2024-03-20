@@ -445,7 +445,7 @@ namespace Project_Group3.Controllers
          
             return View(course);
         }
-        //Post Learnercontroller/delete/5
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteCourse(int id)
