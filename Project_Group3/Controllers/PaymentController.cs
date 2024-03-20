@@ -29,8 +29,6 @@ namespace Project_Group3.Controllers
         ISmtpRepository smtpRepository = null;
         IVoucherRepository voucherRepository = null;
 
-        // ILearnerRepository ilearner = null;
-
         public PaymentController(IVnpayService vnpayService)
         {
             _vnpayService = vnpayService;
@@ -41,9 +39,6 @@ namespace Project_Group3.Controllers
             voucherRepository = new VoucherRepository();
         }
 
-
-
-        // [Authorize]
         public IActionResult PaymentFail(int learnerId, int courseId)
         {
             Learner l = learnerRepository.GetLearnerByID(learnerId);
@@ -53,15 +48,8 @@ namespace Project_Group3.Controllers
                 Learner = l,
                 Course = c
             };
-
             return View(modelsView);
         }
-        // [Authorize]
-
-
-
-
-        // [Authorize]
 
         public IActionResult PaymentCallback()
         {
@@ -72,9 +60,7 @@ namespace Project_Group3.Controllers
             var response = _vnpayService.PaymentExcute(Request.Query);
             if (response == null)
             {
-                System.Console.WriteLine("faillllllllllllllll do null"); ;
                 return RedirectToAction("PaymentFail");
-
             }
             EnrollmentDAO en = new EnrollmentDAO();
             en.AddNew((int)learnerId, (int)courseId);
@@ -92,8 +78,9 @@ namespace Project_Group3.Controllers
             Console.WriteLine("Learner" + learnerId + " Course" + courseId);
             if (l == null || c == null)
             {
-                return NotFound(); // Trả về lỗi 404 nếu không tìm thấy người học hoặc khóa học
+                return NotFound(); 
             }
+
             HttpContext.Session.SetInt32("learnerId", learnerId);
             HttpContext.Session.SetInt32("courseId", courseId);
 
@@ -108,7 +95,6 @@ namespace Project_Group3.Controllers
                 enrollmentDate = DateTime.Now,
                 status = "false"
             };
-
             return View(paymentViewModel);
         }
 
@@ -132,7 +118,7 @@ namespace Project_Group3.Controllers
                     OrderId = new Random().Next(1000, 100000)
                 };
                 System.Console.WriteLine("null voucher");
-                // Không có voucher được nhập
+
                 return Redirect(_vnpayService.CreatePaymentUrl(HttpContext, VnpayModel));
             }
             else
@@ -150,8 +136,8 @@ namespace Project_Group3.Controllers
                 if (v == null)
                 {
                     TempData["invalid"] = "is invalid";
-                    ModelState.AddModelError("", "Invalid voucher"); // Thêm lỗi vào ModelState
-                    return RedirectToAction("PaymentFail", new { learnerId = learnerID, courseId = HttpContext.Session.GetInt32("courseId") });// Trả về view với model và hiển thị lỗi
+                    ModelState.AddModelError("", "Invalid voucher");
+                    return RedirectToAction("PaymentFail", new { learnerId = learnerID, courseId = HttpContext.Session.GetInt32("courseId") });
                 }
                 else
                 {
@@ -175,9 +161,5 @@ namespace Project_Group3.Controllers
                 }
             }
         }
-
-
     }
-
-
 }
