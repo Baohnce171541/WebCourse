@@ -59,7 +59,7 @@ namespace Project_Group3.Controllers
             try
             {
 
-                if (!ModelState.IsValid)  return View(model);
+                if (!ModelState.IsValid) return View(model);
 
                 var instructor = instructorRepository.GetInstructorByEmailOrUser(model.EmailOrUsername);
 
@@ -119,8 +119,8 @@ namespace Project_Group3.Controllers
         {
             try
             {
-                if (!ModelState.IsValid)  return View(model);
-           
+                if (!ModelState.IsValid) return View(model);
+
                 DateTime currentDate = DateTime.Now;
                 DateTime minimumBirthDate = currentDate.AddYears(-18); // Ngày sinh tối thiểu để đủ 18 tuổi
 
@@ -149,23 +149,17 @@ namespace Project_Group3.Controllers
                 ViewBag.UserId = LearnerModel.LearnerId.ToString();
                 ViewBag.Role = "Learner";
                 Response.Cookies.Append("MyCookie", LearnerModel.LearnerId.ToString());
-                // Điều hướng đến trang chính sau khi đăng ký thành công
+
                 return RedirectToAction("Login", "User", new { id = LearnerModel.LearnerId, role = "Learner" });
             }
             catch (Exception ex)
             {
-                // Xử lý lỗi nếu có
                 ViewBag.err = "Đã xảy ra lỗi khi đăng ký: " + ex.Message;
                 return View(model);
             }
         }
 
-        public IActionResult InstructorRegister()
-        {
-            // TODO: Your code here
-            return View();
-        }
-
+        public IActionResult InstructorRegister() => View();
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -173,10 +167,7 @@ namespace Project_Group3.Controllers
         {
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    return View(model);
-                }
+                if (!ModelState.IsValid) return View(model);
 
                 if (string.IsNullOrEmpty(model.Introduce))
                 {
@@ -184,9 +175,8 @@ namespace Project_Group3.Controllers
                     return View(model);
                 }
 
-                // Kiểm tra tuổi
                 DateTime currentDate = DateTime.Now;
-                DateTime minimumBirthDate = currentDate.AddYears(-21); // Ngày sinh tối thiểu để đủ 21 tuổi
+                DateTime minimumBirthDate = currentDate.AddYears(-21);
 
                 if (model.Birthday >= minimumBirthDate)
                 {
@@ -216,12 +206,11 @@ namespace Project_Group3.Controllers
                 ViewBag.UserId = instructorModel.InstructorId;
                 ViewBag.Role = "Learner";
                 Response.Cookies.Append("MyCookie", instructorModel.InstructorId.ToString());
-                // Điều hướng đến trang chính sau khi đăng ký thành công
+
                 return RedirectToAction("Login", "User", new { id = instructorModel.InstructorId, role = "Instructor" });
             }
             catch (Exception ex)
             {
-                // Xử lý lỗi nếu có
                 ViewBag.err = "Đã xảy ra lỗi khi đăng ký: " + ex.Message;
                 return View(model);
             }
@@ -229,16 +218,12 @@ namespace Project_Group3.Controllers
 
         public IActionResult Logout()
         {
-            // Xóa cookie
             foreach (var cookie in HttpContext.Request.Cookies.Keys)
             {
                 Response.Cookies.Delete(cookie);
             }
+            HttpContext.Session.Clear();
 
-            // Xóa session
-            HttpContext.Session.Clear(); // Hoặc HttpContext.Session.Remove("UserId");
-
-            // Chuyển hướng đến trang login hoặc trang chính
             return RedirectToAction("Login", "User");
         }
 
@@ -251,11 +236,7 @@ namespace Project_Group3.Controllers
             return otp;
         }
 
-        public IActionResult ResetPassword()
-        {
-            // TODO: Your code here
-            return View();
-        }
+        public IActionResult ResetPassword() => View();
 
         public IActionResult otp(string email)
         {
@@ -301,7 +282,6 @@ namespace Project_Group3.Controllers
                 HttpContext.Session.SetString("email", UserMail);
 
                 return RedirectToAction("otp");
-
             }
             catch (System.Exception)
             {
@@ -339,6 +319,7 @@ namespace Project_Group3.Controllers
                 throw;
             }
         }
+
         [HttpPost]
         public IActionResult ChangePassword(string email, string password, string newPassword, string confirmPassword)
         {
@@ -367,10 +348,7 @@ namespace Project_Group3.Controllers
                     Response.Cookies.Delete(cookie);
                 }
 
-                // Xóa session
-                HttpContext.Session.Clear(); // Hoặc HttpContext.Session.Remove("UserId");
-
-                // Chuyển hướng đến trang login hoặc trang chính
+                HttpContext.Session.Clear();
                 return RedirectToAction("Login", "User");
             }
             catch (System.Exception)

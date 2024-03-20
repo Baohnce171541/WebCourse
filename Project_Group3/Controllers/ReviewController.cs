@@ -23,16 +23,12 @@ namespace Project_Group3.Controllers
         }
         public ActionResult Detail(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-            var Review= reviewRepository.GetReviewByID(id.Value);
-            if (Review== null)
-            {
-                return NotFound();
+            if (id == null) return NotFound();
 
-            }
+            var Review = reviewRepository.GetReviewByID(id.Value);
+
+            if (Review == null) return NotFound();
+
             return View(Review);
         }
 
@@ -50,11 +46,11 @@ namespace Project_Group3.Controllers
                 {
                     Review.LearnerId = int.Parse(cookieValue);
                     Review.ReviewDate = DateTime.Now;
-                     int? rating = Review.Rating;
+                    int? rating = Review.Rating;
 
                     reviewRepository.InsertReview(Review);
                     ViewBag.SuccessMessage = "Đánh giá đã được gửi thành công.";
-                    // Hoặc có thể chuyển hướng đến một trang thành công
+
                     return RedirectToAction("CourseDetail", "Home", new { id = courseID });
                 }
             }
@@ -62,22 +58,17 @@ namespace Project_Group3.Controllers
             {
                 ViewBag.ErrorMessage = "Đã xảy ra lỗi: " + ex.Message;
             }
-
-            // Nếu có lỗi xảy ra hoặc dữ liệu không hợp lệ, hiển thị lại form
             return View(Review);
         }
 
         public ActionResult Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-            var Review= reviewRepository.GetReviewByID(id.Value);
-            if (Review== null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
+
+            var Review = reviewRepository.GetReviewByID(id.Value);
+
+            if (Review == null) return NotFound();
+
             return View(Review);
         }
 
@@ -87,10 +78,8 @@ namespace Project_Group3.Controllers
         {
             try
             {
-                if (id != review.ReviewId)
-                {
-                    return NotFound();
-                }
+                if (id != review.ReviewId) return NotFound();
+
                 if (ModelState.IsValid)
                 {
                     reviewRepository.UpdateReview(review);
@@ -107,15 +96,12 @@ namespace Project_Group3.Controllers
 
         public ActionResult Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
+
             var Review = reviewRepository.GetReviewByID(id.Value);
-            if (Review == null)
-            {
-                return NotFound();
-            }
+
+            if (Review == null) return NotFound();
+
             return View(Review);
         }
 
@@ -129,7 +115,6 @@ namespace Project_Group3.Controllers
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
-
             {
                 ViewBag.Message = ex.Message;
                 return View();

@@ -26,47 +26,47 @@ namespace Project_Group3.Controllers
             chapterRepository = new ChapterRepository();
             lessonRepository = new LessonRepository();
             instructorRepository = new InstructorRepository();
-
         }
 
-   public ActionResult Index(int courseId, string search = "")
-{
-    try
-    {
-        ViewBag.CourseId = courseId;
-
-        var course = courseRepository.GetCourseByID(courseId);
-        if (course == null) return NotFound();
-
-        ViewBag.CourseName = course.CourseName;
-
-        var chapterList = chapterRepository.GetChapters();
-
-        var chaptersToDisplay = chapterList.Where(c => c.CourseId == courseId);
-
-        if (!string.IsNullOrEmpty(search))
+        public ActionResult Index(int courseId, string search = "")
         {
-            chaptersToDisplay = chaptersToDisplay.Where(c => c.ChapterName.IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0);
+            try
+            {
+                ViewBag.CourseId = courseId;
+
+                var course = courseRepository.GetCourseByID(courseId);
+
+                if (course == null) return NotFound();
+
+                ViewBag.CourseName = course.CourseName;
+
+                var chapterList = chapterRepository.GetChapters();
+
+                var chaptersToDisplay = chapterList.Where(c => c.CourseId == courseId);
+
+                if (!string.IsNullOrEmpty(search))
+                {
+                    chaptersToDisplay = chaptersToDisplay.Where(c => c.ChapterName.IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0);
+                }
+
+                chaptersToDisplay = chaptersToDisplay.OrderBy(c => c.Index);
+
+                var modelsView = new ModelsView
+                {
+                    ChaptersList = chaptersToDisplay.ToList(),
+                    LessonsList = lessonRepository.GetLessons().ToList(),
+                };
+
+                ViewBag.Search = search;
+
+                return View(modelsView);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = "An error occurred while processing your request.";
+                return View();
+            }
         }
-
-        chaptersToDisplay = chaptersToDisplay.OrderBy(c => c.Index);
-
-        var modelsView = new ModelsView
-        {
-            ChaptersList = chaptersToDisplay.ToList(),
-            LessonsList = lessonRepository.GetLessons().ToList(),
-        };
-
-        ViewBag.Search = search;
-
-        return View(modelsView);
-    }
-    catch (Exception ex)
-    {
-        ViewBag.ErrorMessage = "An error occurred while processing your request.";
-        return View();
-    }
-}
 
         public ActionResult Detail(int? id)
         {
@@ -103,68 +103,65 @@ namespace Project_Group3.Controllers
             return View();
         }
 
-[HttpPost]
-[ValidateAntiForgeryToken]
-public ActionResult Create(Chapter chapter, bool redirectToCreateLesson, int courseId)
-{
-    try
-    {
-        if (ModelState.IsValid)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(Chapter chapter, bool redirectToCreateLesson, int courseId)
         {
-            // Kiểm tra điều kiện cho thuộc tính ChapterName
-            if (!string.IsNullOrEmpty(chapter.ChapterName))
+            try
             {
-                // Kiểm tra điều kiện cho thuộc tính Index
-                if (chapter.Index.HasValue && chapter.Index.Value > 0)
+                if (ModelState.IsValid)
                 {
-                    var existingChapter = chapterRepository.GetChapters().FirstOrDefault(c => c.Index == chapter.Index && c.CourseId == courseId);
-                    if (existingChapter != null)
+                    if (!string.IsNullOrEmpty(chapter.ChapterName))
                     {
-                        ModelState.AddModelError("Index", "An existing chapter with the same index already exists for this course.");
-                    }
-                    else
-                    {
-                        // Kiểm tra điều kiện cho thuộc tính Description
-                        if (!string.IsNullOrEmpty(chapter.Description))
+                        if (chapter.Index.HasValue && chapter.Index.Value > 0)
                         {
-                            chapterRepository.InsertChapter(chapter);
-
-                            if (redirectToCreateLesson)
+                            var existingChapter = chapterRepository.GetChapters().FirstOrDefault(c => c.Index == chapter.Index && c.CourseId == courseId);
+                            if (existingChapter != null)
                             {
-                                return RedirectToAction("Create", "Lesson", new { chapterId = chapter.ChapterId, courseId = chapter.CourseId });
+                                ModelState.AddModelError("Index", "An existing chapter with the same index already exists for this course.");
                             }
                             else
                             {
-                                return RedirectToAction("Index", new { courseId = chapter.CourseId });
+                                if (!string.IsNullOrEmpty(chapter.Description))
+                                {
+                                    chapterRepository.InsertChapter(chapter);
+
+                                    if (redirectToCreateLesson)
+                                    {
+                                        return RedirectToAction("Create", "Lesson", new { chapterId = chapter.ChapterId, courseId = chapter.CourseId });
+                                    }
+                                    else
+                                    {
+                                        return RedirectToAction("Index", new { courseId = chapter.CourseId });
+                                    }
+                                }
+                                else
+                                {
+                                    ModelState.AddModelError("Description", "Description is required.");
+                                }
                             }
                         }
                         else
                         {
-                            ModelState.AddModelError("Description", "Description is required.");
+                            ModelState.AddModelError("Index", "Index must be a positive value.");
                         }
                     }
-                }
-                else
-                {
-                    ModelState.AddModelError("Index", "Index must be a positive value.");
+                    else
+                    {
+                        ModelState.AddModelError("ChapterName", "ChapterName is required.");
+                    }
                 }
             }
-            else
+            catch (Exception ex)
             {
-                ModelState.AddModelError("ChapterName", "ChapterName is required.");
+                ViewBag.Message = ex.Message;
             }
-        }
-    }
-    catch (Exception ex)
-    {
-        ViewBag.Message = ex.Message;
-    }
 
-    ViewBag.CourseId = courseId;
-    var course = courseRepository.GetCourseByID(courseId);
-    ViewBag.CourseName = course.CourseName;
-    return View(chapter);
-}
+            ViewBag.CourseId = courseId;
+            var course = courseRepository.GetCourseByID(courseId);
+            ViewBag.CourseName = course.CourseName;
+            return View(chapter);
+        }
         public ActionResult Edit(int? id)
         {
             if (id == null) return NotFound();
@@ -259,7 +256,6 @@ public ActionResult Create(Chapter chapter, bool redirectToCreateLesson, int cou
                 ViewBag.Message = ex.Message;
                 return View();
             }
-
         }
     }
 }

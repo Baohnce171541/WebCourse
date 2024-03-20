@@ -29,7 +29,7 @@ namespace Project_Group3.Controllers
         ICourseProgressRepository courseProgressRepository = null;
         IChapterProgressRepository chapterProgressRepository = null;
         // ILessonProgressRepository lessonProgressRepository = null;
-        
+
         public HomeController()
         {
             courseRepository = new CourseRepository();
@@ -45,7 +45,6 @@ namespace Project_Group3.Controllers
             smtpRepository = new StmpRepository();
             courseProgressRepository = new CourseProgressRepository();
             chapterProgressRepository = new ChapterProgressRepository();
-            // lessonProgressRepository = new LessonProgressRepository();
         }
 
 
@@ -58,11 +57,7 @@ namespace Project_Group3.Controllers
             return View(Tuple.Create(categoryList, instructorList));
         }
 
-        public IActionResult About()
-        {
-            // TODO: Your code here
-            return View();
-        }
+        public IActionResult About() => View();
 
         public IActionResult Course(string search)
         {
@@ -88,11 +83,7 @@ namespace Project_Group3.Controllers
             return View(Tuple.Create(courseList, categoryList, instructList, instructorList, reviewList, enrollment));
         }
 
-        public IActionResult Contact()
-        {
-            // TODO: Your code here
-            return View();
-        }
+        public IActionResult Contact() => View();
 
         [HttpPost]
         public IActionResult Contact(Report report)
@@ -118,10 +109,7 @@ namespace Project_Group3.Controllers
 
             ViewBag.Role = "instructor";
 
-            ModelsView modelsView = new ModelsView
-            {
-                Instructor = instructor,
-            };
+            ModelsView modelsView = new ModelsView { Instructor = instructor };
 
             return View(modelsView);
         }
@@ -168,7 +156,6 @@ namespace Project_Group3.Controllers
                 Learner = learner,
                 EnrollmentList = enrollment.ToList(),
             };
-
             return View(modelsView);
         }
 
@@ -178,7 +165,6 @@ namespace Project_Group3.Controllers
         {
             try
             {
-
                 if (id != models.Learner.LearnerId)
                 {
                     System.Console.WriteLine(id + " " + models.Learner.LearnerId);
@@ -224,7 +210,6 @@ namespace Project_Group3.Controllers
                 {
                     Response.Cookies.Delete(cookie);
                 }
-
                 HttpContext.Session.Clear();
 
                 return RedirectToAction("Login", "User");
@@ -303,15 +288,12 @@ namespace Project_Group3.Controllers
 
         public IActionResult CourseDetail(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
+
             var instruct = instructRepository.GetInstructByID(id.Value);
-            if (instruct == null)
-            {
-                return NotFound();
-            }
+
+            if (instruct == null) return NotFound();
+
             var courseId = TempData["CourseId"] as string;
             var course = courseRepository.GetCourses();
             var instructor = instructorRepository.GetInstructors();
@@ -320,46 +302,36 @@ namespace Project_Group3.Controllers
             var chapter = chapterRepository.GetChapters();
             var lesson = lessonRepository.GetLessons();
             var enrollment = enrollmentRepository.GetEnrollment();
-
             var courseInfo = course.FirstOrDefault(c => c.CourseId == instruct.CourseId);
             var instructorInfo = instructor.FirstOrDefault(i => i.InstructorId == instruct.InstructorId);
+
             ViewBag.CourseID = id;
+
             return View(Tuple.Create(courseInfo, instructorInfo, review, learner, chapter, lesson, enrollment));
         }
 
         public IActionResult Learning(int lessonId, int chapterId, int courseId)
         {
-            //int? id
-            // courseId = 2;
-            // lessonId = 46;
             var course = courseRepository.GetCourseByID(courseId);
-            ViewBag.Course = courseRepository.GetCourseByID(courseId);
             var chapter = chapterRepository.GetChapterByID(chapterId);
             var lesson = lessonRepository.GetLessonByID(lessonId);
-            ViewBag.CourseName = course.CourseName;
-
             var chapterList = chapterRepository.GetChapters();
             var lessonList = lessonRepository.GetLessons();
             var courseProgress = courseProgressRepository.GetCourseProgresss();
             var chapterProgress = chapterProgressRepository.GetChapterProgresss();
-            // var lessonProgress = lessonProgressRepository.GetLessonProgresss();
-            var learner = learnerRepository.GetLearners();
+
+            ViewBag.CourseName = course.CourseName;
+            ViewBag.Course = courseRepository.GetCourseByID(courseId);
+
             return View(Tuple.Create(chapter, lesson, courseProgress, chapterProgress, chapterList, lessonList));
         }
 
         public IActionResult CheckOut(int? id)
         {
             var learner = learnerRepository.GetLearnerByID(id.Value);
-
             return View(learner);
         }
 
-        public IActionResult QA()
-        {
-            // TODO: Your code here
-            return View();
-        }
-        
-
+        public IActionResult QA() => View();
     }
 }

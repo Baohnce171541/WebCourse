@@ -26,7 +26,6 @@ namespace Project_Group3.Controllers
             courseRepository = new CourseRepository();
         }
 
-
         public ActionResult Index(int chapterId, int courseId, string search = "")
         {
             var chapter = chapterRepository.GetChapterByID(chapterId);
@@ -39,7 +38,6 @@ namespace Project_Group3.Controllers
 
             var lessonList = lessonRepository.GetLessons();
 
-            // Tìm tất cả các bài học có ChapterId và CourseId trùng khớp
             var lessonsToDisplay = lessonList.Where(l => l.ChapterId == chapterId && l.CourseId == courseId).ToList();
 
             if (!string.IsNullOrEmpty(search))
@@ -51,24 +49,19 @@ namespace Project_Group3.Controllers
 
             ViewBag.Search = search;
 
-            // Trả về view, truyền danh sách bài học để hiển thị
             return View(lessonsToDisplay);
         }
         public ActionResult Detail(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-            var Lesson = lessonRepository.GetLessonByID(id.Value);
-            if (Lesson == null)
-            {
-                return NotFound();
+            if (id == null) return NotFound();
 
-            }
+            var Lesson = lessonRepository.GetLessonByID(id.Value);
+
+            if (Lesson == null) return NotFound();
+
             return View(Lesson);
         }
-        //Get Learnercontroller/Create  
+
         public ActionResult Create(int chapterId, int courseId)
         {
             var chapter = chapterRepository.GetChapterByID(chapterId);
@@ -89,13 +82,10 @@ namespace Project_Group3.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    // Kiểm tra điều kiện cho thuộc tính LessonName
                     if (!string.IsNullOrEmpty(lesson.LessonName))
                     {
-                        // Kiểm tra điều kiện cho thuộc tính Description
                         if (!string.IsNullOrEmpty(lesson.Description))
                         {
-                            // Kiểm tra điều kiện cho thuộc tính Index
                             if (lesson.Index.HasValue && lesson.Index.Value > 0)
                             {
                                 if (video == null || video.Length == 0)
@@ -105,7 +95,6 @@ namespace Project_Group3.Controllers
 
                                 if (ModelState.IsValid)
                                 {
-                                    // Handle the video file
                                     var urlRelative = "/video/";
                                     var urlAbsolute = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "video");
                                     var fileName = Guid.NewGuid() + Path.GetExtension(video.FileName);
@@ -188,7 +177,6 @@ namespace Project_Group3.Controllers
                 {
                     if (video != null && video.Length > 0)
                     {
-                        // Handle the video file
                         var urlRelative = "/video/";
                         var urlAbsolute = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "video");
                         var fileName = Guid.NewGuid() + Path.GetExtension(video.FileName);
@@ -202,7 +190,6 @@ namespace Project_Group3.Controllers
                         lesson.Content = Path.Combine(urlRelative, fileName);
                     }
 
-                    // Update other properties of the lesson
                     lesson.LessonName = modelsView.Lesson.LessonName;
                     lesson.Description = modelsView.Lesson.Description;
                     lesson.Content = modelsView.Lesson.Content;
@@ -211,7 +198,6 @@ namespace Project_Group3.Controllers
                     lessonRepository.UpdateLesson(lesson);
                     return RedirectToAction("Index", new { chapterId = lesson.ChapterId, courseId = lesson.CourseId });
                 }
-
                 return View(modelsView);
             }
             catch (Exception ex)
@@ -247,7 +233,6 @@ namespace Project_Group3.Controllers
                 return View(modelsView);
             }
             catch (Exception ex)
-
             {
                 ViewBag.Message = ex.Message;
                 return View(modelsView);

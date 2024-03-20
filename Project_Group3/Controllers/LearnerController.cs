@@ -9,11 +9,12 @@ using WebLibrary.Models;
 using WebLibrary.Repository;
 namespace Project_Group3.Controllers
 {
-   
+
     public class LearnerController : Controller
     {
         ILearnerRepository learnerRepository = null;
-        public LearnerController(){
+        public LearnerController()
+        {
             learnerRepository = new LearnerRepository();
         }
         public IActionResult Index(string search = "", int page = 1, int pageSize = 2)
@@ -39,16 +40,12 @@ namespace Project_Group3.Controllers
         }
         public ActionResult Detail(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-            var Learner= learnerRepository.GetLearnerByID(id.Value);
-            if (Learner== null)
-            {
-                return NotFound();
+            if (id == null) return NotFound();
 
-            }
+            var Learner = learnerRepository.GetLearnerByID(id.Value);
+
+            if (Learner == null) return NotFound();
+
             return View(Learner);
         }
         //Get Learnercontroller/Create  
@@ -63,7 +60,6 @@ namespace Project_Group3.Controllers
                 if (ModelState.IsValid)
                 {
                     learnerRepository.InsertLearner(Learner);
-
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -76,28 +72,31 @@ namespace Project_Group3.Controllers
         }
         public IActionResult Edit(int? id)
         {
-            if(id == null){
-                return NotFound();
-            }
+            if (id == null) return NotFound();
+
             var learner = learnerRepository.GetLearnerByID(id.Value);
-            if(learner == null){
-                return NotFound();
-            }
+
+            if (learner == null) return NotFound();
+
             return View(learner);
         }
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, Learner learner){
-            try{
-                if(id != learner.LearnerId){
-                    return NotFound();
-                }
-                if(ModelState.IsValid){
+        public ActionResult Edit(int id, Learner learner)
+        {
+            try
+            {
+                if (id != learner.LearnerId) return NotFound();
+
+                if (ModelState.IsValid)
+                {
                     learnerRepository.UpdateLearner(learner);
                 }
                 return RedirectToAction("Instructor", "Admin");
-            }catch(Exception ex){
+            }
+            catch (Exception ex)
+            {
                 ViewBag.Message = ex.Message;
                 return View();
             }
@@ -110,17 +109,13 @@ namespace Project_Group3.Controllers
             try
             {
                 var existingLearner = learnerRepository.GetLearnerByID(id);
-                if (existingLearner == null)
-                {
-                    return NotFound();
-                }
+                if (existingLearner == null) return NotFound();
 
                 if (ModelState.IsValid)
                 {
                     learnerRepository.UpdateLearner(learner);
                     return RedirectToAction("Index", "Home");
                 }
-
                 return View(learner);
             }
             catch (Exception ex)
@@ -132,23 +127,26 @@ namespace Project_Group3.Controllers
 
         public IActionResult Delete(int? id)
         {
-            if(id == null){
-                return NotFound();
-            }
+            if (id == null) return NotFound();
+
             var learner = learnerRepository.GetLearnerByID(id.Value);
-            if(learner == null){
-                return NotFound();
-            }
+            
+            if (learner == null) return NotFound();
+
             return View(learner);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id){
-            try{
+        public ActionResult Delete(int id)
+        {
+            try
+            {
                 learnerRepository.DeleteLearner(id);
                 return RedirectToAction("Learner", "Admin");
-            }catch(Exception ex){
+            }
+            catch (Exception ex)
+            {
                 ViewBag.Message = ex.Message;
                 return View();
             }
