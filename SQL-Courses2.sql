@@ -508,7 +508,17 @@ BEGIN
     -- Xóa người học (learner) bị xóa
     DELETE FROM learner WHERE learnerID IN (SELECT learnerID FROM deleted);
 END;
-
+go
+---
+CREATE TRIGGER delete_cate_trigger
+ON categories
+INSTEAD OF DELETE
+AS
+BEGIN
+    DELETE FROM courses WHERE categoryID IN (SELECT categoryID FROM deleted);
+    DELETE FROM categories WHERE categoryID IN (SELECT categoryID FROM deleted);
+END;
+go
 CREATE TRIGGER delete_course_trigger
 ON courses
 INSTEAD OF DELETE
