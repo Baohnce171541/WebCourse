@@ -149,7 +149,7 @@ namespace Project_Group3.Controllers
                 VoucherDAO voucherDAO = new VoucherDAO();
                 var voucher = voucherDAO.GetVoucherByID(1);
                 smtpRepository.sendMail(LearnerModel.Email, "You have registered an online learning account at W3Courses.",
-                 $"We will give you a 20 % voucher code for your first registered course. Your voucher code is here: {voucher.CodeVoucher}.");
+                 $"We will give you a 5 0 % voucher code for your first registered course. Your voucher code is here: {voucher.CodeVoucher}.");
                 ViewBag.UserId = LearnerModel.LearnerId.ToString();
                 ViewBag.Role = "Learner";
                 Response.Cookies.Append("MyCookie", LearnerModel.LearnerId.ToString());

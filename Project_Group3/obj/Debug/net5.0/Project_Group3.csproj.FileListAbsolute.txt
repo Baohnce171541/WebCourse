@@ -658,3 +658,5 @@ D:\SWP\Project_Group3\obj\Debug\net5.0\Project_Group3.pdb
 D:\SWP\Project_Group3\obj\Debug\net5.0\Project_Group3.genruntimeconfig.cache
 D:\SWP\Project_Group3\obj\Debug\net5.0\ref\Project_Group3.dll
 D:\SWP\Project_Group3\obj\Debug\net5.0\Project_Group3.sourcelink.json
+D:\SWP\Project_Group3\obj\Debug\net5.0\Razor\Views\Quiz\Delete.cshtml.g.cs
+D:\SWP\Project_Group3\obj\Debug\net5.0\Razor\Views\Quiz\Edit.cshtml.g.cs
