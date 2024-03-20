@@ -41,7 +41,7 @@ namespace WebLibrary.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=LAPTOP-H5V6RB1O\\SQLEXPRESS;Database=Project_Group03;uid=sa;pwd=1234;encrypt=true;trustServerCertificate=true;");
+                optionsBuilder.UseSqlServer("Server=DINHANH\\SQLEXPRESS;Database=Project_Group03tt;uid=sa;pwd=1243;encrypt=true;trustServerCertificate=True;");
             }
         }
 
@@ -290,7 +290,7 @@ namespace WebLibrary.Models
             {
                 entity.ToTable("instruct");
 
-                entity.HasIndex(e => new { e.InstructorId, e.CourseId }, "UQ__instruct__029B7EDA4B3E74F7")
+                entity.HasIndex(e => new { e.InstructorId, e.CourseId }, "UQ__instruct__029B7EDA3557DA89")
                     .IsUnique();
 
                 entity.Property(e => e.InstructId).HasColumnName("instructID");
