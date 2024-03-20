@@ -1,12 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using Project_Group3.Models;
 using WebLibrary.Models;
 using WebLibrary.Repository;
@@ -257,8 +253,7 @@ namespace Project_Group3.Controllers
                     return RedirectToAction("Index", new { chapterId = quiz.ChapterId, courseId = quiz.CourseId });
                 }
 
-                ViewBag.Answers = answerRepository.GetAnswers(); // Add this line to pass the answers to the view
-
+                ViewBag.Answers = answerRepository.GetAnswers(); 
                 return View(modelsView);
             }
             catch (Exception ex)
@@ -274,7 +269,9 @@ namespace Project_Group3.Controllers
             if (id == null) return NotFound();
 
             var Quiz = quizRepository.GetQuizByID(id.Value);
+            
             var Answer = answerRepository.GetAnswerByID(Quiz.AnswerId.Value);
+
             if (Quiz == null) return NotFound();
 
             return View(new ModelsView { Quiz = Quiz, Answer = Answer });
