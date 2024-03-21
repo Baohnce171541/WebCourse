@@ -1,11 +1,10 @@
 @model Project_Group3.Models.ModelsView
 @{
     ViewData["Title"] = "Course Management | Chapter";
-       Layout = "~/Views/Shared/_LayoutCourse.cshtml";
+      Layout = "~/Views/Shared/_LayoutCourse.cshtml";
 }
 <link rel="stylesheet" href="~/css/site.css" />
 <link rel="stylesheet" href="~/fonts/boxicons.css" />
-
 @{
     var idInstructor = int.Parse(Context.Request.Cookies["ID"]);
 }
@@ -30,7 +29,7 @@
                 </div>
             </div>
             <div class="col-sm-12 col-md-6 float-right">
-                <a class="btn btn-warning mb-2 float-right " href="@Url.Action("Index", "Answer")">Answer</a>
+                <a class="btn btn-warning mb-2 float-right " href="@Url.Action("Index", "Answer", new { courseId = ViewBag.CourseId })">Answer</a>
                 <a class="btn btn-success mb-2 float-right mr-3" href="@Url.Action("Create", "Chapter", new { courseId = ViewBag.CourseId })">Add new Chapter</a>
             </div>
         </div>

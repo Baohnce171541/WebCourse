@@ -9,6 +9,7 @@ namespace Project_Group3.Models
     public int WrongCount { get; set; }
     public Chapter Chapter { get; set; }
     public Course Course { get; set; }
+     public Lesson Lesson { get; set; }
     public List<Quiz> QuizList { get; set; }
 }
 }

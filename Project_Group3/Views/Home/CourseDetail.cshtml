@@ -100,7 +100,7 @@
             <div class="col-md-6 col-lg-6 mb-4">
                 <div class="instructor-item mb-2 mt-2">
                     <div class="instructor-img">
-                        <img class="img-fluid rounded-circle" src="~/img/avatars/instructor/team-4.jpg" style=" width: 6rem;" alt="">
+                        <img class="img-fluid rounded-circle" src="@Model.Item2.Picture" style=" width: 6rem;" alt="">
                     </div>
                     <label class="text-white" style="width: 25rem;"><b>Instructor: </b>@Model.Item2.FirstName @Model.Item2.LastName</label>
                 </div>
@@ -137,9 +137,20 @@
                             foreach(var enrollment in Model.Item7){
                                 if(LearnerID == enrollment.LearnerId && Model.Item1.CourseId == enrollment.CourseId){
                                     if(enrollment.IsPaid == true){
-                                        <a class="erroll-btn btn btn-warning" href="@Url.Action("LearnerChapter", "Chapter", new { courseId = Model.Item1.CourseId })">
-                                            <h6 class="text-theme mt-3">Already Enroll</h6>
-                                        </a>
+                                        foreach(var chapter in Model.Item5){
+                                            if(chapter.CourseId == Model.Item1.CourseId){
+                                                foreach(var lesson in Model.Item6){
+                                                    if(chapter.ChapterId == lesson.ChapterId){
+                                                    @* <a class="erroll-btn btn btn-warning" href="@Url.Action("LearnerChapter", "Chapter", new { courseId = Model.Item1.CourseId })"> *@
+                                                        <a class="erroll-btn btn btn-warning" href="@Url.Action("learning", "home", new {lessonId = lesson.LessonId, chapterId = chapter.ChapterId, courseId = Model.Item1.CourseId  })">
+                                                        <h6 class="text-theme mt-3">Already Enroll</h6>
+                                                    </a>
+                                                    break;
+                                                    }
+                                                }
+                                            }
+                                            break;
+                                        }
                                         
                                         break;
                                     }else{
@@ -213,7 +224,7 @@
                 <label>@Model.Item1.Description</label>
             </div>
             <div class="col-lg-4 col-md-6 mb-4">
-                <img class="img-fluid" src="~/img/avatars/course/course-2.jpg" alt="">
+                <img class="img-fluid" src="@Model.Item1.Picture" alt="">
             </div>
             <div id="syllabus" class="col-lg-12 col-md-12 mb-4 mt-5">
                 <h2>Syllabus - What you will learn from this learn</h2>
@@ -245,7 +256,7 @@
             </div>
 
             @{
-                foreach(var chapter in Model.Item5){
+            foreach(var chapter in Model.Item5.OrderBy(chapter => chapter.Index)){
                     if(chapter.CourseId == Model.Item1.CourseId){
                         <div class="col-lg-12 col-md-12">
                             <div class="box-chaper mb-2" data-bs-toggle="collapse" data-bs-target="#list-lesson@(chapter.Index)">
@@ -274,11 +285,14 @@
                                             <div class="">
                                                 @{
                                                     bool tmp = false;
-                                                    foreach(var lesson in Model.Item6){
-                                                        if(chapter.ChapterId == lesson.ChapterId){
+                                                   
+                                                        foreach(var lesson in Model.Item6.OrderBy(lesson => lesson.Index)){
+    if(chapter.ChapterId == lesson.ChapterId){
+   
+ 
                                                             if(role != null){
                                                                 if(role == "learner"){
-                                                                    var idLearner = int.Parse(Context.Request.Cookies["ID"]);
+                                                                    var idLearner = int.Parse(Context.Request.Cookies["ID"]); 
 
                                                                     foreach(var enrollment in Model.Item7){
                                                                         if(idLearner == enrollment.LearnerId){

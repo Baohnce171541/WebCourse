@@ -1,8 +1,9 @@
 @model Project_Group3.Models.ModelsView
 @{
-    ViewData["Title"] = "Edit";
+   Layout = "~/Views/Shared/_LayoutCourse.cshtml";
 }
-
+<link rel="stylesheet" href="~/css/site.css" />
+<link rel="stylesheet" href="~/fonts/boxicons.css" />
 @{
     var idInstructor = Context.Request.Cookies["ID"];
     if (idInstructor != null)

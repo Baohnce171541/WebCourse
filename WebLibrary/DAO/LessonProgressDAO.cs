@@ -26,75 +26,124 @@ namespace WebLibrary.DAO
                 }
             }
         }
-        private DBContext dbContext;
-        public LessonProgressDAO()
+        public IEnumerable<LessonProgress> GetLessonProgresslist()
         {
-            dbContext = new DBContext(); 
-        }
-
-  
-        public void AddLessonProgress(LessonProgress LessonProgress)
-        {
-            dbContext.LessonProgresses.Add(LessonProgress);
-            dbContext.SaveChanges();
-        }
-
-        public void UpdateLessonProgress(LessonProgress LessonProgress)
-        {
-            var existingLessonProgress = dbContext.LessonProgresses.Find(LessonProgress.LessonProgressId);
-            if (existingLessonProgress != null)
+            var lessonProgress = new List<LessonProgress>();
+            try
             {
-                existingLessonProgress.LearnerId = LessonProgress.LearnerId;
-                existingLessonProgress.ChapterId = LessonProgress.ChapterId;
-                existingLessonProgress.LessonId = LessonProgress.LessonId;
-                existingLessonProgress.Completed = LessonProgress.Completed;
-                existingLessonProgress.StartAt = LessonProgress.StartAt;
+                using var context = new DBContext();
+                lessonProgress = context.LessonProgresses.ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
 
-                dbContext.SaveChanges();
+                throw;
+            }
+            return lessonProgress;
+        }
+
+        public LessonProgress GetLessonProgressByID(int lessonProgressID)
+        {
+            LessonProgress lessonProgress = null;
+            try
+            {
+                using var context = new DBContext();
+                lessonProgress = context.LessonProgresses.SingleOrDefault(c => c.LessonProgressId.Equals(lessonProgressID));
+
+            }
+            catch (System.Exception)
+            {
+
+                throw;
+            }
+            return lessonProgress;
+        }
+
+        public void AddNew(LessonProgress lessonProgress)
+        {
+            try
+            {
+                LessonProgress existingLessonProgress = GetLessonProgressByID(lessonProgress.LessonProgressId);
+                if (existingLessonProgress == null)
+                {
+                    using (var context = new DBContext())
+                    {
+                        context.LessonProgresses.Add(lessonProgress);
+                        context.SaveChanges();
+                    }
+                }
+                else
+                {
+                    throw new Exception("The lessonProgress already exists.");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
         }
 
-
-        public List<LessonProgress> GetLessonProgressByUserId(int LearnerId)
+        public void Update(LessonProgress lessonProgress)
         {
-            return dbContext.LessonProgresses.Where(lp => lp.LearnerId == LearnerId).ToList();
-        }
-
-
-        public List<LessonProgress> GetLessonProgressByCourseId(int ChapterId)
-        {
-            return dbContext.LessonProgresses.Where(lp => lp.ChapterId == ChapterId).ToList();
-        }
-
-        public List<LessonProgress> GetLessonProgressByCompletionStatus(bool isCompleted)
-        {
-            return dbContext.LessonProgresses.Where(lp => lp.Completed == isCompleted).ToList();
-        }
-
-        public void DeleteLessonProgress(int LessonProgressId)
-        {
-            var LessonProgressToDelete = dbContext.LessonProgresses.Find(LessonProgressId);
-            if (LessonProgressToDelete != null)
+            try
             {
-                dbContext.LessonProgresses.Remove(LessonProgressToDelete);
-                dbContext.SaveChanges();
+                LessonProgress existingLessonProgress = GetLessonProgressByID(lessonProgress.LessonProgressId);
+                if (existingLessonProgress != null)
+                {
+                    using (var context = new DBContext())
+                    {
+                        context.LessonProgresses.Update(lessonProgress);
+                        context.SaveChanges();
+                    }
+                }
+                else
+                {
+                    throw new Exception("The lessonProgress does not exist.");
+                }
             }
-        }
-        public List<LessonProgress> GetLessonProgressByProgressPercentage(double progressPercentage)
-        {
-            var completedLessonCount = dbContext.LessonProgresses.Count(lp => (bool)lp.Completed);
-            var totalLessonCount = dbContext.LessonProgresses.Count();
-            var progress = (double)completedLessonCount / totalLessonCount * 100;
-            if (progress >= progressPercentage)
+            catch (Exception ex)
             {
-                return dbContext.LessonProgresses.Where(lp => (bool)lp.Completed).ToList();
-            }
-            else
-            {
-                return dbContext.LessonProgresses.Where(lp => !(bool)lp.Completed).ToList();
+                throw new Exception(ex.Message);
             }
         }
 
+        public void Remove(int lessonProgressID)
+        {
+            try
+            {
+                LessonProgress lessonProgress = GetLessonProgressByID(lessonProgressID);
+                if (lessonProgress != null)
+                {
+                    using (var context = new DBContext())
+                    {
+                        context.LessonProgresses.Remove(lessonProgress);
+                        context.SaveChanges();
+                    }
+                }
+                else
+                {
+                    throw new Exception("The lessonProgress does not exist.");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public LessonProgress GetLessonProgressByLessonAndChapter(int lessonId, int chapterId, int learnerId)
+        {
+            try
+            {
+                using var context = new DBContext();
+                var lessonProgress = context.LessonProgresses.FirstOrDefault(lp => lp.LessonId == lessonId && lp.ChapterId == chapterId && lp.LearnerId == learnerId);
+                return lessonProgress;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 
 }

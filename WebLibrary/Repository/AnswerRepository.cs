@@ -9,8 +9,6 @@ namespace WebLibrary.Repository
 {
     public class AnswerRepository : IAnswerRepository
     {
-
-
         public Answer GetAnswerByID(int answerId) => AnswerDAO.Instance.GetAnswerByID(answerId);
 
         public IEnumerable<Answer> GetAnswers() => AnswerDAO.Instance.GetAnswerList();
@@ -20,7 +18,6 @@ namespace WebLibrary.Repository
         public void DeleteAnswer(int answerId) => AnswerDAO.Instance.Remove(answerId);
 
         public void UpdateAnswer(Answer answer) => AnswerDAO.Instance.Update(answer);
-
 
     }
 }

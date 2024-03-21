@@ -208,7 +208,7 @@ namespace Project_Group3.Controllers
                         course.CreationDate = DateTime.Now;
                         courseRepository.UpdateCourse(modelsView.Course);
                     }
-                    return RedirectToAction("Index", new { id = Request.Cookies["ID"] });
+                return RedirectToAction("Course","Admin", new { id = Request.Cookies["ID"] });
                 }
                 return View(modelsView);
             }

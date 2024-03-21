@@ -37,7 +37,7 @@
                         <div class="col-md-3 col-lg-3">
                             <div class="team-item">
                                 <div class="team-img">
-                                    <img class="img-fluid rounded-circle" src="~/img/1.png" alt="">
+                                    <img class="img-fluid rounded-circle" src="@Model.Instructor.Picture" alt="">
                                 </div>
                             </div>
                         </div>
@@ -135,22 +135,24 @@
             </div>
             <div class="modal-body">
                 <form asp-action="InstructorProfile" class="mb-3" enctype="multipart/form-data">
-                    <input type="hidden" asp-for="@Model.Instructor.InstructorId" />
-                    <input type="hidden" asp-for="@Model.Instructor.Email" />
-                    <input type="hidden" asp-for="@Model.Instructor.Username" />
-                    <input type="hidden" asp-for="@Model.Instructor.Password" />
-                    <input type="hidden" asp-for="@Model.Instructor.RegistrationDate" />
-                    <input type="hidden" asp-for="@Model.Instructor.Income" />
-                    <input type="hidden" asp-for="@Model.Instructor.Introduce" />
-                    <input type="hidden" asp-for="@Model.Instructor.Status" />
                     <div class="container-fluid">
-                        <div class="d-flex align-items-start align-items-sm-center">
-                            <div class="mr-2 mb-3">
-                                <img class="avatar-initial rounded-circle bg-label-warning" src="~/img/1.png"
-                                    style="width: 30%">
-                            </div>
+                        <input type="hidden" asp-for="@Model.Instructor.InstructorId" />
+                        <input type="hidden" asp-for="@Model.Instructor.Email" />
+                        <input type="hidden" asp-for="@Model.Instructor.Username" />
+                        <input type="hidden" asp-for="@Model.Instructor.Password" />
+                        <input type="hidden" asp-for="@Model.Instructor.RegistrationDate" />
+                        <input type="hidden" asp-for="@Model.Instructor.Income" />
+                        <input type="hidden" asp-for="@Model.Instructor.Introduce" />
+                        <input type="hidden" asp-for="@Model.Instructor.Status" />
+                        <div class="">
+                            <img id="profile-pic" class="avatar-initial rounded-circle bg-label-warning" src="@Model.Instructor.Picture"
+                                style="width: 30%; position: relative;">
+                            <label for="input-file" class="upload-avatar text-white text-center p-2 ml-5" 
+                            style="display: block; width: 38px; border-radius: 6px; position: absolute; right: 21rem; top: 7.5rem"><i class='bx bxs-camera text-theme'></i></label>
+                            <input asp-for="Instructor.Picture" type="file" name="picture" class="text-theme d-none" id="input-file"
+                                accept="image/jpeg, image/png, image/jpg">
                         </div>
-                        <div class="row">
+                        <div class="row mt-3">
                             <div class="col-md-6 col-lg-6">
                                 <div class="form-group">
                                     <label class="text-theme font-weight-bold">First Name</label>

@@ -130,5 +130,19 @@ namespace WebLibrary.DAO
                 throw new Exception(ex.Message);
             }
         }
+
+        public CourseProgress GetCourseProgressByLearnerAndCourse(int learnerId, int courseId)
+        {
+            try
+            {
+                using var context = new DBContext();
+                var courseProgress = context.CourseProgresses.FirstOrDefault(cp => cp.LearnerId == learnerId && cp.CourseId == courseId);
+                return courseProgress;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

@@ -113,7 +113,7 @@ namespace Project_Group3.Controllers
             return View();
         }
 
-        [HttpPost]
+     [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Register(RegisterViewModel model)
         {
@@ -123,7 +123,18 @@ namespace Project_Group3.Controllers
 
                 DateTime currentDate = DateTime.Now;
                 DateTime minimumBirthDate = currentDate.AddYears(-18); // Ngày sinh tối thiểu để đủ 18 tuổi
-
+                var learnerEmail = learnerRepository.GetLearnerByEmail(model.Email);
+                var learnerUsername = learnerRepository.GetLearnerByUser(model.Username);
+                var instructorEmail = instructorRepository.GetInstructorByEmail(model.Email);
+                var instructorUsername = instructorRepository.GetInstructorByUser(model.Username);
+                if(learnerEmail != null  || instructorEmail != null){
+                    ViewBag.err = "This Email account already exists";
+                    return View(model);
+                }
+                if(learnerUsername != null ||  instructorUsername != null){
+                    ViewBag.err = "This Username account already exists";
+                    return View(model);
+                }
                 if (model.Birthday >= minimumBirthDate)
                 {
                     ViewBag.err = "Your year of birth is not old enough to register";
@@ -140,20 +151,16 @@ namespace Project_Group3.Controllers
                     Email = model.Email,
                     Country = model.Country,
                     Username = model.Username,
-                    Password = model.Password,
+                    Password = this.GetHashedPassword(model.Password),
                     Picture = model.Picture,
                     RegistrationDate = DateTime.Now.Date,
                     Status = "Active",
                 };
                 learnerRepository.InsertLearner(LearnerModel);
-                VoucherDAO voucherDAO = new VoucherDAO();
-                var voucher = voucherDAO.GetVoucherByID(1);
-                smtpRepository.sendMail(LearnerModel.Email, "You have registered an online learning account at W3Courses.",
-                 $"We will give you a 5 0 % voucher code for your first registered course. Your voucher code is here: {voucher.CodeVoucher}.");
                 ViewBag.UserId = LearnerModel.LearnerId.ToString();
                 ViewBag.Role = "Learner";
                 Response.Cookies.Append("MyCookie", LearnerModel.LearnerId.ToString());
-
+                // Điều hướng đến trang chính sau khi đăng ký thành công
                 return RedirectToAction("Login", "User", new { id = LearnerModel.LearnerId, role = "Learner" });
             }
             catch (Exception ex)
@@ -163,7 +170,11 @@ namespace Project_Group3.Controllers
             }
         }
 
-        public IActionResult InstructorRegister() => View();
+        public IActionResult InstructorRegister()
+        {
+            return View();
+        }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -171,7 +182,10 @@ namespace Project_Group3.Controllers
         {
             try
             {
-                if (!ModelState.IsValid) return View(model);
+if (!ModelState.IsValid)
+                {
+                    return View(model);
+                }
 
                 if (string.IsNullOrEmpty(model.Introduce))
                 {
@@ -180,7 +194,19 @@ namespace Project_Group3.Controllers
                 }
 
                 DateTime currentDate = DateTime.Now;
-                DateTime minimumBirthDate = currentDate.AddYears(-21);
+                DateTime minimumBirthDate = currentDate.AddYears(-21); // Ngày sinh tối thiểu để đủ 21 tuổi
+                                var learnerEmail = learnerRepository.GetLearnerByEmail(model.Email);
+                var learnerUsername = learnerRepository.GetLearnerByUser(model.Username);
+                var instructorEmail = instructorRepository.GetInstructorByEmail(model.Email);
+                var instructorUsername = instructorRepository.GetInstructorByUser(model.Username);
+                if(learnerEmail != null  || instructorEmail != null){
+                    ViewBag.err = "This Email account already exists";
+                    return View(model);
+                }
+                if(learnerUsername != null ||  instructorUsername != null){
+                    ViewBag.err = "This Username account already exists";
+                    return View(model);
+                }
 
                 if (model.Birthday >= minimumBirthDate)
                 {
@@ -198,7 +224,7 @@ namespace Project_Group3.Controllers
                     Email = model.Email,
                     Country = model.Country,
                     Username = model.Username,
-                    Password = model.Password,
+                    Password = this.GetHashedPassword(model.Password),
                     Picture = model.Picture,
                     RegistrationDate = DateTime.Now.Date,
                     Income = 0,
@@ -210,11 +236,12 @@ namespace Project_Group3.Controllers
                 ViewBag.UserId = instructorModel.InstructorId;
                 ViewBag.Role = "Learner";
                 Response.Cookies.Append("MyCookie", instructorModel.InstructorId.ToString());
-
+                // Điều hướng đến trang chính sau khi đăng ký thành công
                 return RedirectToAction("Login", "User", new { id = instructorModel.InstructorId, role = "Instructor" });
             }
             catch (Exception ex)
             {
+                // Xử lý lỗi nếu có
                 ViewBag.err = "Đã xảy ra lỗi khi đăng ký: " + ex.Message;
                 return View(model);
             }

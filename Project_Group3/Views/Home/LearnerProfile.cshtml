@@ -39,7 +39,7 @@
                         <div class="col-md-3 col-lg-3">
                             <div class="team-item">
                                 <div class="team-img">
-                                    <img class="img-fluid rounded-circle" src="~/img/1.png" alt="">
+                                    <img class="img-fluid rounded-circle" src="@Model.Learner.Picture" alt="">
                                 </div>
                             </div>
                         </div>
@@ -241,15 +241,15 @@
                         <input type="hidden" asp-for="@Model.Learner.Password" />
                         <input type="hidden" asp-for="@Model.Learner.RegistrationDate" />
                         <input type="hidden" asp-for="@Model.Learner.Status" />
-                        <div class="d-flex align-items-start align-items-sm-center">
-                            <div class="mr-2 mb-3">
-                                <img class="avatar-initial rounded-circle bg-label-warning" src="~/img/1.png"
-                                    style="width: 30%">
-                                <label class="text-theme">Upload avatar</label>
-                                <input type="file" name="fileAnh" class="text-theme">
-                            </div>
+                        <div class="">
+                            <img id="profile-pic" class="avatar-initial rounded-circle bg-label-warning" src="@Model.Learner.Picture"
+                                style="width: 30%; position: relative;">
+                            <label for="input-file" class="upload-avatar text-white text-center p-2 ml-5" 
+                            style="display: block; width: 38px; border-radius: 6px; position: absolute; right: 21rem; top: 7.5rem"><i class='bx bxs-camera text-theme'></i></label>
+                            <input asp-for="Learner.Picture" type="file" name="picture" class="text-theme d-none" id="input-file"
+                                accept="image/jpeg, image/png, image/jpg">
                         </div>
-                        <div class="row">
+                        <div class="row mt-3">
                             <div class="col-md-6 col-lg-6">
                                 <div class="form-group">
                                     <label class="text-theme font-weight-bold">First Name</label>
@@ -317,5 +317,5 @@
             </div>
         </div>
     </div>
-
+</div>
     <!-- Modal -->
