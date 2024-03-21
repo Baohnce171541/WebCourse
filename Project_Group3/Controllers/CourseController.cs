@@ -146,9 +146,9 @@ namespace Project_Group3.Controllers
                     {
                         ModelState.AddModelError("Price", "Price is required.");
                     }
-                    else if (course.Price < 5000)
+                    else if (course.Price < 50)
                     {
-                        ModelState.AddModelError("Price", "Price is less 5000");
+                        ModelState.AddModelError("Price", "Price is less 50");
                     }
 
                     if (ModelState.IsValid)
@@ -168,11 +168,9 @@ namespace Project_Group3.Controllers
                         course.CreationDate = DateTime.Now;
                         courseRepository.InsertCourse(course);
 
-                        var ins = instructorRepository.GetInstructorByID(HttpContext.Session.GetInt32("InsID").GetValueOrDefault());
-
+                        var ins = instructorRepository.GetInstructorByUser(HttpContext.Session.GetString("username"));
                         Instruct instruct = new Instruct { CourseId = course.CourseId, InstructorId = ins.InstructorId };
 
-                        System.Console.WriteLine(instruct.InstructorId);
                         instructRepository.InsertInstruct(instruct);
                         return RedirectToAction("Create", "Chapter", new { courseId = course.CourseId });
                     }
@@ -212,7 +210,7 @@ namespace Project_Group3.Controllers
             }
             catch (System.Exception)
             {
-                return View(id);
+                return View();
             }
 
         }
