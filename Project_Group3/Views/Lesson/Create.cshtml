@@ -35,6 +35,20 @@
                             <span asp-validation-for="Content" class="text-danger"></span>
                         </div>
                     </div>
+                     <div class="mb-3 col-md-6">
+                        @if (ViewBag.ExistingLessonIndexes != null && ViewBag.ExistingLessonIndexes.Count > 0)
+                        {
+                            <div class="form-group">
+                                <label class="text-theme font-weight-bold">Existing Lesson Indexes:</label>
+                                <ul class="list-group">
+                                    @foreach (var index in ViewBag.ExistingLessonIndexes)
+                                    {
+                                     <li class="list-group-item text-dark">@index</li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+                    </div>
                     <div class="mb-3 col-md-6">
                         <div class="form-group">
                             <label asp-for="Index" class="text-theme font-weight-bold"></label>
