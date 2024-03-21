@@ -1281,3 +1281,9 @@ E:\2024\SP24\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Category\Edit
 E:\2024\SP24\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Category\Index.cshtml.g.cs
 E:\2024\SP24\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Voucher\Delete.cshtml.g.cs
 >>>>>>> ea4ab36d9b2cf3e780dafbb9d8869ff50d334b91
+C:\Users\admin\Downloads\Project03\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Admin\CourseModeration.cshtml.g.cs
+C:\Users\admin\Downloads\Project03\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Category\Create.cshtml.g.cs
+C:\Users\admin\Downloads\Project03\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Category\Delete.cshtml.g.cs
+C:\Users\admin\Downloads\Project03\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Category\Edit.cshtml.g.cs
+C:\Users\admin\Downloads\Project03\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Category\Index.cshtml.g.cs
+C:\Users\admin\Downloads\Project03\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Voucher\Delete.cshtml.g.cs

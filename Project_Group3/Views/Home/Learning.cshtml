@@ -79,12 +79,8 @@ IEnumerable<WebLibrary.Models.Lesson>>
                         // Đã đến lesson cuối cùng của chapter hiện tại
                         isLastLesson = true;
                         chapterID = currentChapterId;
-<<<<<<< HEAD
-                      
-=======
 
 
->>>>>>> ea4ab36d9b2cf3e780dafbb9d8869ff50d334b91
                     }
                 }
                 @if (isLastLesson)
@@ -92,10 +88,8 @@ IEnumerable<WebLibrary.Models.Lesson>>
 
                     <a class="btn btn-primary mb-2 float-right"
                         href="@Url.Action("Test", "Quiz", new { lessonId = Model.Item2.LessonId, chapterId = chapterID, courseId = ViewBag.CourseID})">QuizTest</a>
-<<<<<<< HEAD
+
                   
-=======
->>>>>>> ea4ab36d9b2cf3e780dafbb9d8869ff50d334b91
                 }
                 else
                 {
