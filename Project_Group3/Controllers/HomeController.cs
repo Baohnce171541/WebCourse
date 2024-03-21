@@ -338,6 +338,7 @@ namespace Project_Group3.Controllers
 
         public IActionResult Learning(int lessonId, int chapterId, int courseId)
         {
+      
             var cookieValue = Request.Cookies["ID"];
             var learnerId = Convert.ToInt32(cookieValue);
             var courseProgress = courseProgressRepository.GetCourseProgressByLearnerAndCourse(learnerId, courseId);
