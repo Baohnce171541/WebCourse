@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Text;
 using System.Security.Cryptography;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace Project_Group3.Controllers
 {
@@ -134,6 +135,26 @@ namespace Project_Group3.Controllers
                     ViewBag.err = "Your year of birth is not old enough to register";
                     return View(model);
                 }
+                 if (model.Birthday.Year < 1000)
+                {
+                    ViewBag.err = "Year of birth must have at least 4 digits";
+                    return View(model);
+                }
+                if (!IsStrongPassword(model.Password))
+                {
+                    ViewBag.err = "Password must be at least 8 characters long and contain at least one letter and one number.";
+                    return View(model);
+                }
+                if (!IsValidPhoneNumber(model.PhoneNumber))
+                {
+                    ViewBag.err = "The phone number must be 10 digits long and start with 0.";
+                    return View(model);
+                }
+                if (!IsValidEmail(model.Email))
+                {
+                    ViewBag.err = "Invalid email address.";
+                return View(model);
+                }
                 if (picture != null && picture.Length > 0)
                 {
                     var urlRelative = "/img/avatars/";
@@ -183,6 +204,23 @@ namespace Project_Group3.Controllers
             return View();
         }
 
+         private bool IsStrongPassword(string password)
+        {
+            // Kiểm tra mật khẩu có ít nhất 8 ký tự, chứa ít nhất một chữ cái và một số
+            return Regex.IsMatch(password, @"^(?=.*[A-Za-z])(?=.*\d).{8,}$");
+        }
+
+        private bool IsValidPhoneNumber(string phoneNumber)
+        {
+            // Kiểm tra số điện thoại có đúng định dạng (ví dụ: 10 chữ số) không
+            return Regex.IsMatch(phoneNumber, @"^(0)\d{9}$");
+        }
+        private bool IsValidEmail(string email)
+        {
+            // Kiểm tra địa chỉ email có đúng định dạng "tên@gmail.com" không
+            return Regex.IsMatch(email, @"^[a-zA-Z0-9._%+-]+@gmail.com$");
+        }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -220,6 +258,26 @@ namespace Project_Group3.Controllers
                 {
                     ViewBag.err = "Your year of birth is not old enough to register";
                     return View(model);
+                }
+                 if (model.Birthday.Year < 1000)
+                {
+                    ViewBag.err = "Year of birth must have at least 4 digits";
+                    return View(model);
+                }
+                if (!IsStrongPassword(model.Password))
+                {
+                    ViewBag.err = "Password must be at least 8 characters long and contain at least one letter and one number.";
+                    return View(model);
+                }
+                if (!IsValidPhoneNumber(model.PhoneNumber))
+                {
+                    ViewBag.err = "The phone number must be 10 digits long and start with 0.";
+                    return View(model);
+                }
+                if (!IsValidEmail(model.Email))
+                {
+                    ViewBag.err = "Invalid email address.";
+                return View(model);
                 }
                 if (picture != null && picture.Length > 0)
                 {
