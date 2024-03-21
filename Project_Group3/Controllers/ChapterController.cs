@@ -224,38 +224,43 @@ namespace Project_Group3.Controllers
             return View(modelsView);
         }
 
-        public ActionResult Delete(int? id)
-        {
-            if (id == null) return NotFound();
+      public IActionResult Delete(int? id)
+{
+    var chapter = chapterRepository.GetChapterByID(id.Value);
 
-            var Chapter = chapterRepository.GetChapterByID(id.Value);
+    if (chapter == null)
+    {
+        return NotFound();
+    }
 
-            if (Chapter == null) return NotFound();
+    var model = new ModelsView
+    {
+        Chapter = chapter
+    };
 
-            return View(new ModelsView { Chapter = Chapter });
-        }
-
+    return View(model);
+}
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(ModelsView modelsView)
+[ValidateAntiForgeryToken]
+public ActionResult Delete(ModelsView modelsView)
+{
+    try
+    {
+        var chapter = chapterRepository.GetChapterByID(modelsView.Chapter.ChapterId);
+        if (chapter != null)
         {
-            try
-            {
-                var chapter = chapterRepository.GetChapterByID(modelsView.Chapter.ChapterId);
-                System.Console.WriteLine(chapter.ChapterId);
-                if (chapter != null)
-                {
-                    chapterRepository.DeleteChapter(chapter.ChapterId);
-                    return RedirectToAction("Index", new { courseId = modelsView.Chapter.CourseId });
-                }
-                return View(modelsView);
-            }
-            catch (Exception ex)
-
-            {
-                ViewBag.Message = ex.Message;
-                return View();
-            }
+            System.Console.WriteLine(chapter.ChapterId);
+            chapterRepository.DeleteChapter(chapter.ChapterId);
+            return RedirectToAction("Index", new { courseId = modelsView.Chapter.CourseId });
         }
+        
+        return View(modelsView);
+    }
+    catch (Exception ex)
+    {
+        ViewBag.Message = ex.Message;
+        return View();
+    }
+}
     }
 }

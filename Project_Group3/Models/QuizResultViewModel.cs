@@ -11,5 +11,7 @@ namespace Project_Group3.Models
     public Course Course { get; set; }
      public Lesson Lesson { get; set; }
     public List<Quiz> QuizList { get; set; }
+   
+   
 }
 }

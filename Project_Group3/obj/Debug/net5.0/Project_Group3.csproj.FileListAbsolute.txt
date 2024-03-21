@@ -738,7 +738,6 @@ C:\Users\admin\Downloads\Project03\WebCourse\Project_Group3\obj\Debug\net5.0\Raz
 C:\Users\admin\Downloads\Project03\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Answer\Create.cshtml.g.cs
 C:\Users\admin\Downloads\Project03\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Answer\Index.cshtml.g.cs
 C:\Users\admin\Downloads\Project03\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Chapter\Create.cshtml.g.cs
-C:\Users\admin\Downloads\Project03\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Chapter\Delete.cshtml.g.cs
 C:\Users\admin\Downloads\Project03\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Chapter\Edit.cshtml.g.cs
 C:\Users\admin\Downloads\Project03\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Chapter\Index.cshtml.g.cs
 C:\Users\admin\Downloads\Project03\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Chapter\LearnerChapter.cshtml.g.cs
@@ -967,3 +966,4 @@ E:\2024\SP24\SWT\WebCourse\Project_Group3\obj\Debug\net5.0\Project_Group3.genrun
 E:\2024\SP24\SWT\WebCourse\Project_Group3\obj\Debug\net5.0\ref\Project_Group3.dll
 >>>>>>> 760e137cc537862bd8696d102f1062e51a4f76b9
 C:\Users\admin\Downloads\Project03\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Admin\Edit.cshtml.g.cs
+C:\Users\admin\Downloads\Project03\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Chapter\Delete.cshtml.g.cs
