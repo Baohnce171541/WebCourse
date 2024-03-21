@@ -1122,3 +1122,9 @@ D:\Lĩnh\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Category\Delete.c
 D:\Lĩnh\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Category\Edit.cshtml.g.cs
 D:\Lĩnh\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Category\Index.cshtml.g.cs
 D:\Lĩnh\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Voucher\Delete.cshtml.g.cs
+D:\SWP\Project_Group3\obj\Debug\net5.0\Razor\Views\Admin\CourseModeration.cshtml.g.cs
+D:\SWP\Project_Group3\obj\Debug\net5.0\Razor\Views\Category\Create.cshtml.g.cs
+D:\SWP\Project_Group3\obj\Debug\net5.0\Razor\Views\Category\Delete.cshtml.g.cs
+D:\SWP\Project_Group3\obj\Debug\net5.0\Razor\Views\Category\Edit.cshtml.g.cs
+D:\SWP\Project_Group3\obj\Debug\net5.0\Razor\Views\Category\Index.cshtml.g.cs
+D:\SWP\Project_Group3\obj\Debug\net5.0\Razor\Views\Voucher\Delete.cshtml.g.cs
