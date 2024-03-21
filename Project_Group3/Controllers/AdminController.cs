@@ -27,6 +27,7 @@ namespace Project_Group3.Controllers
         ILessonRepository lessonRepository = null;
         ISmtpRepository smtpRepository = null;
         IReportRepository reportRepository = null;
+
         public AdminController()
         {
             adminRepository = new AdminRepository();
@@ -43,21 +44,36 @@ namespace Project_Group3.Controllers
 
         public ActionResult Index()
         {
-            var Adminlist = adminRepository.GetAdmins();
-            var learner = learnerRepository.GetLearners();
-            var instructor = instructorRepository.GetInstructors();
-            var course = courseRepository.GetCourses();
-            return View(Tuple.Create(Adminlist, learner, instructor, course));
+            try
+            {
+                var Adminlist = adminRepository.GetAdmins();
+                var learner = learnerRepository.GetLearners();
+                var instructor = instructorRepository.GetInstructors();
+                var course = courseRepository.GetCourses();
+                return View(Tuple.Create(Adminlist, learner, instructor, course));
+            }
+            catch (System.Exception)
+            {
+                return View();
+            }
+
         }
         public ActionResult Detail(int? id)
         {
-            if (id == null) return NotFound();
+            try
+            {
+                if (id == null) return NotFound();
 
-            var Admin = adminRepository.GetAdminByID(id.Value);
+                var Admin = adminRepository.GetAdminByID(id.Value);
 
-            if (Admin == null) return NotFound();
+                if (Admin == null) return NotFound();
 
-            return View(Admin);
+                return View(Admin);
+            }
+            catch (System.Exception)
+            {
+                return View(id);
+            }
         }
 
         public ActionResult Create() => View();
@@ -84,20 +100,27 @@ namespace Project_Group3.Controllers
 
         public ActionResult Edit(int? id)
         {
-            if (id == null) return NotFound();
-
-            var Course = courseRepository.GetCourseByID(id.Value);
-
-            if (Course == null) return NotFound();
-
-            ModelsView modelsView = new ModelsView
+            try
             {
-                Course = Course,
-            };
-            ViewBag.CategoryId = Course.CategoryId;
-            var categoryList = categoryRepository.GetCategorys();
-            ViewBag.CategoryList = new SelectList(categoryList, "CategoryId", "CategoryName");
-            return View(modelsView);
+                if (id == null) return NotFound();
+
+                var Course = courseRepository.GetCourseByID(id.Value);
+
+                if (Course == null) return NotFound();
+
+                ModelsView modelsView = new ModelsView
+                {
+                    Course = Course,
+                };
+                ViewBag.CategoryId = Course.CategoryId;
+                var categoryList = categoryRepository.GetCategorys();
+                ViewBag.CategoryList = new SelectList(categoryList, "CategoryId", "CategoryName");
+                return View(modelsView);
+            }
+            catch (System.Exception)
+            {
+                return View(id);
+            }
         }
 
         [HttpPost]
@@ -127,13 +150,21 @@ namespace Project_Group3.Controllers
 
         public ActionResult Delete(int? id)
         {
-            if (id == null) return NotFound();
+            try
+            {
+                if (id == null) return NotFound();
 
-            var Admin = adminRepository.GetAdminByID(id.Value);
+                var Admin = adminRepository.GetAdminByID(id.Value);
 
-            if (Admin == null) return NotFound();
+                if (Admin == null) return NotFound();
 
-            return View(Admin);
+                return View(Admin);
+            }
+            catch (System.Exception)
+            {
+                return View(id);
+            }
+
         }
 
         [HttpPost]
@@ -155,9 +186,17 @@ namespace Project_Group3.Controllers
 
         public IActionResult Login()
         {
-            if (HttpContext.Session.GetString("admin") != null) return RedirectToAction("Index", "Home");
+            try
+            {
+                if (HttpContext.Session.GetString("admin") != null) return RedirectToAction("Index", "Home");
 
-            return View();
+                return View();
+            }
+            catch (System.Exception)
+            {
+                return View();
+            }
+
         }
 
         [HttpPost]
@@ -188,114 +227,153 @@ namespace Project_Group3.Controllers
 
         public IActionResult Instructor(string search, bool showOnlyWait = false)
         {
-            var instructorList = instructorRepository.GetInstructors();
-            if (!string.IsNullOrEmpty(search))
+            try
             {
-                string lowercaseSearch = search.ToLower();
-                instructorList = instructorList.Where(i =>
-                    i.FirstName.ToLower().Any(c => lowercaseSearch.Contains(c)) ||
-                    i.LastName.ToLower().Any(c => lowercaseSearch.Contains(c))
-                ).ToList();
-                ViewBag.search = search;
+                var instructorList = instructorRepository.GetInstructors();
+                if (!string.IsNullOrEmpty(search))
+                {
+                    string lowercaseSearch = search.ToLower();
+                    instructorList = instructorList.Where(i =>
+                        i.FirstName.ToLower().Any(c => lowercaseSearch.Contains(c)) ||
+                        i.LastName.ToLower().Any(c => lowercaseSearch.Contains(c))
+                    ).ToList();
+                    ViewBag.search = search;
+                }
+                ViewBag.Status = "";
+                if (showOnlyWait)
+                {
+                    ViewBag.Status = "Wait";
+                    instructorList = instructorList.Where(i => i.Status == "Wait").ToList();
+                }
+                return View(instructorList);
             }
-            ViewBag.Status = "";
-            if (showOnlyWait)
+            catch (System.Exception)
             {
-                ViewBag.Status = "Wait";
-                instructorList = instructorList.Where(i => i.Status == "Wait").ToList();
+                return View();
             }
-            return View(instructorList);
+
         }
 
         public IActionResult Learner(string search)
         {
-            var learnerList = learnerRepository.GetLearners();
-            if (!string.IsNullOrEmpty(search))
+            try
             {
-                string lowercaseSearch = search.ToLower();
-                learnerList = learnerList.Where(i =>
-                    i.FirstName.ToLower().Any(c => lowercaseSearch.Contains(c)) ||
-                    i.LastName.ToLower().Any(c => lowercaseSearch.Contains(c))
-                ).ToList();
-                ViewBag.search = search;
+                var learnerList = learnerRepository.GetLearners();
+                if (!string.IsNullOrEmpty(search))
+                {
+                    string lowercaseSearch = search.ToLower();
+                    learnerList = learnerList.Where(i =>
+                        i.FirstName.ToLower().Any(c => lowercaseSearch.Contains(c)) ||
+                        i.LastName.ToLower().Any(c => lowercaseSearch.Contains(c))
+                    ).ToList();
+                    ViewBag.search = search;
+                }
+                return View(learnerList);
             }
-            return View(learnerList);
+            catch (System.Exception)
+            {
+                return View();
+            }
+
         }
 
         public IActionResult Course(string search, bool showOnlyWait = false)
         {
-            var course = courseRepository.GetCourses();
-            var category = categoryRepository.GetCategorys();
-            var instruct = instructRepository.GetInstructs();
-            var instructor = instructorRepository.GetInstructors();
-            var courseList = course.ToList();
-            var categoryList = category.ToList();
-            var instructList = instruct.ToList();
-            var instructorList = instructor.ToList();
-            ViewBag.Status = "";
-            if (showOnlyWait)
+            try
             {
-                ViewBag.Status = "Wait";
-                courseList = courseList.Where(i => i.Status == "Wait").ToList();
+                var course = courseRepository.GetCourses();
+                var category = categoryRepository.GetCategorys();
+                var instruct = instructRepository.GetInstructs();
+                var instructor = instructorRepository.GetInstructors();
+                var courseList = course.ToList();
+                var categoryList = category.ToList();
+                var instructList = instruct.ToList();
+                var instructorList = instructor.ToList();
+                ViewBag.Status = "";
+                if (showOnlyWait)
+                {
+                    ViewBag.Status = "Wait";
+                    courseList = courseList.Where(i => i.Status == "Wait").ToList();
+                }
+                return View(Tuple.Create(courseList, categoryList, instructList, instructorList));
             }
-            return View(Tuple.Create(courseList, categoryList, instructList, instructorList));
+            catch (System.Exception)
+            {
+                return View();
+            }
         }
 
         public IActionResult UserDetail(int? id, string role)
         {
-            if (id == null) return NotFound();
-
-            var instructor = instructorRepository.GetInstructorByID(id.Value);
-            var learner = learnerRepository.GetLearnerByID(id.Value);
-            if (role.Equals("instructor"))
+            try
             {
-                if (instructor == null) return NotFound();
+                if (id == null) return NotFound();
 
-                ViewBag.Role = role;
+                var instructor = instructorRepository.GetInstructorByID(id.Value);
+                var learner = learnerRepository.GetLearnerByID(id.Value);
+                if (role.Equals("instructor"))
+                {
+                    if (instructor == null) return NotFound();
+
+                    ViewBag.Role = role;
+                }
+                else if (role.Equals("learner"))
+                {
+                    if (learner == null) return NotFound();
+
+                    ViewBag.Role = role;
+                }
+                return View(Tuple.Create(instructor, learner));
             }
-            else if (role.Equals("learner"))
+            catch (System.Exception)
             {
-                if (learner == null) return NotFound();
-
-                ViewBag.Role = role;
+                return View();
             }
-            return View(Tuple.Create(instructor, learner));
+
         }
 
         [HttpPost]
         public IActionResult Next(int id, string role)
         {
-            if (role.Equals("instructor"))
+            try
             {
-                var currentInstructor = instructorRepository.GetInstructorByID(id);
-                var nextInstructor = instructorRepository.GetInstructors().FirstOrDefault(i => i.InstructorId > id);
+                if (role.Equals("instructor"))
+                {
+                    var currentInstructor = instructorRepository.GetInstructorByID(id);
+                    var nextInstructor = instructorRepository.GetInstructors().FirstOrDefault(i => i.InstructorId > id);
 
-                if (nextInstructor != null)
-                {
-                    return RedirectToAction("UserDetail", new { id = nextInstructor.InstructorId, role = role });
+                    if (nextInstructor != null)
+                    {
+                        return RedirectToAction("UserDetail", new { id = nextInstructor.InstructorId, role = role });
+                    }
+                    else
+                    {
+                        var firstInstructor = instructorRepository.GetInstructors().FirstOrDefault();
+                        return RedirectToAction("UserDetail", new { id = firstInstructor.InstructorId, role = role });
+                    }
                 }
-                else
+                else if (role.Equals("learner"))
                 {
-                    var firstInstructor = instructorRepository.GetInstructors().FirstOrDefault();
-                    return RedirectToAction("UserDetail", new { id = firstInstructor.InstructorId, role = role });
+                    var currentLearner = learnerRepository.GetLearnerByID(id);
+                    var nextLearner = learnerRepository.GetLearners().FirstOrDefault(l => l.LearnerId > id);
+
+                    if (nextLearner != null)
+                    {
+                        return RedirectToAction("UserDetail", new { id = nextLearner.LearnerId, role = role });
+                    }
+                    else
+                    {
+                        var firstLearner = learnerRepository.GetLearners().FirstOrDefault();
+                        return RedirectToAction("UserDetail", new { id = firstLearner.LearnerId, role = role });
+                    }
                 }
+                return NotFound();
             }
-            else if (role.Equals("learner"))
+            catch (System.Exception)
             {
-                var currentLearner = learnerRepository.GetLearnerByID(id);
-                var nextLearner = learnerRepository.GetLearners().FirstOrDefault(l => l.LearnerId > id);
-
-                if (nextLearner != null)
-                {
-                    return RedirectToAction("UserDetail", new { id = nextLearner.LearnerId, role = role });
-                }
-                else
-                {
-                    var firstLearner = learnerRepository.GetLearners().FirstOrDefault();
-                    return RedirectToAction("UserDetail", new { id = firstLearner.LearnerId, role = role });
-                }
+                return View();
             }
-            return NotFound();
+
         }
 
         [HttpPost]
@@ -336,28 +414,43 @@ namespace Project_Group3.Controllers
 
         public IActionResult courseDetail(int? id)
         {
-            if (id == null) return NotFound();
+            try
+            {
+                if (id == null) return NotFound();
 
-            var course = courseRepository.GetCourseByID(id.Value);
-            var chapterList = chapterRepository.GetChapters();
-            var lessonList = lessonRepository.GetLessons();
-            var categoryList = categoryRepository.GetCategorys();
-            var instruct = instructRepository.GetInstructs();
-            var instructor = instructorRepository.GetInstructors();
-            if (course == null) return NotFound();
+                var course = courseRepository.GetCourseByID(id.Value);
+                var chapterList = chapterRepository.GetChapters();
+                var lessonList = lessonRepository.GetLessons();
+                var categoryList = categoryRepository.GetCategorys();
+                var instruct = instructRepository.GetInstructs();
+                var instructor = instructorRepository.GetInstructors();
+                if (course == null) return NotFound();
 
-            return View(Tuple.Create(course, chapterList, categoryList, instruct, lessonList, instructor));
+                return View(Tuple.Create(course, chapterList, categoryList, instruct, lessonList, instructor));
+            }
+            catch (System.Exception)
+            {
+                return View();
+            }
         }
 
         public IActionResult AccountModeration(int? id)
         {
-            if (id == null) return NotFound();
+            try
+            {
+                if (id == null) return NotFound();
 
-            var instructor = instructorRepository.GetInstructorByID(id.Value);
+                var instructor = instructorRepository.GetInstructorByID(id.Value);
 
-            if (instructor == null) return NotFound();
+                if (instructor == null) return NotFound();
 
-            return View(new ModelsView{Instructor = instructor});
+                return View(new ModelsView { Instructor = instructor });
+            }
+            catch (System.Exception)
+            {
+                return View(id);
+            }
+
         }
 
         [HttpPost]
@@ -372,10 +465,13 @@ namespace Project_Group3.Controllers
                 if (ModelState.IsValid)
                 {
                     model.Instructor.Status = "Active";
-                    if(instructorRepository.EditStatus(instructor.InstructorId, model.Instructor.Status)){
+                    if (instructorRepository.EditStatus(instructor.InstructorId, model.Instructor.Status))
+                    {
                         smtpRepository.sendMail(instructor.Email, "Xác thực tài khoản", "Tài khoản của bạn đã được xác minh");
                         return RedirectToAction("Instructor", "Admin");
-                    }else{
+                    }
+                    else
+                    {
                         return RedirectToAction("Instructor", "Admin");
                     }
                 }
@@ -390,33 +486,39 @@ namespace Project_Group3.Controllers
 
         public IActionResult CourseModeration(int? id)
         {
-            if (id == null) return NotFound();
+            try
+            {
+                if (id == null) return NotFound();
 
-            var course = courseRepository.GetCourseByID(id.Value);
-            var chapterList = chapterRepository.GetChapters();
-            var lessonList = lessonRepository.GetLessons();
-            var categoryList = categoryRepository.GetCategorys();
-            var instructList = instructRepository.GetInstructs();
-            var instructorList = instructorRepository.GetInstructors();
-            System.Console.WriteLine(course.CourseId);
-            if (course == null) return NotFound();
-            ModelsView model = new ModelsView{
-                Course = course,
-                ChaptersList = chapterList.ToList(),
-                LessonsList = lessonList.ToList(),
-                CategoriesList = categoryList.ToList(),
-                InstructsList = instructList.ToList(),
-                InstructorsList = instructorList.ToList()
-            };
-    
-            return View(model);
+                var course = courseRepository.GetCourseByID(id.Value);
+                var chapterList = chapterRepository.GetChapters();
+                var lessonList = lessonRepository.GetLessons();
+                var categoryList = categoryRepository.GetCategorys();
+                var instructList = instructRepository.GetInstructs();
+                var instructorList = instructorRepository.GetInstructors();
+                System.Console.WriteLine(course.CourseId);
+                if (course == null) return NotFound();
+                ModelsView model = new ModelsView
+                {
+                    Course = course,
+                    ChaptersList = chapterList.ToList(),
+                    LessonsList = lessonList.ToList(),
+                    CategoriesList = categoryList.ToList(),
+                    InstructsList = instructList.ToList(),
+                    InstructorsList = instructorList.ToList()
+                };
+                return View(model);
+            }
+            catch (System.Exception)
+            {
+                return View();
+            }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult CourseModeration(int id, ModelsView model)
         {
-            System.Console.WriteLine(model.Course.CourseId);
             try
             {
                 if (id != model.Course.CourseId) return NotFound();
@@ -425,10 +527,12 @@ namespace Project_Group3.Controllers
                 if (ModelState.IsValid)
                 {
                     model.Course.Status = "Active";
-                    if(courseRepository.EditStatus(course.CourseId, model.Course.Status)){
-                        // smtpRepository.sendMail(course.in.Email, "Xác thực tài khoản", "Tài khoản của bạn đã được xác minh");
+                    if (courseRepository.EditStatus(course.CourseId, model.Course.Status))
+                    {
                         return RedirectToAction("Course", "Admin");
-                    }else{
+                    }
+                    else
+                    {
                         return RedirectToAction("Course", "Admin");
                     }
                 }
@@ -443,24 +547,38 @@ namespace Project_Group3.Controllers
 
         public IActionResult Logout()
         {
-            foreach (var cookie in HttpContext.Request.Cookies.Keys)
+            try
             {
-                Response.Cookies.Delete(cookie);
-            }
-            HttpContext.Session.Clear();
+                foreach (var cookie in HttpContext.Request.Cookies.Keys)
+                {
+                    Response.Cookies.Delete(cookie);
+                }
+                HttpContext.Session.Clear();
 
-            return RedirectToAction("Login", "Admin");
+                return RedirectToAction("Login", "Admin");
+            }
+            catch (System.Exception)
+            {
+                return View();
+            }
         }
 
         public IActionResult DeleteInstructor(int? id)
         {
-            if (id == null) return NotFound();
+            try
+            {
+                if (id == null) return NotFound();
 
-            var instructor = instructorRepository.GetInstructorByID(id.Value);
+                var instructor = instructorRepository.GetInstructorByID(id.Value);
 
-            if (instructor == null) return NotFound();
+                if (instructor == null) return NotFound();
 
-            return View(instructor);
+                return View(instructor);
+            }
+            catch (System.Exception)
+            {
+                return View();
+            }
         }
 
         [HttpPost]
@@ -482,13 +600,20 @@ namespace Project_Group3.Controllers
 
         public IActionResult DeleteLearner(int? id)
         {
-            if (id == null) return NotFound();
+            try
+            {
+                if (id == null) return NotFound();
 
-            var learner = learnerRepository.GetLearnerByID(id.Value);
+                var learner = learnerRepository.GetLearnerByID(id.Value);
 
-            if (learner == null) return NotFound();
+                if (learner == null) return NotFound();
 
-            return View(learner);
+                return View(learner);
+            }
+            catch (System.Exception)
+            {
+                return View();
+            }
         }
 
         [HttpPost]
@@ -511,13 +636,20 @@ namespace Project_Group3.Controllers
         [HttpGet]
         public ActionResult DeleteCourse(int? id)
         {
-            if (id == null) return NotFound();
+            try
+            {
+                if (id == null) return NotFound();
 
-            var course = courseRepository.GetCourseByID(id.Value);
+                var course = courseRepository.GetCourseByID(id.Value);
 
-            if (course == null) return NotFound();
+                if (course == null) return NotFound();
 
-            return View(course);
+                return View(course);
+            }
+            catch (System.Exception)
+            {
+                return View();
+            }
         }
 
         [HttpPost]
@@ -534,7 +666,6 @@ namespace Project_Group3.Controllers
                 ViewBag.Message = ex.Message;
                 return View();
             }
-
         }
         public IActionResult Email()
         {

@@ -36,20 +36,27 @@ namespace Project_Group3.Controllers
 
         public IActionResult Login()
         {
-            int? insSession = HttpContext.Session.GetInt32("InsID");
-            int? learnerSession = HttpContext.Session.GetInt32("LearnerID");
-
-            Console.WriteLine($"InsID: {insSession}, LearnerID: {learnerSession}");
-
-            if (insSession != null)
+            try
             {
-                return RedirectToAction("Index", "Home");
+                int? insSession = HttpContext.Session.GetInt32("InsID");
+                int? learnerSession = HttpContext.Session.GetInt32("LearnerID");
+
+                Console.WriteLine($"InsID: {insSession}, LearnerID: {learnerSession}");
+
+                if (insSession != null)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                else if (learnerSession != null)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                else return View();
             }
-            else if (learnerSession != null)
+            catch (System.Exception)
             {
-                return RedirectToAction("Index", "Home");
+                return View();
             }
-            else return View();
         }
 
 
@@ -58,7 +65,6 @@ namespace Project_Group3.Controllers
         {
             try
             {
-
                 if (!ModelState.IsValid) return View(model);
 
                 var instructor = instructorRepository.GetInstructorByEmailOrUser(model.EmailOrUsername);
@@ -67,7 +73,6 @@ namespace Project_Group3.Controllers
 
                 if (instructor != null && instructor.Password == this.GetHashedPassword(model.Password))
                 {
-                    HttpContext.Session.SetInt32("InsID", instructor.InstructorId);
                     if (instructor.Status == "Wait")
                     {
                         ViewBag.err = "The account has not been moderated!!!";
@@ -78,18 +83,17 @@ namespace Project_Group3.Controllers
                         ViewBag.err = "The account no longer exists!!!";
                         return View();
                     }
+                    HttpContext.Session.SetInt32("InsID", instructor.InstructorId);
+                    HttpContext.Session.SetString("username", instructor.Username);
                     Response.Cookies.Append("Role", "instructor");
                     Response.Cookies.Append("Name", instructor.Username);
                     Response.Cookies.Append("ID", instructor.InstructorId.ToString());
                     return RedirectToAction("Index", "Home");
-
                 }
                 else if (learner != null && learner.Password == this.GetHashedPassword(model.Password))
                 {
-                 
                     HttpContext.Session.SetInt32("LearnerID", learner.LearnerId);
-                       Console.WriteLine($"LearnerID: {HttpContext.Session.GetInt32("LearnerID")}");
-                        HttpContext.Session.SetString("Username", learner.Username);
+                    HttpContext.Session.SetString("username", learner.Username);
                     Response.Cookies.Append("Role", "learner");
                     Response.Cookies.Append("Name", learner.Username);
                     Response.Cookies.Append("ID", learner.LearnerId.ToString());
@@ -110,7 +114,7 @@ namespace Project_Group3.Controllers
 
         public IActionResult Register() => View();
 
-     [HttpPost]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Register(RegisterViewModel model, IFormFile picture)
         {
@@ -124,11 +128,13 @@ namespace Project_Group3.Controllers
                 var learnerUsername = learnerRepository.GetLearnerByUser(model.Username);
                 var instructorEmail = instructorRepository.GetInstructorByEmail(model.Email);
                 var instructorUsername = instructorRepository.GetInstructorByUser(model.Username);
-                if(learnerEmail != null  || instructorEmail != null){
+                if (learnerEmail != null || instructorEmail != null)
+                {
                     ViewBag.err = "This Email account already exists";
                     return View(model);
                 }
-                if(learnerUsername != null ||  instructorUsername != null){
+                if (learnerUsername != null || instructorUsername != null)
+                {
                     ViewBag.err = "This Username account already exists";
                     return View(model);
                 }
@@ -137,7 +143,7 @@ namespace Project_Group3.Controllers
                     ViewBag.err = "Your year of birth is not old enough to register";
                     return View(model);
                 }
-                 if (model.Birthday.Year < 1000)
+                if (model.Birthday.Year < 1000)
                 {
                     ViewBag.err = "Year of birth must have at least 4 digits";
                     return View(model);
@@ -155,7 +161,7 @@ namespace Project_Group3.Controllers
                 if (!IsValidEmail(model.Email))
                 {
                     ViewBag.err = "Invalid email address.";
-                return View(model);
+                    return View(model);
                 }
                 if (picture != null && picture.Length > 0)
                 {
@@ -184,15 +190,13 @@ namespace Project_Group3.Controllers
                     Password = this.GetHashedPassword(model.Password),
                     RegistrationDate = DateTime.Now.Date,
                     Status = "Active",
-                    
                     Picture = model.Picture,
                 };
                 learnerRepository.InsertLearner(LearnerModel);
                 ViewBag.UserId = LearnerModel.LearnerId.ToString();
                 ViewBag.Role = "Learner";
                 Response.Cookies.Append("MyCookie", LearnerModel.LearnerId.ToString());
-                // Điều hướng đến trang chính sau khi đăng ký thành công
-                return RedirectToAction("Login", "User", new { id = LearnerModel.LearnerId, role = "Learner" });
+                return RedirectToAction("Login", "User");
             }
             catch (Exception ex)
             {
@@ -201,25 +205,19 @@ namespace Project_Group3.Controllers
             }
         }
 
-        public IActionResult InstructorRegister()
-        {
-            return View();
-        }
+        public IActionResult InstructorRegister() => View();
 
-         private bool IsStrongPassword(string password)
+        private bool IsStrongPassword(string password)
         {
-            // Kiểm tra mật khẩu có ít nhất 8 ký tự, chứa ít nhất một chữ cái và một số
             return Regex.IsMatch(password, @"^(?=.*[A-Za-z])(?=.*\d).{8,}$");
         }
 
         private bool IsValidPhoneNumber(string phoneNumber)
         {
-            // Kiểm tra số điện thoại có đúng định dạng (ví dụ: 10 chữ số) không
             return Regex.IsMatch(phoneNumber, @"^(0)\d{9}$");
         }
         private bool IsValidEmail(string email)
         {
-            // Kiểm tra địa chỉ email có đúng định dạng "tên@gmail.com" không
             return Regex.IsMatch(email, @"^[a-zA-Z0-9._%+-]+@gmail.com$");
         }
 
@@ -230,10 +228,7 @@ namespace Project_Group3.Controllers
         {
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    return View(model);
-                }
+                if (!ModelState.IsValid) return View(model);
 
                 if (string.IsNullOrEmpty(model.Introduce))
                 {
@@ -247,11 +242,13 @@ namespace Project_Group3.Controllers
                 var learnerUsername = learnerRepository.GetLearnerByUser(model.Username);
                 var instructorEmail = instructorRepository.GetInstructorByEmail(model.Email);
                 var instructorUsername = instructorRepository.GetInstructorByUser(model.Username);
-                if(learnerEmail != null  || instructorEmail != null){
+                if (learnerEmail != null || instructorEmail != null)
+                {
                     ViewBag.err = "This Email account already exists";
                     return View(model);
                 }
-                if(learnerUsername != null ||  instructorUsername != null){
+                if (learnerUsername != null || instructorUsername != null)
+                {
                     ViewBag.err = "This Username account already exists";
                     return View(model);
                 }
@@ -261,7 +258,7 @@ namespace Project_Group3.Controllers
                     ViewBag.err = "Your year of birth is not old enough to register";
                     return View(model);
                 }
-                 if (model.Birthday.Year < 1000)
+                if (model.Birthday.Year < 1000)
                 {
                     ViewBag.err = "Year of birth must have at least 4 digits";
                     return View(model);
@@ -279,7 +276,7 @@ namespace Project_Group3.Controllers
                 if (!IsValidEmail(model.Email))
                 {
                     ViewBag.err = "Invalid email address.";
-                return View(model);
+                    return View(model);
                 }
                 if (picture != null && picture.Length > 0)
                 {
@@ -317,12 +314,10 @@ namespace Project_Group3.Controllers
                 ViewBag.UserId = instructorModel.InstructorId;
                 ViewBag.Role = "Learner";
                 Response.Cookies.Append("MyCookie", instructorModel.InstructorId.ToString());
-                // Điều hướng đến trang chính sau khi đăng ký thành công
-                return RedirectToAction("Login", "User", new { id = instructorModel.InstructorId, role = "Instructor" });
+                return RedirectToAction("Login", "User");
             }
             catch (Exception ex)
             {
-                // Xử lý lỗi nếu có
                 ViewBag.err = "Đã xảy ra lỗi khi đăng ký: " + ex.Message;
                 return View(model);
             }
@@ -330,13 +325,20 @@ namespace Project_Group3.Controllers
 
         public IActionResult Logout()
         {
-            foreach (var cookie in HttpContext.Request.Cookies.Keys)
+            try
             {
-                Response.Cookies.Delete(cookie);
-            }
-            HttpContext.Session.Clear();
+                foreach (var cookie in HttpContext.Request.Cookies.Keys)
+                {
+                    Response.Cookies.Delete(cookie);
+                }
+                HttpContext.Session.Clear();
 
-            return RedirectToAction("Login", "User");
+                return RedirectToAction("Login", "User");
+            }
+            catch (System.Exception)
+            {
+                return View();
+            }
         }
 
         public int Random()
@@ -352,28 +354,42 @@ namespace Project_Group3.Controllers
 
         public IActionResult otp(string email)
         {
-            int random = Random();
+            try
+            {
+                int random = Random();
 
-            System.Console.WriteLine(random);
+                System.Console.WriteLine(random);
 
-            string tmpEmail = HttpContext.Session.GetString("email");
+                string tmpEmail = HttpContext.Session.GetString("email");
 
-            if (!string.IsNullOrEmpty(tmpEmail)) smtpRepository.sendMail(tmpEmail, "Mã xác thực OTP", $"Mã xác thực OTP của bạn là: [{random}], tuyệt đối không chia sẻ mã này cho người khác!");
+                if (!string.IsNullOrEmpty(tmpEmail)) smtpRepository.sendMail(tmpEmail, "Mã xác thực OTP", $"Mã xác thực OTP của bạn là: [{random}], tuyệt đối không chia sẻ mã này cho người khác!");
 
-            else return RedirectToAction("CheckEmail");
+                else return RedirectToAction("CheckEmail");
 
-            return View(email);
+                return View(email);
+            }
+            catch (System.Exception)
+            {
+                return View();
+            }
         }
 
 
         [HttpPost]
         public IActionResult otp(int otp, int otp1, int otp2, int otp3, int otp4)
         {
-            int otpValue = otp * 10000 + otp1 * 1000 + otp2 * 100 + otp3 * 10 + otp4;
+            try
+            {
+                int otpValue = otp * 10000 + otp1 * 1000 + otp2 * 100 + otp3 * 10 + otp4;
 
-            if (HttpContext.Session.GetInt32("otp") == otpValue) return View("ResetPassword");
+                if (HttpContext.Session.GetInt32("otp") == otpValue) return View("ResetPassword");
 
-            return View();
+                return View();
+            }
+            catch (System.Exception)
+            {
+                return View();
+            }
         }
 
         public IActionResult CheckEmail() => View();
@@ -427,7 +443,7 @@ namespace Project_Group3.Controllers
             }
             catch (System.Exception)
             {
-                throw;
+                return View();
             }
         }
 
@@ -464,22 +480,29 @@ namespace Project_Group3.Controllers
             }
             catch (System.Exception)
             {
-                throw;
+                return View();
             }
         }
 
         private string GetHashedPassword(string password)
         {
-            using (MD5 md5 = MD5.Create())
+            try
             {
-                byte[] hashBytes = md5.ComputeHash(Encoding.UTF8.GetBytes(password));
-                StringBuilder sb = new StringBuilder();
-
-                for (int i = 0; i < hashBytes.Length; i++)
+                using (MD5 md5 = MD5.Create())
                 {
-                    sb.Append(hashBytes[i].ToString("x2"));
+                    byte[] hashBytes = md5.ComputeHash(Encoding.UTF8.GetBytes(password));
+                    StringBuilder sb = new StringBuilder();
+
+                    for (int i = 0; i < hashBytes.Length; i++)
+                    {
+                        sb.Append(hashBytes[i].ToString("x2"));
+                    }
+                    return sb.ToString();
                 }
-                return sb.ToString();
+            }
+            catch (System.Exception)
+            {
+                throw;
             }
         }
     }
