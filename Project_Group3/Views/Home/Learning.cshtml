@@ -32,7 +32,7 @@ IEnumerable<WebLibrary.Models.Lesson>>
                         @{
                             var course = ViewBag.Course;
                         }
-            
+
                 </li>
             </ul>
         </div>
@@ -89,7 +89,7 @@ IEnumerable<WebLibrary.Models.Lesson>>
                     <a class="btn btn-primary mb-2 float-right"
                         href="@Url.Action("Test", "Quiz", new { lessonId = Model.Item2.LessonId, chapterId = chapterID, courseId = ViewBag.CourseID})">QuizTest</a>
 
-                  
+
                 }
                 else
                 {
