@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Project_Group3.Models;
-using WebLibrary.DAO;
 using WebLibrary.Models;
 using WebLibrary.Repository;
 
@@ -28,7 +24,7 @@ namespace Project_Group3.Controllers
         ISmtpRepository smtpRepository = null;
         ICourseProgressRepository courseProgressRepository = null;
         IChapterProgressRepository chapterProgressRepository = null;
-        // ILessonProgressRepository lessonProgressRepository = null;
+        ILessonProgressRepository lessonProgressRepository = null;
 
         public HomeController()
         {
@@ -45,6 +41,7 @@ namespace Project_Group3.Controllers
             smtpRepository = new StmpRepository();
             courseProgressRepository = new CourseProgressRepository();
             chapterProgressRepository = new ChapterProgressRepository();
+            lessonProgressRepository = new LessonProgressRepository();
         }
 
 
@@ -79,7 +76,6 @@ namespace Project_Group3.Controllers
                 courseList = courseList.Where(c => c.CourseName.ToLower().Contains(lowercaseSearch)).ToList();
                 ViewBag.search = search;
             }
-
             return View(Tuple.Create(courseList, categoryList, instructList, instructorList, reviewList, enrollment));
         }
 
@@ -109,7 +105,10 @@ namespace Project_Group3.Controllers
 
             ViewBag.Role = "instructor";
 
-            ModelsView modelsView = new ModelsView { Instructor = instructor };
+            ModelsView modelsView = new ModelsView
+            {
+                Instructor = instructor,
+            };
 
             return View(modelsView);
         }
@@ -120,7 +119,6 @@ namespace Project_Group3.Controllers
         {
             try
             {
-
                 if (id != models.Instructor.InstructorId)
                 {
                     System.Console.WriteLine(id + " " + models.Instructor.InstructorId);
@@ -128,6 +126,19 @@ namespace Project_Group3.Controllers
                 }
                 if (ModelState.IsValid)
                 {
+                    if (picture != null && picture.Length > 0)
+                    {
+                        var urlRelative = "/img/avatars/";
+                        var urlAbsolute = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "avatars");
+                        var fileName = Guid.NewGuid() + Path.GetExtension(picture.FileName);
+                        var filePath = Path.Combine(urlAbsolute, fileName);
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            picture.CopyTo(stream);
+                        }
+                        models.Instructor.Picture = Path.Combine(urlRelative, fileName);
+                    }
                     instructorRepository.UpdateInstructor(models.Instructor);
                 }
                 return RedirectToAction("InstructorProfile", "Home", new { id = models.Instructor.InstructorId });
@@ -156,12 +167,13 @@ namespace Project_Group3.Controllers
                 Learner = learner,
                 EnrollmentList = enrollment.ToList(),
             };
+
             return View(modelsView);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult LearnerProfile(int id, ModelsView models)
+        public ActionResult LearnerProfile(int id, ModelsView models, IFormFile picture)
         {
             try
             {
@@ -170,10 +182,25 @@ namespace Project_Group3.Controllers
                     System.Console.WriteLine(id + " " + models.Learner.LearnerId);
                     return NotFound();
                 }
+
                 if (ModelState.IsValid)
                 {
+                    if (picture != null && picture.Length > 0)
+                    {
+                        var urlRelative = "/img/avatars/";
+                        var urlAbsolute = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "avatars");
+                        var fileName = Guid.NewGuid() + Path.GetExtension(picture.FileName);
+                        var filePath = Path.Combine(urlAbsolute, fileName);
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            picture.CopyTo(stream);
+                        }
+                        models.Learner.Picture = Path.Combine(urlRelative, fileName);
+                    }
                     learnerRepository.UpdateLearner(models.Learner);
                 }
+
                 return RedirectToAction("LearnerProfile", "Home", new { id = models.Learner.LearnerId });
             }
             catch (Exception ex)
@@ -210,6 +237,7 @@ namespace Project_Group3.Controllers
                 {
                     Response.Cookies.Delete(cookie);
                 }
+
                 HttpContext.Session.Clear();
 
                 return RedirectToAction("Login", "User");
@@ -269,12 +297,11 @@ namespace Project_Group3.Controllers
             try
             {
                 var learner = learnerRepository.GetLearnerByID(id);
-                if (learner == null)
-                {
-                    return NotFound();
-                }
+
+                if (learner == null) return NotFound();
 
                 learner.Status = "Delete";
+
                 learnerRepository.UpdateLearner(learner);
 
                 return RedirectToAction("Instructor", "Admin");
@@ -302,36 +329,102 @@ namespace Project_Group3.Controllers
             var chapter = chapterRepository.GetChapters();
             var lesson = lessonRepository.GetLessons();
             var enrollment = enrollmentRepository.GetEnrollment();
+
             var courseInfo = course.FirstOrDefault(c => c.CourseId == instruct.CourseId);
             var instructorInfo = instructor.FirstOrDefault(i => i.InstructorId == instruct.InstructorId);
-
             ViewBag.CourseID = id;
-
             return View(Tuple.Create(courseInfo, instructorInfo, review, learner, chapter, lesson, enrollment));
         }
 
         public IActionResult Learning(int lessonId, int chapterId, int courseId)
         {
+            var cookieValue = Request.Cookies["ID"];
+            var learnerId = Convert.ToInt32(cookieValue);
+            var courseProgress = courseProgressRepository.GetCourseProgressByLearnerAndCourse(learnerId, courseId);
+            if (courseProgress == null)
+            {
+                courseProgress = new CourseProgress
+                {
+                    LearnerId = learnerId,
+                    CourseId = courseId,
+                    Completed = false,
+                    ProgressPercent = 0,
+                    Rated = false,
+                    TotalTime = 0,
+                    StartAt = DateTime.Now
+                };
+                courseProgressRepository.InsertCourseProgress(courseProgress);
+            }
+
+            var chapterProgress = chapterProgressRepository.GetChapterProgressByChapterAndCourseProgress(chapterId, courseProgress.CourseProgressId);
+            if (chapterProgress == null)
+            {
+                chapterProgress = new ChapterProgress
+                {
+                    ChapterId = chapterId,
+                    CourseProgressId = courseProgress.CourseProgressId,
+                    Completed = false,
+                    ProgressPercent = 0,
+                    TotalTime = 0,
+                    StartAt = DateTime.Now
+                };
+                chapterProgressRepository.InsertChapterProgress(chapterProgress);
+            }
+
+            var lessonProgress = lessonProgressRepository.GetLessonProgressByLessonAndChapter(lessonId, chapterId, learnerId);
+            if (lessonProgress == null)
+            {
+                lessonProgress = new LessonProgress
+                {
+                    LearnerId = learnerId,
+                    LessonId = lessonId,
+                    ChapterId = chapterId,
+                    Completed = false,
+                    StartAt = DateTime.Now
+                };
+                lessonProgressRepository.InsertLessonProgress(lessonProgress);
+            }
+
             var course = courseRepository.GetCourseByID(courseId);
             var chapter = chapterRepository.GetChapterByID(chapterId);
             var lesson = lessonRepository.GetLessonByID(lessonId);
             var chapterList = chapterRepository.GetChapters();
             var lessonList = lessonRepository.GetLessons();
-            var courseProgress = courseProgressRepository.GetCourseProgresss();
-            var chapterProgress = chapterProgressRepository.GetChapterProgresss();
-
+            var learner = learnerRepository.GetLearners();
+            ViewBag.TimeLesson = lesson.Time;
+            ViewBag.Course = course;
             ViewBag.CourseName = course.CourseName;
-            ViewBag.Course = courseRepository.GetCourseByID(courseId);
+            ViewBag.CourseID = course.CourseId;
+            ViewBag.ChapterID = chapter.ChapterId;
+            ViewBag.LessonID = lesson.LessonId;
 
-            return View(Tuple.Create(chapter, lesson, courseProgress, chapterProgress, chapterList, lessonList));
+            return View(Tuple.Create(chapter, lesson, courseProgress, chapterProgress, lessonProgress, chapterList, lessonList));
         }
 
         public IActionResult CheckOut(int? id)
         {
             var learner = learnerRepository.GetLearnerByID(id.Value);
+
             return View(learner);
         }
 
         public IActionResult QA() => View();
+
+        [HttpPost]
+        public ActionResult UpdateCheckValue(int lessonId, int chapterId, int courseId)
+        {
+            int learnerId = int.Parse(Request.Cookies["ID"]);
+            var course = courseRepository.GetCourseByID(courseId);
+            var chapter = chapterRepository.GetChapterByID(chapterId);
+            var lesson = lessonRepository.GetLessonByID(lessonId);
+            var lessonProgress = lessonProgressRepository.GetLessonProgressByLessonAndChapter(lessonId, chapterId, courseId);
+            var courseProgress = courseProgressRepository.GetCourseProgressByLearnerAndCourse(learnerId, courseId);
+            var chapterProgress = chapterProgressRepository.GetChapterProgressByChapterAndCourseProgress(chapterId, courseProgress.CourseProgressId);
+
+            lessonProgress.Completed = true;
+            lessonProgressRepository.InsertLessonProgress(lessonProgress);
+
+            return Content("success");
+        }
     }
 }

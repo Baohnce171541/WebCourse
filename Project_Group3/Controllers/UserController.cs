@@ -22,6 +22,7 @@ namespace Project_Group3.Controllers
         ILearnerRepository learnerRepository = null;
         IAdminRepository adminRepository = null;
         ISmtpRepository smtpRepository = null;
+
         private string tmpEmail;
         public UserController()
         {
@@ -46,10 +47,7 @@ namespace Project_Group3.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
-            else
-            {
-                return View();
-            }
+            else return View();
         }
 
 
@@ -64,7 +62,6 @@ namespace Project_Group3.Controllers
                 var instructor = instructorRepository.GetInstructorByEmailOrUser(model.EmailOrUsername);
 
                 var learner = learnerRepository.GetLearnerByEmailOrUser(model.EmailOrUsername);
-
 
                 if (instructor != null && instructor.Password == model.Password)
                 {
@@ -107,11 +104,7 @@ namespace Project_Group3.Controllers
             }
         }
 
-
-        public IActionResult Register()
-        {
-            return View();
-        }
+        public IActionResult Register() => View();
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -122,7 +115,7 @@ namespace Project_Group3.Controllers
                 if (!ModelState.IsValid) return View(model);
 
                 DateTime currentDate = DateTime.Now;
-                DateTime minimumBirthDate = currentDate.AddYears(-18); // Ngày sinh tối thiểu để đủ 18 tuổi
+                DateTime minimumBirthDate = currentDate.AddYears(-18); 
 
                 if (model.Birthday >= minimumBirthDate)
                 {
@@ -371,7 +364,6 @@ namespace Project_Group3.Controllers
                 {
                     sb.Append(hashBytes[i].ToString("x2"));
                 }
-
                 return sb.ToString();
             }
         }

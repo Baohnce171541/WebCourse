@@ -9,14 +9,15 @@ using WebLibrary.Models;
 using WebLibrary.Repository;
 namespace Project_Group3.Controllers
 {
-
     public class LearnerController : Controller
     {
         ILearnerRepository learnerRepository = null;
+
         public LearnerController()
         {
             learnerRepository = new LearnerRepository();
         }
+
         public IActionResult Index(string search = "", int page = 1, int pageSize = 2)
         {
             var learnerList = learnerRepository.GetLearners();
@@ -48,9 +49,9 @@ namespace Project_Group3.Controllers
 
             return View(Learner);
         }
-        //Get Learnercontroller/Create  
+
         public ActionResult Create() => View();
-        //Post: Learnercontroller/ Create
+       
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(Learner Learner)
