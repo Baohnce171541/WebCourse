@@ -62,82 +62,90 @@ namespace Project_Group3.Controllers
             return View(Lesson);
         }
 
-        public ActionResult Create(int chapterId, int courseId)
-        {
-            var chapter = chapterRepository.GetChapterByID(chapterId);
-            var course = courseRepository.GetCourseByID(courseId);
-            ViewBag.ChapterId = chapterId;
-            ViewBag.CourseId = courseId;
-
-            ViewBag.ChapterName = chapter.ChapterName;
-            ViewBag.CourseName = course.CourseName;
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(Lesson lesson, int chapterId, int courseId, IFormFile video)
-        {
-            try
+            public ActionResult Create(int chapterId, int courseId)
             {
-                if (ModelState.IsValid)
+                var chapter = chapterRepository.GetChapterByID(chapterId);
+                var course = courseRepository.GetCourseByID(courseId);
+                ViewBag.ChapterId = chapterId;
+                ViewBag.CourseId = courseId;
+
+                ViewBag.ChapterName = chapter.ChapterName;
+                ViewBag.CourseName = course.CourseName;
+                // Lấy danh sách các index của existing lessons từ repository hoặc nguồn dữ liệu tương ứng.
+    var existingLessonIndexes = lessonRepository.GetLessons()
+        .Where(l => l.ChapterId == chapterId)
+        .Select(l => l.Index)
+        .OrderBy(index => index) // Sắp xếp theo thứ tự tăng dần index
+        .ToList();
+    // Đưa danh sách các index của existing lessons vào ViewBag.
+    ViewBag.ExistingLessonIndexes = existingLessonIndexes;
+                return View();
+            }
+
+            [HttpPost]
+            [ValidateAntiForgeryToken]
+            public ActionResult Create(Lesson lesson, int chapterId, int courseId, IFormFile video)
+            {
+                try
                 {
-                    if (!string.IsNullOrEmpty(lesson.LessonName))
+                    if (ModelState.IsValid)
                     {
-                        if (!string.IsNullOrEmpty(lesson.Description))
+                        if (!string.IsNullOrEmpty(lesson.LessonName))
                         {
-                            if (lesson.Index.HasValue && lesson.Index.Value > 0)
+                            if (!string.IsNullOrEmpty(lesson.Description))
                             {
-                                if (video == null || video.Length == 0)
+                                if (lesson.Index.HasValue && lesson.Index.Value > 0)
                                 {
-                                    ModelState.AddModelError("Video", "Video is required.");
-                                }
-
-                                if (ModelState.IsValid)
-                                {
-                                    var urlRelative = "/video/";
-                                    var urlAbsolute = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "video");
-                                    var fileName = Guid.NewGuid() + Path.GetExtension(video.FileName);
-                                    var filePath = Path.Combine(urlAbsolute, fileName);
-
-                                    using (var stream = new FileStream(filePath, FileMode.Create))
+                                    if (video == null || video.Length == 0)
                                     {
-                                        video.CopyTo(stream);
+                                        ModelState.AddModelError("Video", "Video is required.");
                                     }
 
-                                    lesson.Content = Path.Combine(urlRelative, fileName);
-                                    lessonRepository.InsertLesson(lesson);
+                                    if (ModelState.IsValid)
+                                    {
+                                        var urlRelative = "/video/";
+                                        var urlAbsolute = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "video");
+                                        var fileName = Guid.NewGuid() + Path.GetExtension(video.FileName);
+                                        var filePath = Path.Combine(urlAbsolute, fileName);
 
-                                    return RedirectToAction("Index", new { chapterId = chapterId, courseId = courseId });
+                                        using (var stream = new FileStream(filePath, FileMode.Create))
+                                        {
+                                            video.CopyTo(stream);
+                                        }
+
+                                        lesson.Content = Path.Combine(urlRelative, fileName);
+                                        lessonRepository.InsertLesson(lesson);
+
+                                        return RedirectToAction("Index", new { chapterId = chapterId, courseId = courseId });
+                                    }
+                                }
+                                else
+                                {
+                                    ModelState.AddModelError("Index", "Index must be a positive value.");
                                 }
                             }
                             else
                             {
-                                ModelState.AddModelError("Index", "Index must be a positive value.");
+                                ModelState.AddModelError("Description", "Description is required.");
                             }
                         }
                         else
                         {
-                            ModelState.AddModelError("Description", "Description is required.");
+                            ModelState.AddModelError("LessonName", "LessonName is required.");
                         }
                     }
-                    else
-                    {
-                        ModelState.AddModelError("LessonName", "LessonName is required.");
-                    }
                 }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("An error occurred: " + ex.Message);
+                    ViewBag.Message = ex.Message;
+                }
+                var chapter = chapterRepository.GetChapterByID(chapterId);
+                ViewBag.ChapterId = chapterId;
+                ViewBag.CourseId = courseId;
+                ViewBag.ChapterName = chapter.ChapterName;
+                return View(lesson);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: " + ex.Message);
-                ViewBag.Message = ex.Message;
-            }
-            var chapter = chapterRepository.GetChapterByID(chapterId);
-            ViewBag.ChapterId = chapterId;
-            ViewBag.CourseId = courseId;
-            ViewBag.ChapterName = chapter.ChapterName;
-            return View(lesson);
-        }
 
 
 

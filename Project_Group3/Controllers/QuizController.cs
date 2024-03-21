@@ -19,7 +19,8 @@ namespace Project_Group3.Controllers
         ICourseRepository courseRepository = null;
         ILessonRepository lessonRepository = null;
         ILessonProgressRepository lessonProgressRepository = null;
-
+        ILearnerRepository learnerRepository = null;
+        ISmtpRepository smtpRepository = null;
         public QuizController()
         {
             quizRepository = new QuizRepository();
@@ -28,6 +29,8 @@ namespace Project_Group3.Controllers
             courseRepository = new CourseRepository();
             lessonRepository = new LessonRepository();
             lessonProgressRepository = new LessonProgressRepository();
+            learnerRepository = new LearnerRepository();
+            smtpRepository = new StmpRepository();
         }
 
 
@@ -127,7 +130,7 @@ namespace Project_Group3.Controllers
             var allQuizzes = quizRepository.GetQuizzes();
             var chapter = chapterRepository.GetChapterByID(chapterId);
             var course = courseRepository.GetCourseByID(courseId);
-           ViewBag.LessonId = lessonId;
+            ViewBag.LessonId = lessonId;
             var answerList = answerRepository.GetAnswers();
             var quizList = allQuizzes.Where(q => q.ChapterId == chapterId && q.CourseId == courseId);
 
@@ -177,23 +180,25 @@ namespace Project_Group3.Controllers
             var quizList = model.Quiz;
             int correctCount = 0;
             int wrongCount = 0;
- ViewBag.LessonId = lessonId;
-              foreach (var quiz in quizList)
-    {
-        var selectedAnswerId = quiz.AnswerId;
-        var correctAnswerId = quizRepository.GetQuizByID(quiz.QuizId)?.AnswerId;
-        quiz.IsCorrect = selectedAnswerId == correctAnswerId;
+            ViewBag.LessonId = lessonId;
 
-        if (quiz.IsCorrect.HasValue && quiz.IsCorrect.Value)
-        {
-            correctCount++;
-        }
-        else
-        {
-            wrongCount++;
-        }
-    }
-      model.UserCanSelectAnswer = false;
+            foreach (var quiz in quizList)
+            {
+                var selectedAnswerId = quiz.AnswerId;
+                var correctAnswerId = quizRepository.GetQuizByID(quiz.QuizId)?.AnswerId;
+                quiz.IsCorrect = selectedAnswerId == correctAnswerId;
+
+                if (quiz.IsCorrect.HasValue && quiz.IsCorrect.Value)
+                {
+                    correctCount++;
+                }
+                else
+                {
+                    wrongCount++;
+                }
+            }
+
+            model.UserCanSelectAnswer = false;
             var result = new QuizResultViewModel
             {
                 CorrectCount = correctCount,
@@ -202,12 +207,10 @@ namespace Project_Group3.Controllers
                 Course = course,
                 QuizList = quizList,
             };
-
             return ProcessPostResult(result);
         }
       public IActionResult ProcessPostResult(QuizResultViewModel model)
 {
-
     var chapters = chapterRepository.GetChapters()
         .Where(c => c.CourseId == model.Course.CourseId)
         .OrderBy(c => c.Index)
@@ -219,7 +222,7 @@ namespace Project_Group3.Controllers
     {
         if (currentChapterIndex == chapters.Count - 1)
         {
-            TempData["CompletedCourse"] = true;
+            // Scenario 1: No more lessons in the current chapter
             return RedirectToAction("CourseDetail", "Home", new { Id = model.Course.CourseId });
         }
         else if (currentChapterIndex != -1 && currentChapterIndex < chapters.Count - 1)
@@ -227,17 +230,44 @@ namespace Project_Group3.Controllers
             var nextChapter = chapters[currentChapterIndex + 1];
             var firstLessonOfNextChapter = lessonRepository.GetLessons()
                 .FirstOrDefault(l => l.ChapterId == nextChapter.ChapterId);
-
+            string learnerId = HttpContext.Session.GetString("Username");
+            System.Console.WriteLine($"learnerId = {learnerId}");
+            var learner = learnerRepository.GetLearnerByUser(learnerId);
+            smtpRepository.sendMail(learner.Email, $"You have successfully complete chapter{model.Chapter.ChapterName} ", "Thank you for your kind words! I'm glad to hear that our efforts are contributing to the improvement of teaching quality. Continuous efforts and dedication are key to achieving positive outcomes in any endeavor, including education. If you have any specific questions or need further assistance, feel free to ask.");
+            System.Console.WriteLine(model.Chapter.ChapterName);
             if (firstLessonOfNextChapter != null)
-{
+            {
+                // Scenario 2: Next chapter has lessons
                 return RedirectToAction("Learning", "Home", new { courseId = model.Course.CourseId, chapterId = nextChapter.ChapterId, lessonId = firstLessonOfNextChapter.LessonId });
+            }
+            else
+            {
+                // Scenario 3: Next chapter has only a test (no lessons)
+                var nextChapterTest = quizRepository.GetQuizzes().FirstOrDefault(q => q.ChapterId == nextChapter.ChapterId);
+                if (nextChapterTest != null)
+                {
+                    return RedirectToAction("Test", "Quiz", new
+                    {
+                        chapterId = nextChapter.ChapterId,
+                        courseId = model.Course.CourseId,
+                        lessonId = lessonId,
+                        numberOfQuestions = nextChapterTest.QuizId, // Số lượng câu hỏi của bài test
+                        correctCount = model.CorrectCount,
+                        totalCount = model.CorrectCount + model.WrongCount,
+                    });
+                }
+                else
+                {
+                    // Scenario 4: Next chapter has neither lessons nor test
+                    return RedirectToAction("CourseDetail", "Home", new { Id = model.Course.CourseId });
+                }
             }
         }
     }
-    else
 
-        ViewBag.WrongAnswerMessage = "Bạn có một số câu trả lời sai. Vui lòng làm lại bài test.";
-  return RedirectToAction("Test", "Quiz", new
+    // Default scenario: Incorrect answers
+    ViewBag.WrongAnswerMessage = "Bạn có một số câu trả lời sai. Vui lòng làm lại bài test.";
+    return RedirectToAction("Test", "Quiz", new
     {
         chapterId = model.Chapter.ChapterId,
         courseId = model.Course.CourseId,
@@ -247,6 +277,7 @@ namespace Project_Group3.Controllers
         totalCount = model.CorrectCount + model.WrongCount,
     });
 }
+
         public ActionResult Edit(int? id)
         {
             if (id == null) return NotFound();

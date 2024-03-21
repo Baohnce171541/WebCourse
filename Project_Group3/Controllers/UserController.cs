@@ -86,8 +86,10 @@ namespace Project_Group3.Controllers
                 }
                 else if (learner != null && learner.Password == this.GetHashedPassword(model.Password))
                 {
-                    Console.WriteLine($"LearnerID: {HttpContext.Session.GetInt32("LearnerID")}");
+                 
                     HttpContext.Session.SetInt32("LearnerID", learner.LearnerId);
+                       Console.WriteLine($"LearnerID: {HttpContext.Session.GetInt32("LearnerID")}");
+                        HttpContext.Session.SetString("Username", learner.Username);
                     Response.Cookies.Append("Role", "learner");
                     Response.Cookies.Append("Name", learner.Username);
                     Response.Cookies.Append("ID", learner.LearnerId.ToString());

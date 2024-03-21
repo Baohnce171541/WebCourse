@@ -79,29 +79,31 @@ namespace Project_Group3.Controllers
             return View(Chapter);
         }
 
-        public ActionResult Create(int courseId)
-        {
-            var course = courseRepository.GetCourseByID(courseId);
-            ViewBag.CourseId = courseId;
-            if (course == null)
-            {
-                ViewBag.CourseId = courseId;
-                ViewBag.CourseName = "Unknown Course";
-            }
-            else
-            {
-                ViewBag.CourseId = courseId;
-                if (string.IsNullOrEmpty(course.CourseName))
-                {
-                    ViewBag.CourseName = "Unknown Course";
-                }
-                else
-                {
-                    ViewBag.CourseName = course.CourseName;
-                }
-            }
-            return View();
-        }
+   public ActionResult Create(int courseId)
+{
+    var course = courseRepository.GetCourseByID(courseId);
+    ViewBag.CourseId = courseId;
+
+    if (course == null)
+    {
+        ViewBag.CourseName = "Unknown Course";
+    }
+    else
+    {
+        ViewBag.CourseName = string.IsNullOrEmpty(course.CourseName) ? "Unknown Course" : course.CourseName;
+    }
+
+    // Lấy danh sách các index của chương đã tồn tại cho khóa học này
+   var existingChapters = chapterRepository.GetChapters()
+    .Where(c => c.CourseId == courseId)
+    .Select(c => c.Index)
+    .OrderBy(index => index) // Sắp xếp theo thứ tự tăng dần index
+    .ToList();
+ViewBag.ExistingChapterIndexes = existingChapters;
+
+    return View();
+}
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
