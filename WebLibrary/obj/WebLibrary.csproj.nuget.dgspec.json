@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "E:\\2024\\SP24\\SWT\\WebCourse\\WebLibrary\\WebLibrary.csproj": {}
+    "D:\\SWP\\WebLibrary\\WebLibrary.csproj": {}
   },
   "projects": {
-    "E:\\2024\\SP24\\SWT\\WebCourse\\WebLibrary\\WebLibrary.csproj": {
+    "D:\\SWP\\WebLibrary\\WebLibrary.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\2024\\SP24\\SWT\\WebCourse\\WebLibrary\\WebLibrary.csproj",
+        "projectUniqueName": "D:\\SWP\\WebLibrary\\WebLibrary.csproj",
         "projectName": "WebLibrary",
-        "projectPath": "E:\\2024\\SP24\\SWT\\WebCourse\\WebLibrary\\WebLibrary.csproj",
-        "packagesPath": "C:\\Users\\ACER\\.nuget\\packages\\",
-        "outputPath": "E:\\2024\\SP24\\SWT\\WebCourse\\WebLibrary\\obj\\",
+        "projectPath": "D:\\SWP\\WebLibrary\\WebLibrary.csproj",
+        "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
+        "outputPath": "D:\\SWP\\WebLibrary\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\ACER\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -34,11 +38,6 @@
           "warnAsError": [
             "NU1605"
           ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -82,7 +81,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.103\\RuntimeIdentifierGraph.json"
         }
       }
     }

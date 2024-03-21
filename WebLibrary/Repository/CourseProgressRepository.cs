@@ -14,5 +14,6 @@ namespace WebLibrary.Repository
         public void InsertCourseProgress(CourseProgress CourseProgress) => CourseProgressDAO.Instance.AddNew(CourseProgress);
         public void DeleteCourseProgress(int CourseProgressId) => CourseProgressDAO.Instance.Remove(CourseProgressId);
         public void UpdateCourseProgress(CourseProgress CourseProgress) => CourseProgressDAO.Instance.Update(CourseProgress);
+        public CourseProgress GetCourseProgressByLearnerAndCourse(int learnerId, int courseId) => CourseProgressDAO.Instance.GetCourseProgressByLearnerAndCourse(learnerId, courseId);
     }
 }

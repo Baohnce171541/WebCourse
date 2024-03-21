@@ -60,3 +60,4 @@ E:\2024\SP24\SWT\WebCourse\WebLibrary\obj\Debug\net5.0\refint\WebLibrary.dll
 E:\2024\SP24\SWT\WebCourse\WebLibrary\obj\Debug\net5.0\WebLibrary.pdb
 E:\2024\SP24\SWT\WebCourse\WebLibrary\obj\Debug\net5.0\WebLibrary.genruntimeconfig.cache
 E:\2024\SP24\SWT\WebCourse\WebLibrary\obj\Debug\net5.0\ref\WebLibrary.dll
+D:\SWP\WebLibrary\obj\Debug\net5.0\WebLibrary.sourcelink.json
