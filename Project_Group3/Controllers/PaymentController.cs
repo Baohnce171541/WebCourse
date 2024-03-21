@@ -156,7 +156,6 @@ namespace Project_Group3.Controllers
                         Fullname = paymentViewModel.learnerName,
                         OrderId = new Random().Next(1000, 100000)
                     };
-
                     return Redirect(_vnpayService.CreatePaymentUrl(HttpContext, VnpayModel));
                 }
             }

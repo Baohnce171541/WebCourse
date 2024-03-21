@@ -43,7 +43,7 @@
             </div>
             < <button type="submit" class="btn btn-success">Create Chapter</button>
             <button type="submit" class="btn btn-primary" name="redirectToCreateLesson" value="true">Add and Create Lesson</button>
-            <a href="@Url.Action("Index", "Course", new {id = @idInstructor})" class="btn btn-secondary">Cancel</a> 
+            <a href="@Url.Action("Index", "Chapter", new {courseId = @ViewBag.CourseId})" class="btn btn-secondary">Cancel</a> 
         </form>
     </div>
 </div>

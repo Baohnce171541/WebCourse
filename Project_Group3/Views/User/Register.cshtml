@@ -24,12 +24,14 @@
                                     <div class="form-group">
                                         <label asp-for="FirstName" class="text-theme font-weight-bold"></label>
                                         <input asp-for="FirstName" class="form-control" style="width: 80%;" />
+                                          <span asp-validation-for="FirstName" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="mb-1 col-md-6">
                                     <div class="form-group">
                                         <label asp-for="LastName" class="text-theme font-weight-bold"></label>
                                         <input asp-for="LastName" class="form-control" style="width: 80%;" />
+                                             <span asp-validation-for="LastName" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="mb-1 col-md-6">
@@ -41,24 +43,28 @@
                                             <option value="Female">Female</option>
                                             <option value="Other">Other</option>
                                     </select>
+                                         <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="mb-1 col-md-6">
                                     <div class="form-group">
                                         <label asp-for="Email" class="text-theme font-weight-bold"></label>
                                         <input asp-for="Email" class="form-control" style="width: 80%;" />
+                                           <span asp-validation-for="Email" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="mb-1 col-md-6">
                                     <div class="form-group">
                                         <label asp-for="PhoneNumber" class="text-theme font-weight-bold"></label>
                                         <input asp-for="PhoneNumber" class="form-control" style="width: 80%;" />
+                                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="mb-1 col-md-6">
                                     <div class="form-group">
                                         <label asp-for="Birthday" class="text-theme font-weight-bold"></label>
                                         <input asp-for="Birthday" type="date" class="form-control" style="width: 80%;" />
+                                        <span asp-validation-for="Birthday" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="mb-1 col-md-6">
@@ -71,6 +77,7 @@
                                         <option value="America">America</option>
                                         <option value="England">England</option>
                                         </select>
+                                                <span asp-validation-for="Country" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="mb-1 col-md-6">
@@ -84,7 +91,7 @@
                                     <div class="form-group">
                                         <label asp-for="Password" class="text-theme font-weight-bold"></label>
                                         <input asp-for="Password" class="form-control" style="width: 80%;" />
-                                        <span asp-validation-for="Username" class="text-danger"></span>
+                                        <span asp-validation-for="Password" class="text-danger"></span>
                                     </div>
                                 </div>
 

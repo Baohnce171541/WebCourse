@@ -12,8 +12,8 @@ namespace Project_Group3.Controllers
 
     public class CategoryController : Controller
     {
-
         CategoryRepository categoryRepository = null;
+        
         public CategoryController() => categoryRepository = new CategoryRepository();
 
         public ActionResult Index()

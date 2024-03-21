@@ -10,8 +10,8 @@ namespace Project_Group3.Service
 {
     public interface IVnpayService
     {
-        string CreatePaymentUrl(HttpContext context,VnPaymentRequestModel model );
+        string CreatePaymentUrl(HttpContext context, VnPaymentRequestModel model);
         VnPaymentResponseModel PaymentExcute(IQueryCollection collections);
     }
-  
+
 }

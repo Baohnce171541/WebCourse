@@ -2,18 +2,17 @@
 
 @{
     ViewBag.Title = "QuizTest";
-    Layout = "~/Views/Shared/_LayoutHome.cshtml";
+  Layout = "~/Views/Shared/_LayoutHome.cshtml";
 }
-<link rel="stylesheet" href="~/css/style.css" />
+<link rel="stylesheet" href="~/css/site.css" />
 <link rel="stylesheet" href="~/fonts/boxicons.css" />
 
 <div class="container-fluid addvertising-course">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <a class="btn btn-success mb-3"
-                href="@Url.Action("LearnerChapter", "Chapter", new { courseId = @Model.Course.CourseId})">
-                <i class="fas fa-arrow-left"></i> Back to Chapter
-            </a>
+       <a class="" href="@Url.Action("Learning", "Home", new { courseId = Model.Course.CourseId, chapterId = Model.Chapter.ChapterId, lessonId = Model.Lesson.LessonId })">
+   <i class="fas fa-arrow-left"></i> Back to Lesson
+</a>
 
             <div class="card">
                 <div class="card-header">
@@ -22,8 +21,9 @@
                 <div class="card-body">
                     <p>Correct Answers: @ViewBag.correctCount / Total Questions: @ViewBag.totalCount</p>
                     <form asp-controller="Quiz" asp-action="Test" asp-route-chapterId="@Model.Chapter.ChapterId"
-                        asp-route-courseId="@Model.Course.CourseId" asp-route-numberOfQuestions="@Model.Quiz.Count"
+                        asp-route-courseId="@Model.Course.CourseId" asp-route-lessonId=@Model.Lesson.LessonId asp-route-numberOfQuestions="@Model.Quiz.Count"
                         method="post">
+                        <input type="hidden" name="lessonId" value="@Model.Lesson.LessonId" />
                         <div class="form-group">
                             <label for="CourseName">Course Name:</label>
                             <input type="text" class="form-control" asp-for="@Model.Course.CourseName" readonly>

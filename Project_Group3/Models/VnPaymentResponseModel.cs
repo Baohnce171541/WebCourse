@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Project_Group3.Models
 {
-       public class VnPaymentResponseModel
+    public class VnPaymentResponseModel
     {
         public bool Success { get; set; }
         public string PaymentMethod { get; set; }
@@ -17,7 +17,8 @@ namespace Project_Group3.Models
         public string VnPayResponseCode { get; set; }
     }
 
-  public class VnPaymentRequestModel{
+    public class VnPaymentRequestModel
+    {
         public int OrderId { get; set; }
         public string Fullname { get; set; }
         public string Description { get; set; }
