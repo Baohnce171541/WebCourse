@@ -221,5 +221,25 @@ namespace Project_Group3.DAO
                 throw new Exception("The learner does not exist.");
             }
         }
+
+        public bool EditStatus(int id, string status)
+        {
+            Instructor existingIns = GetInstructorByID(id);
+            if (existingIns != null)
+            {
+                existingIns.Status = status;
+
+                using (var context = new DBContext())
+                {
+                    context.Instructors.Update(existingIns);
+                    context.SaveChanges();
+                    return true;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

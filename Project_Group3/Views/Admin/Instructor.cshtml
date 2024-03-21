@@ -55,7 +55,7 @@
                 </div>
                 <div class="user-plus">
                     @{
-                        int countInstructor = 0;
+                        int countInstructor = 0; 
 
                         foreach (var instructor in Model)
                         {
@@ -106,11 +106,11 @@
                                     <div class="d-flex justify-content-start align-items-center user-name">
                                         <div class="avatar-wrapper">
                                             <div class="avatar mr-2">
-                                                <img class="avatar-initial rounded-circle bg-label-warning" src="~/img/1.png">
+                                                <img class="avatar-initial rounded-circle bg-label-warning" src="@instructor.Picture">
                                             </div>
                                         </div>
                                         <div class="d-flex flex-column">
-                                            <a href="/admin/userDetail/@instructor.InstructorId?role=instructor">
+                                            <a href="/admin/userDetail/@instructor.InstructorId">
                                                 <span class="text-truncate text-theme">@instructor.FirstName
                                                     @instructor.LastName</span><br>
                                                 <small class="text-truncate text-muted text-theme">@instructor.Email</small>
@@ -127,7 +127,7 @@
                                 <td class="text-theme">
                                     <div class="action-icon d-flex text-center">
                                         <a class="btn btn-primary"
-                                            href="/admin/AccountModeration/@instructor.InstructorId?role=instructor"
+                                            href="/admin/AccountModeration/@instructor.InstructorId"
                                             title="Check account">
                                             <i class='bx bxs-user-pin'></i>
                                         </a>

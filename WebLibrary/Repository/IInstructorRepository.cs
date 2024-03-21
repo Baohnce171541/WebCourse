@@ -21,5 +21,6 @@ namespace WebLibrary.Repository
         bool VerifyEmail(string email, string InstructorEmail);
         bool CheckEmailAndUser(string EmaiOrUser, string InstructEmail, string InstructorUserName);
         void UpdatePass(int id, string pass);
+        bool EditStatus(int id, string status);
     }
 }

@@ -222,7 +222,7 @@ namespace Project_Group3.Controllers
             return View(learnerList);
         }
 
-        public IActionResult Course()
+        public IActionResult Course(string search, bool showOnlyWait = false)
         {
             var course = courseRepository.GetCourses();
             var category = categoryRepository.GetCategorys();
@@ -232,6 +232,12 @@ namespace Project_Group3.Controllers
             var categoryList = category.ToList();
             var instructList = instruct.ToList();
             var instructorList = instructor.ToList();
+            ViewBag.Status = "";
+            if (showOnlyWait)
+            {
+                ViewBag.Status = "Wait";
+                courseList = courseList.Where(i => i.Status == "Wait").ToList();
+            }
             return View(Tuple.Create(courseList, categoryList, instructList, instructorList));
         }
 
@@ -351,24 +357,29 @@ namespace Project_Group3.Controllers
 
             if (instructor == null) return NotFound();
 
-            return View(instructor);
+            return View(new ModelsView{Instructor = instructor});
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AccountModeration(int id, Instructor instructor)
+        public ActionResult AccountModeration(int id, ModelsView model)
         {
             try
             {
-                if (id != instructor.InstructorId) return NotFound();
+                if (id != model.Instructor.InstructorId) return NotFound();
+                var instructor = instructorRepository.GetInstructorByID(model.Instructor.InstructorId);
 
                 if (ModelState.IsValid)
                 {
-                    instructor.Status = "Active";
-                    instructorRepository.UpdateInstructor(instructor);
-                    smtpRepository.sendMail(instructor.Email, "Xác thực tài khoản", "Tài khoản của bạn đã được xác minh");
+                    model.Instructor.Status = "Active";
+                    if(instructorRepository.EditStatus(instructor.InstructorId, model.Instructor.Status)){
+                        smtpRepository.sendMail(instructor.Email, "Xác thực tài khoản", "Tài khoản của bạn đã được xác minh");
+                        return RedirectToAction("Instructor", "Admin");
+                    }else{
+                        return RedirectToAction("Instructor", "Admin");
+                    }
                 }
-                return RedirectToAction("Instructor", "Admin");
+                return View();
             }
             catch (Exception ex)
             {
@@ -377,6 +388,58 @@ namespace Project_Group3.Controllers
             }
         }
 
+        public IActionResult CourseModeration(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var course = courseRepository.GetCourseByID(id.Value);
+            var chapterList = chapterRepository.GetChapters();
+            var lessonList = lessonRepository.GetLessons();
+            var categoryList = categoryRepository.GetCategorys();
+            var instructList = instructRepository.GetInstructs();
+            var instructorList = instructorRepository.GetInstructors();
+            System.Console.WriteLine(course.CourseId);
+            if (course == null) return NotFound();
+            ModelsView model = new ModelsView{
+                Course = course,
+                ChaptersList = chapterList.ToList(),
+                LessonsList = lessonList.ToList(),
+                CategoriesList = categoryList.ToList(),
+                InstructsList = instructList.ToList(),
+                InstructorsList = instructorList.ToList()
+            };
+    
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CourseModeration(int id, ModelsView model)
+        {
+            System.Console.WriteLine(model.Course.CourseId);
+            try
+            {
+                if (id != model.Course.CourseId) return NotFound();
+                var course = courseRepository.GetCourseByID(model.Course.CourseId);
+
+                if (ModelState.IsValid)
+                {
+                    model.Course.Status = "Active";
+                    if(courseRepository.EditStatus(course.CourseId, model.Course.Status)){
+                        // smtpRepository.sendMail(course.in.Email, "Xác thực tài khoản", "Tài khoản của bạn đã được xác minh");
+                        return RedirectToAction("Course", "Admin");
+                    }else{
+                        return RedirectToAction("Course", "Admin");
+                    }
+                }
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Message = ex.Message;
+                return View();
+            }
+        }
 
         public IActionResult Logout()
         {
