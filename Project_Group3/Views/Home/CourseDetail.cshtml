@@ -141,7 +141,6 @@
                                             if(chapter.CourseId == Model.Item1.CourseId){
                                                 foreach(var lesson in Model.Item6){
                                                     if(chapter.ChapterId == lesson.ChapterId){
-                                                    @* <a class="erroll-btn btn btn-warning" href="@Url.Action("LearnerChapter", "Chapter", new { courseId = Model.Item1.CourseId })"> *@
                                                         <a class="erroll-btn btn btn-warning" href="@Url.Action("learning", "home", new {lessonId = lesson.LessonId, chapterId = chapter.ChapterId, courseId = Model.Item1.CourseId  })">
                                                         <h6 class="text-theme mt-3">Already Enroll</h6>
                                                     </a>

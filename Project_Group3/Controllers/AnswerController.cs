@@ -98,39 +98,39 @@ namespace Project_Group3.Controllers
                 return View();
             }
         }
-public ActionResult Delete(int? id, int courseId)
-{
-    if (id == null)
-    {
-        return NotFound();
-    }
+        public ActionResult Delete(int? id, int courseId)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-    ViewBag.CourseId = courseId;
-    var answer = answerRepository.GetAnswerByID(id.Value);
-    if (answer == null)
-    {
-        return NotFound();
-    }
+            ViewBag.CourseId = courseId;
+            var answer = answerRepository.GetAnswerByID(id.Value);
+            if (answer == null)
+            {
+                return NotFound();
+            }
 
-    return View(answer);
-}
+            return View(answer);
+        }
 
-[HttpPost]
-[ValidateAntiForgeryToken]
-public ActionResult Delete(int id, int courseId)
-{
-    ViewBag.CourseId = courseId;
-    try
-    {
-        answerRepository.DeleteAnswer(id);
-        return RedirectToAction("Index", "Answer", new { courseId = ViewBag.CourseId });
-    }
-    catch (Exception ex)
-    {
-        ViewBag.Message = ex.Message;
-        var answer = answerRepository.GetAnswerByID(id);
-        return View(answer);
-    }
-}
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(int id, int courseId)
+        {
+            ViewBag.CourseId = courseId;
+            try
+            {
+                answerRepository.DeleteAnswer(id);
+                return RedirectToAction("Index", "Answer", new { courseId = ViewBag.CourseId });
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Message = ex.Message;
+                var answer = answerRepository.GetAnswerByID(id);
+                return View(answer);
+            }
+        }
     }
 }

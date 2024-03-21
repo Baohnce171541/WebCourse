@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\admin\\Downloads\\Project03\\WebCourse\\WebLibrary\\WebLibrary.csproj": {}
+    "D:\\SWP\\WebLibrary\\WebLibrary.csproj": {}
   },
   "projects": {
-    "C:\\Users\\admin\\Downloads\\Project03\\WebCourse\\WebLibrary\\WebLibrary.csproj": {
+    "D:\\SWP\\WebLibrary\\WebLibrary.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\admin\\Downloads\\Project03\\WebCourse\\WebLibrary\\WebLibrary.csproj",
+        "projectUniqueName": "D:\\SWP\\WebLibrary\\WebLibrary.csproj",
         "projectName": "WebLibrary",
-        "projectPath": "C:\\Users\\admin\\Downloads\\Project03\\WebCourse\\WebLibrary\\WebLibrary.csproj",
-        "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\admin\\Downloads\\Project03\\WebCourse\\WebLibrary\\obj\\",
+        "projectPath": "D:\\SWP\\WebLibrary\\WebLibrary.csproj",
+        "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
+        "outputPath": "D:\\SWP\\WebLibrary\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -77,7 +81,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.103\\RuntimeIdentifierGraph.json"
         }
       }
     }

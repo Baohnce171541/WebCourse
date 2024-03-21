@@ -83,26 +83,15 @@ IEnumerable<WebLibrary.Models.Lesson>>
                         // Đã đến lesson cuối cùng của chapter hiện tại
                         isLastLesson = true;
                         chapterID = currentChapterId;
-                        @* var nextChapter = Model.Item6.FirstOrDefault(chapter => chapter.ChapterId > currentChapterId);
-                if (nextChapter != null)
-                {
-                chapterID = nextChapter.ChapterId;
-                var firstLessonOfNextChapter = Model.Item7.FirstOrDefault(lesson => lesson.ChapterId ==
-                nextChapter.ChapterId);
-                if (firstLessonOfNextChapter != null)
-                {
-                lessonID = firstLessonOfNextChapter.LessonId;
-                isLastLesson = false;
-                }
-                } *@
+
+
                     }
                 }
                 @if (isLastLesson)
                 {
+
                     <a class="btn btn-primary mb-2 float-right"
                         href="@Url.Action("Test", "Quiz", new { lessonId = Model.Item2.LessonId, chapterId = chapterID, courseId = ViewBag.CourseID})">QuizTest</a>
-                    @* <a class="btn btn-success mb-2" href="@Url.Action("Test", "Quiz", new { chapterId =
-                Model.Chapter.ChapterId, courseId = Model.Course.CourseId })">QuizTest</a> *@
                 }
                 else
                 {
@@ -134,6 +123,7 @@ IEnumerable<WebLibrary.Models.Lesson>>
                                         <div class="box-chaper m-1">
                                             <div class="">
                                                 @{
+
                                                     foreach (var lesson in Model.Item7.OrderBy(lesson => lesson.Index))
                                                     {
                                                         if (lesson.ChapterId == chapter.ChapterId)
@@ -174,8 +164,6 @@ IEnumerable<WebLibrary.Models.Lesson>>
 <!-- Learning End -->
 
 <!-- Endbar Start -->
-@* <input type="number" id="secondsInput" placeholder="Nhập số giây">
-<button onclick="startCountdown()">Bắt đầu đếm ngược</button> *@
 @{
     bool check = false;
 }
@@ -189,7 +177,9 @@ IEnumerable<WebLibrary.Models.Lesson>>
                     clearInterval(interval);
                     $.ajax({
                         type: 'POST',
+
                         url: '@Url.Action("UpdateCheckValue", "Home", new { lessonId = @ViewBag.LessonID, chapterId = ViewBag.ChapterID, courseId = ViewBag.CourseID })',
+
                         data: { check: true },
                         success: function (response) {
                             if (response === 'success') {

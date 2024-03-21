@@ -22,6 +22,7 @@ namespace Project_Group3.Controllers
         ILearnerRepository learnerRepository = null;
         IAdminRepository adminRepository = null;
         ISmtpRepository smtpRepository = null;
+
         private string tmpEmail;
         public UserController()
         {
@@ -46,10 +47,7 @@ namespace Project_Group3.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
-            else
-            {
-                return View();
-            }
+            else return View();
         }
 
 
@@ -64,7 +62,6 @@ namespace Project_Group3.Controllers
                 var instructor = instructorRepository.GetInstructorByEmailOrUser(model.EmailOrUsername);
 
                 var learner = learnerRepository.GetLearnerByEmailOrUser(model.EmailOrUsername);
-
 
                 if (instructor != null && instructor.Password == model.Password)
                 {
@@ -107,11 +104,7 @@ namespace Project_Group3.Controllers
             }
         }
 
-
-        public IActionResult Register()
-        {
-            return View();
-        }
+        public IActionResult Register() => View();
 
      [HttpPost]
         [ValidateAntiForgeryToken]
@@ -398,7 +391,6 @@ if (!ModelState.IsValid)
                 {
                     sb.Append(hashBytes[i].ToString("x2"));
                 }
-
                 return sb.ToString();
             }
         }

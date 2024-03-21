@@ -599,10 +599,6 @@ D:\SWP\Project_Group3\obj\Debug\net5.0\Razor\Views\Home\Course.cshtml.g.cs
 D:\SWP\Project_Group3\obj\Debug\net5.0\Razor\Views\Home\CourseDetail.cshtml.g.cs
 D:\SWP\Project_Group3\obj\Debug\net5.0\Razor\Views\Home\Index.cshtml.g.cs
 D:\SWP\Project_Group3\obj\Debug\net5.0\Razor\Views\Home\InstructorProfile.cshtml.g.cs
-D:\SWP\Project_Group3\obj\Debug\net5.0\Razor\Views\Home\Instructor\Create.cshtml.g.cs
-D:\SWP\Project_Group3\obj\Debug\net5.0\Razor\Views\Home\Instructor\Dashboard.cshtml.g.cs
-D:\SWP\Project_Group3\obj\Debug\net5.0\Razor\Views\Home\Instructor\Delete.cshtml.g.cs
-D:\SWP\Project_Group3\obj\Debug\net5.0\Razor\Views\Home\Instructor\Edit.cshtml.g.cs
 D:\SWP\Project_Group3\obj\Debug\net5.0\Razor\Views\Home\LearnerProfile.cshtml.g.cs
 D:\SWP\Project_Group3\obj\Debug\net5.0\Razor\Views\Home\Learning.cshtml.g.cs
 D:\SWP\Project_Group3\obj\Debug\net5.0\Razor\Views\Home\Profile.cshtml.g.cs
@@ -967,3 +963,5 @@ E:\2024\SP24\SWT\WebCourse\Project_Group3\obj\Debug\net5.0\Project_Group3.genrun
 E:\2024\SP24\SWT\WebCourse\Project_Group3\obj\Debug\net5.0\ref\Project_Group3.dll
 >>>>>>> 760e137cc537862bd8696d102f1062e51a4f76b9
 C:\Users\admin\Downloads\Project03\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Admin\Edit.cshtml.g.cs
+D:\SWP\Project_Group3\obj\Debug\net5.0\Razor\Views\Admin\Edit.cshtml.g.cs
+D:\SWP\Project_Group3\obj\Debug\net5.0\Razor\Views\Answer\Delete.cshtml.g.cs

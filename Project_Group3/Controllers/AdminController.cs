@@ -82,7 +82,7 @@ namespace Project_Group3.Controllers
 
         }
 
-         public ActionResult Edit(int? id)
+        public ActionResult Edit(int? id)
         {
             if (id == null) return NotFound();
 
@@ -106,7 +106,6 @@ namespace Project_Group3.Controllers
         {
             try
             {
-
                 var course = courseRepository.GetCourseByID(modelsView.Course.CourseId);
                 if (course != null)
                 {
@@ -115,7 +114,7 @@ namespace Project_Group3.Controllers
                         course.CreationDate = DateTime.Now;
                         courseRepository.UpdateCourse(modelsView.Course);
                     }
-                return RedirectToAction("Course","Admin", new { id = Request.Cookies["ID"] });
+                    return RedirectToAction("Course", "Admin", new { id = Request.Cookies["ID"] });
                 }
                 return View(modelsView);
             }
@@ -449,12 +448,12 @@ namespace Project_Group3.Controllers
         [HttpGet]
         public ActionResult DeleteCourse(int? id)
         {
-            if (id == null)   return NotFound();
-          
+            if (id == null) return NotFound();
+
             var course = courseRepository.GetCourseByID(id.Value);
-            
+
             if (course == null) return NotFound();
-         
+
             return View(course);
         }
 

@@ -2000,6 +2000,22 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\video\2f05adf9-b254-4bbc-98a0-f5e6594df3d4.mp4))</OriginalItemSpec>
     </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\video\43182b2c-4a8d-47aa-bb91-48f82d9f85f9.mp4))">
+      <SourceType>Package</SourceType>
+      <SourceId>Project_Group3</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/Project_Group3</BasePath>
+      <RelativePath>video\43182b2c-4a8d-47aa-bb91-48f82d9f85f9.mp4</RelativePath>
+      <AssetKind></AssetKind>
+      <AssetMode></AssetMode>
+      <AssetRole></AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <CopyToOutputDirectory></CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\video\43182b2c-4a8d-47aa-bb91-48f82d9f85f9.mp4))</OriginalItemSpec>
+    </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\video\44bb1213-38b9-4e92-8b39-933e5a87e40d.mp4))">
       <SourceType>Package</SourceType>
       <SourceId>Project_Group3</SourceId>
