@@ -32,11 +32,7 @@ IEnumerable<WebLibrary.Models.Lesson>>
                         @{
                             var course = ViewBag.Course;
                         }
-                        <div class="progess-info text-danger"><label>@course.Price</label></div>
-                    </div>
-                    <div class="course-quanity_lesson text-danger">
-                        <p><label>2</label>/<label>10</label> lesson</p>
-                    </div>
+            
                 </li>
             </ul>
         </div>
@@ -92,6 +88,8 @@ IEnumerable<WebLibrary.Models.Lesson>>
 
                     <a class="btn btn-primary mb-2 float-right"
                         href="@Url.Action("Test", "Quiz", new { lessonId = Model.Item2.LessonId, chapterId = chapterID, courseId = ViewBag.CourseID})">QuizTest</a>
+
+                  
                 }
                 else
                 {
@@ -193,8 +191,6 @@ IEnumerable<WebLibrary.Models.Lesson>>
                     seconds--;
                 }
             }, 1000);
-        } else {
-            alert('Vui lòng nhập một số nguyên dương.');
         }
     }
 </script>

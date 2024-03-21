@@ -10,6 +10,7 @@ namespace Project_Group3.Models
     {
         public int QuizId { get; set; }
         public Course Course { get; set; }
+           public bool UserCanSelectAnswer { get; set; } = true;
         public Chapter Chapter { get; set; }
         public Lesson Lesson { get; set; } 
         public List<Quiz> Quiz { get; set; }

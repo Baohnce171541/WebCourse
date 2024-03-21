@@ -25,6 +25,7 @@ namespace Project_Group3.Controllers
         ICourseProgressRepository courseProgressRepository = null;
         IChapterProgressRepository chapterProgressRepository = null;
         ILessonProgressRepository lessonProgressRepository = null;
+        IQuizRepository quizRepository =null;
 
         public HomeController()
         {
@@ -42,6 +43,7 @@ namespace Project_Group3.Controllers
             courseProgressRepository = new CourseProgressRepository();
             chapterProgressRepository = new ChapterProgressRepository();
             lessonProgressRepository = new LessonProgressRepository();
+            quizRepository = new QuizRepository();
         }
 
 
@@ -338,8 +340,10 @@ namespace Project_Group3.Controllers
 
         public IActionResult Learning(int lessonId, int chapterId, int courseId)
         {
+      
             var cookieValue = Request.Cookies["ID"];
             var learnerId = Convert.ToInt32(cookieValue);
+                 
             var courseProgress = courseProgressRepository.GetCourseProgressByLearnerAndCourse(learnerId, courseId);
             if (courseProgress == null)
             {
@@ -397,7 +401,8 @@ namespace Project_Group3.Controllers
             ViewBag.CourseID = course.CourseId;
             ViewBag.ChapterID = chapter.ChapterId;
             ViewBag.LessonID = lesson.LessonId;
-
+   
+   
             return View(Tuple.Create(chapter, lesson, courseProgress, chapterProgress, lessonProgress, chapterList, lessonList));
         }
 
