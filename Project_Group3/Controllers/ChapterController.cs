@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
 using Project_Group3.Models;
 using WebLibrary.Models;
@@ -70,37 +71,51 @@ namespace Project_Group3.Controllers
 
         public ActionResult Detail(int? id)
         {
-            if (id == null) return NotFound();
+            try
+            {
+                if (id == null) return NotFound();
 
-            var Chapter = chapterRepository.GetChapterByID(id.Value);
+                var Chapter = chapterRepository.GetChapterByID(id.Value);
 
-            if (Chapter == null) return NotFound();
+                if (Chapter == null) return NotFound();
 
-            return View(Chapter);
+                return View(Chapter);
+            }
+            catch (System.Exception)
+            {
+                return View(id);
+            }
         }
 
         public ActionResult Create(int courseId)
         {
-            var course = courseRepository.GetCourseByID(courseId);
-            ViewBag.CourseId = courseId;
-            if (course == null)
+            try
             {
+                var course = courseRepository.GetCourseByID(courseId);
                 ViewBag.CourseId = courseId;
-                ViewBag.CourseName = "Unknown Course";
-            }
-            else
-            {
-                ViewBag.CourseId = courseId;
-                if (string.IsNullOrEmpty(course.CourseName))
+                if (course == null)
                 {
+                    ViewBag.CourseId = courseId;
                     ViewBag.CourseName = "Unknown Course";
                 }
                 else
                 {
-                    ViewBag.CourseName = course.CourseName;
+                    ViewBag.CourseId = courseId;
+                    if (string.IsNullOrEmpty(course.CourseName))
+                    {
+                        ViewBag.CourseName = "Unknown Course";
+                    }
+                    else
+                    {
+                        ViewBag.CourseName = course.CourseName;
+                    }
                 }
+                return View();
             }
-            return View();
+            catch (System.Exception)
+            {
+                return View(courseId);
+            }
         }
 
         [HttpPost]
@@ -109,72 +124,86 @@ namespace Project_Group3.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
+                try
                 {
-                    if (!string.IsNullOrEmpty(chapter.ChapterName))
+                    if (ModelState.IsValid)
                     {
-                        if (chapter.Index.HasValue && chapter.Index.Value > 0)
+                        if (!string.IsNullOrEmpty(chapter.ChapterName))
                         {
-                            var existingChapter = chapterRepository.GetChapters().FirstOrDefault(c => c.Index == chapter.Index && c.CourseId == courseId);
-                            if (existingChapter != null)
+                            if (chapter.Index.HasValue && chapter.Index.Value > 0)
                             {
-                                ModelState.AddModelError("Index", "An existing chapter with the same index already exists for this course.");
-                            }
-                            else
-                            {
-                                if (!string.IsNullOrEmpty(chapter.Description))
+                                var existingChapter = chapterRepository.GetChapters().FirstOrDefault(c => c.Index == chapter.Index && c.CourseId == courseId);
+                                if (existingChapter != null)
                                 {
-                                    chapterRepository.InsertChapter(chapter);
-
-                                    if (redirectToCreateLesson)
-                                    {
-                                        return RedirectToAction("Create", "Lesson", new { chapterId = chapter.ChapterId, courseId = chapter.CourseId });
-                                    }
-                                    else
-                                    {
-                                        return RedirectToAction("Index", new { courseId = chapter.CourseId });
-                                    }
+                                    ModelState.AddModelError("Index", "An existing chapter with the same index already exists for this course.");
                                 }
                                 else
                                 {
-                                    ModelState.AddModelError("Description", "Description is required.");
+                                    if (!string.IsNullOrEmpty(chapter.Description))
+                                    {
+                                        chapterRepository.InsertChapter(chapter);
+
+                                        if (redirectToCreateLesson)
+                                        {
+                                            return RedirectToAction("Create", "Lesson", new { chapterId = chapter.ChapterId, courseId = chapter.CourseId });
+                                        }
+                                        else
+                                        {
+                                            return RedirectToAction("Index", new { courseId = chapter.CourseId });
+                                        }
+                                    }
+                                    else
+                                    {
+                                        ModelState.AddModelError("Description", "Description is required.");
+                                    }
                                 }
+                            }
+                            else
+                            {
+                                ModelState.AddModelError("Index", "Index must be a positive value.");
                             }
                         }
                         else
                         {
-                            ModelState.AddModelError("Index", "Index must be a positive value.");
+                            ModelState.AddModelError("ChapterName", "ChapterName is required.");
                         }
                     }
-                    else
-                    {
-                        ModelState.AddModelError("ChapterName", "ChapterName is required.");
-                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                ViewBag.Message = ex.Message;
-            }
+                catch (Exception ex)
+                {
+                    ViewBag.Message = ex.Message;
+                    return View();
+                }
 
-            ViewBag.CourseId = courseId;
-            var course = courseRepository.GetCourseByID(courseId);
-            ViewBag.CourseName = course.CourseName;
-            return View(chapter);
+                ViewBag.CourseId = courseId;
+                var course = courseRepository.GetCourseByID(courseId);
+                ViewBag.CourseName = course.CourseName;
+                return View(chapter);
+            }
+            catch (System.Exception)
+            {
+                return View();
+            }
         }
         public ActionResult Edit(int? id)
         {
-            if (id == null) return NotFound();
+            try
+            {
+                if (id == null) return NotFound();
 
-            var Chapter = chapterRepository.GetChapterByID(id.Value);
+                var Chapter = chapterRepository.GetChapterByID(id.Value);
 
-            if (Chapter == null) return NotFound();
+                if (Chapter == null) return NotFound();
 
-            ModelsView modelsView = new ModelsView { Chapter = Chapter };
+                ModelsView modelsView = new ModelsView { Chapter = Chapter };
 
-            return View(modelsView);
+                return View(modelsView);
+            }
+            catch (System.Exception)
+            {
+                return View();
+            }
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -212,55 +241,66 @@ namespace Project_Group3.Controllers
 
         public IActionResult LearnerChapter(int courseId)
         {
-            var course = courseRepository.GetCourseByID(courseId);
-            var chapterlist = chapterRepository.GetChapters();
-            var lessonlist = lessonRepository.GetLessons();
-            ModelsView modelsView = new ModelsView
+            try
             {
-                Course = course,
-                ChaptersList = chapterlist.ToList(),
-                LessonsList = lessonlist.ToList(),
-            };
-            return View(modelsView);
+                var course = courseRepository.GetCourseByID(courseId);
+                var chapterlist = chapterRepository.GetChapters();
+                var lessonlist = lessonRepository.GetLessons();
+                ModelsView modelsView = new ModelsView
+                {
+                    Course = course,
+                    ChaptersList = chapterlist.ToList(),
+                    LessonsList = lessonlist.ToList(),
+                };
+                return View(modelsView);
+            }
+            catch (System.Exception)
+            {
+                return View();
+            }
         }
 
-      public IActionResult Delete(int? id)
-{
-    var chapter = chapterRepository.GetChapterByID(id.Value);
-
-    if (chapter == null)
-    {
-        return NotFound();
-    }
-
-    var model = new ModelsView
-    {
-        Chapter = chapter
-    };
-
-    return View(model);
-}
-        [HttpPost]
-[ValidateAntiForgeryToken]
-public ActionResult Delete(ModelsView modelsView)
-{
-    try
-    {
-        var chapter = chapterRepository.GetChapterByID(modelsView.Chapter.ChapterId);
-        if (chapter != null)
+        public IActionResult Delete(int? id)
         {
-            System.Console.WriteLine(chapter.ChapterId);
-            chapterRepository.DeleteChapter(chapter.ChapterId);
-            return RedirectToAction("Index", new { courseId = modelsView.Chapter.CourseId });
+            try
+            {
+                var chapter = chapterRepository.GetChapterByID(id.Value);
+
+                if (chapter == null) return NotFound();
+
+                var model = new ModelsView
+                {
+                    Chapter = chapter
+                };
+
+                return View(model);
+            }
+            catch (System.Exception)
+            {
+                return View();
+            }
         }
-        
-        return View(modelsView);
-    }
-    catch (Exception ex)
-    {
-        ViewBag.Message = ex.Message;
-        return View();
-    }
-}
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(ModelsView modelsView)
+        {
+            try
+            {
+                var chapter = chapterRepository.GetChapterByID(modelsView.Chapter.ChapterId);
+                if (chapter != null)
+                {
+                    System.Console.WriteLine(chapter.ChapterId);
+                    chapterRepository.DeleteChapter(chapter.ChapterId);
+                    return RedirectToAction("Index", new { courseId = modelsView.Chapter.CourseId });
+                }
+                return View(modelsView);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Message = ex.Message;
+                return View();
+            }
+        }
     }
 }

@@ -28,50 +28,72 @@ namespace Project_Group3.Controllers
 
         public ActionResult Index(int chapterId, int courseId, string search = "")
         {
-            var chapter = chapterRepository.GetChapterByID(chapterId);
-            var course = courseRepository.GetCourseByID(courseId);
-            ViewBag.CourseId = courseId;
-            ViewBag.ChapterId = chapterId;
-
-            ViewBag.ChapterName = chapter.ChapterName;
-            ViewBag.CourseName = course.CourseName;
-
-            var lessonList = lessonRepository.GetLessons();
-
-            var lessonsToDisplay = lessonList.Where(l => l.ChapterId == chapterId && l.CourseId == courseId).ToList();
-
-            if (!string.IsNullOrEmpty(search))
+            try
             {
-                lessonsToDisplay = lessonsToDisplay.Where(l => l.LessonName.IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
+                var chapter = chapterRepository.GetChapterByID(chapterId);
+                var course = courseRepository.GetCourseByID(courseId);
+                ViewBag.CourseId = courseId;
+                ViewBag.ChapterId = chapterId;
+
+                ViewBag.ChapterName = chapter.ChapterName;
+                ViewBag.CourseName = course.CourseName;
+
+                var lessonList = lessonRepository.GetLessons();
+
+                var lessonsToDisplay = lessonList.Where(l => l.ChapterId == chapterId && l.CourseId == courseId).ToList();
+
+                if (!string.IsNullOrEmpty(search))
+                {
+                    lessonsToDisplay = lessonsToDisplay.Where(l => l.LessonName.IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
+                }
+
+                lessonsToDisplay = lessonsToDisplay.OrderBy(l => l.Index).ToList();
+
+                ViewBag.Search = search;
+
+                return View(lessonsToDisplay);
+            }
+            catch (System.Exception)
+            {
+                return View();
             }
 
-            lessonsToDisplay = lessonsToDisplay.OrderBy(l => l.Index).ToList();
-
-            ViewBag.Search = search;
-
-            return View(lessonsToDisplay);
         }
         public ActionResult Detail(int? id)
         {
-            if (id == null) return NotFound();
+            try
+            {
+                if (id == null) return NotFound();
 
-            var Lesson = lessonRepository.GetLessonByID(id.Value);
+                var Lesson = lessonRepository.GetLessonByID(id.Value);
 
-            if (Lesson == null) return NotFound();
+                if (Lesson == null) return NotFound();
 
-            return View(Lesson);
+                return View(Lesson);
+            }
+            catch (System.Exception)
+            {
+                return View();
+            }
         }
 
         public ActionResult Create(int chapterId, int courseId)
         {
-            var chapter = chapterRepository.GetChapterByID(chapterId);
-            var course = courseRepository.GetCourseByID(courseId);
-            ViewBag.ChapterId = chapterId;
-            ViewBag.CourseId = courseId;
+            try
+            {
+                var chapter = chapterRepository.GetChapterByID(chapterId);
+                var course = courseRepository.GetCourseByID(courseId);
+                ViewBag.ChapterId = chapterId;
+                ViewBag.CourseId = courseId;
 
-            ViewBag.ChapterName = chapter.ChapterName;
-            ViewBag.CourseName = course.CourseName;
-            return View();
+                ViewBag.ChapterName = chapter.ChapterName;
+                ViewBag.CourseName = course.CourseName;
+                return View();
+            }
+            catch (System.Exception)
+            {
+                return View();
+            }
         }
 
         [HttpPost]
@@ -80,90 +102,109 @@ namespace Project_Group3.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
+                try
                 {
-                    if (!string.IsNullOrEmpty(lesson.LessonName))
+                    if (ModelState.IsValid)
                     {
-                        if (!string.IsNullOrEmpty(lesson.Description))
+                        if (!string.IsNullOrEmpty(lesson.LessonName))
                         {
-                            if (lesson.Index.HasValue && lesson.Index.Value > 0)
+                            if (!string.IsNullOrEmpty(lesson.Description))
                             {
-                                if (video == null || video.Length == 0)
+                                if (lesson.Index.HasValue && lesson.Index.Value > 0)
                                 {
-                                    ModelState.AddModelError("Video", "Video is required.");
-                                }
-
-                                if (ModelState.IsValid)
-                                {
-                                    var urlRelative = "/video/";
-                                    var urlAbsolute = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "video");
-                                    var fileName = Guid.NewGuid() + Path.GetExtension(video.FileName);
-                                    var filePath = Path.Combine(urlAbsolute, fileName);
-
-                                    using (var stream = new FileStream(filePath, FileMode.Create))
+                                    if (video == null || video.Length == 0)
                                     {
-                                        video.CopyTo(stream);
+                                        ModelState.AddModelError("Video", "Video is required.");
                                     }
 
-                                    lesson.Content = Path.Combine(urlRelative, fileName);
-                                    lessonRepository.InsertLesson(lesson);
+                                    if (ModelState.IsValid)
+                                    {
+                                        var urlRelative = "/video/";
+                                        var urlAbsolute = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "video");
+                                        var fileName = Guid.NewGuid() + Path.GetExtension(video.FileName);
+                                        var filePath = Path.Combine(urlAbsolute, fileName);
 
-                                    return RedirectToAction("Index", new { chapterId = chapterId, courseId = courseId });
+                                        using (var stream = new FileStream(filePath, FileMode.Create))
+                                        {
+                                            video.CopyTo(stream);
+                                        }
+
+                                        lesson.Content = Path.Combine(urlRelative, fileName);
+                                        lessonRepository.InsertLesson(lesson);
+
+                                        return RedirectToAction("Index", new { chapterId = chapterId, courseId = courseId });
+                                    }
+                                }
+                                else
+                                {
+                                    ModelState.AddModelError("Index", "Index must be a positive value.");
                                 }
                             }
                             else
                             {
-                                ModelState.AddModelError("Index", "Index must be a positive value.");
+                                ModelState.AddModelError("Description", "Description is required.");
                             }
                         }
                         else
                         {
-                            ModelState.AddModelError("Description", "Description is required.");
+                            ModelState.AddModelError("LessonName", "LessonName is required.");
                         }
                     }
-                    else
-                    {
-                        ModelState.AddModelError("LessonName", "LessonName is required.");
-                    }
                 }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("An error occurred: " + ex.Message);
+                    ViewBag.Message = ex.Message;
+                }
+                var chapter = chapterRepository.GetChapterByID(chapterId);
+                ViewBag.ChapterId = chapterId;
+                ViewBag.CourseId = courseId;
+                ViewBag.ChapterName = chapter.ChapterName;
+                return View(lesson);
             }
-            catch (Exception ex)
+            catch (System.Exception)
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
-                ViewBag.Message = ex.Message;
+                return View();
             }
-            var chapter = chapterRepository.GetChapterByID(chapterId);
-            ViewBag.ChapterId = chapterId;
-            ViewBag.CourseId = courseId;
-            ViewBag.ChapterName = chapter.ChapterName;
-            return View(lesson);
         }
-
-
 
         public IActionResult LearnerLesson(int courseId, int chapterId)
         {
-            var course = courseRepository.GetCourseByID(courseId);
-            var chapter = chapterRepository.GetChapterByID(chapterId);
-            var lessonlist = lessonRepository.GetLessons();
-            ModelsView modelsView = new ModelsView
+            try
             {
-                Course = course,
-                Chapter = chapter,
-                LessonsList = lessonlist.ToList(),
-            };
-            return View(modelsView);
+                var course = courseRepository.GetCourseByID(courseId);
+                var chapter = chapterRepository.GetChapterByID(chapterId);
+                var lessonlist = lessonRepository.GetLessons();
+                ModelsView modelsView = new ModelsView
+                {
+                    Course = course,
+                    Chapter = chapter,
+                    LessonsList = lessonlist.ToList(),
+                };
+                return View(modelsView);
+            }
+            catch (System.Exception)
+            {
+                return View();
+            }
         }
 
         public ActionResult Edit(int? id)
         {
-            if (id == null) return NotFound();
+            try
+            {
+                if (id == null) return NotFound();
 
-            var Lesson = lessonRepository.GetLessonByID(id.Value);
+                var Lesson = lessonRepository.GetLessonByID(id.Value);
 
-            if (Lesson == null) return NotFound();
+                if (Lesson == null) return NotFound();
 
-            return View(new ModelsView { Lesson = Lesson });
+                return View(new ModelsView { Lesson = Lesson });
+            }
+            catch (System.Exception)
+            {
+                return View();
+            }
         }
 
         [HttpPost]
@@ -209,13 +250,20 @@ namespace Project_Group3.Controllers
 
         public ActionResult Delete(int? id)
         {
-            if (id == null) return NotFound();
+            try
+            {
+                if (id == null) return NotFound();
 
-            var Lesson = lessonRepository.GetLessonByID(id.Value);
+                var Lesson = lessonRepository.GetLessonByID(id.Value);
 
-            if (Lesson == null) return NotFound();
+                if (Lesson == null) return NotFound();
 
-            return View(new ModelsView { Lesson = Lesson });
+                return View(new ModelsView { Lesson = Lesson });
+            }
+            catch (System.Exception)
+            {
+                return View();
+            }
         }
 
         [HttpPost]
@@ -237,7 +285,6 @@ namespace Project_Group3.Controllers
                 ViewBag.Message = ex.Message;
                 return View(modelsView);
             }
-
         }
     }
 }

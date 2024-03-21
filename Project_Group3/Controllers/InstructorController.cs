@@ -24,72 +24,101 @@ namespace Project_Group3.Controllers
             courseRepository = new CourseRepository();
             instructRepository = new InstructRepository();
         }
+
         public IActionResult Index(string search = "", int page = 1, int pageSize = 2)
         {
-            var instructorList = instructorRepository.GetInstructors();
-
-            if (!string.IsNullOrEmpty(search))
+            try
             {
-                instructorList = instructorList.Where(i => i.FirstName.IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0 || i.LastName.IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
+                var instructorList = instructorRepository.GetInstructors();
+
+                if (!string.IsNullOrEmpty(search))
+                {
+                    instructorList = instructorList.Where(i => i.FirstName.IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0 || i.LastName.IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
+                }
+
+
+                var totalCount = instructorList.Count();
+                var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+
+                instructorList = instructorList.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+                ViewBag.Search = search;
+                ViewBag.PageSize = pageSize;
+                ViewBag.TotalPages = totalPages;
+                ViewBag.Quantity = totalCount;
+                ViewBag.CurrentPage = page;
+                return View(instructorList);
             }
-
-
-            var totalCount = instructorList.Count();
-            var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
-
-            instructorList = instructorList.Skip((page - 1) * pageSize).Take(pageSize).ToList();
-
-            ViewBag.Search = search;
-            ViewBag.PageSize = pageSize;
-            ViewBag.TotalPages = totalPages;
-            ViewBag.Quantity = totalCount;
-            ViewBag.CurrentPage = page;
-            return View(instructorList);
+            catch (System.Exception)
+            {
+                return View();
+            }
         }
 
         public IActionResult Detail(int? id)
         {
-            if (id == null) return NotFound();
+            try
+            {
+                if (id == null) return NotFound();
 
-            var instructor = instructorRepository.GetInstructorByID(id.Value);
+                var instructor = instructorRepository.GetInstructorByID(id.Value);
 
-            if (instructor == null) return NotFound();
+                if (instructor == null) return NotFound();
 
-            return View(instructor);
+                return View(instructor);
+            }
+            catch (System.Exception)
+            {
+                return View();
+            }
         }
 
         [HttpPost]
         public IActionResult Next(int id)
         {
-            var currentInstructor = instructorRepository.GetInstructorByID(id);
-            var nextInstructor = instructorRepository.GetInstructors().FirstOrDefault(i => i.InstructorId > id);
+            try
+            {
+                var currentInstructor = instructorRepository.GetInstructorByID(id);
+                var nextInstructor = instructorRepository.GetInstructors().FirstOrDefault(i => i.InstructorId > id);
 
-            if (nextInstructor != null)
-            {
-                return RedirectToAction("Detail", new { id = nextInstructor.InstructorId });
+                if (nextInstructor != null)
+                {
+                    return RedirectToAction("Detail", new { id = nextInstructor.InstructorId });
+                }
+                else
+                {
+                    var firstInstructor = instructorRepository.GetInstructors().FirstOrDefault();
+                    return RedirectToAction("Detail", new { id = firstInstructor.InstructorId });
+                }
             }
-            else
+            catch (System.Exception)
             {
-                var firstInstructor = instructorRepository.GetInstructors().FirstOrDefault();
-                return RedirectToAction("Detail", new { id = firstInstructor.InstructorId });
+                return View();
             }
         }
 
         [HttpPost]
         public IActionResult Previous(int id)
         {
-            var currentInstructor = instructorRepository.GetInstructorByID(id);
-
-            var previousInstructor = instructorRepository.GetInstructors().LastOrDefault(i => i.InstructorId < id);
-
-            if (previousInstructor != null)
+            try
             {
-                return RedirectToAction("Detail", new { id = previousInstructor.InstructorId });
+                var currentInstructor = instructorRepository.GetInstructorByID(id);
+
+                var previousInstructor = instructorRepository.GetInstructors().LastOrDefault(i => i.InstructorId < id);
+
+                if (previousInstructor != null)
+                {
+                    return RedirectToAction("Detail", new { id = previousInstructor.InstructorId });
+                }
+                else
+                {
+                    var lastInstructor = instructorRepository.GetInstructors().LastOrDefault();
+                    return RedirectToAction("Detail", new { id = lastInstructor.InstructorId });
+                }
             }
-            else
+            catch (System.Exception)
             {
-                var lastInstructor = instructorRepository.GetInstructors().LastOrDefault();
-                return RedirectToAction("Detail", new { id = lastInstructor.InstructorId });
+                return View();
             }
         }
 
@@ -116,13 +145,20 @@ namespace Project_Group3.Controllers
 
         public IActionResult Edit(int? id)
         {
-            if (id == null) return NotFound();
+            try
+            {
+                if (id == null) return NotFound();
 
-            var instructor = instructorRepository.GetInstructorByID(id.Value);
+                var instructor = instructorRepository.GetInstructorByID(id.Value);
 
-            if (instructor == null) return NotFound();
+                if (instructor == null) return NotFound();
 
-            return View(instructor);
+                return View(instructor);
+            }
+            catch (System.Exception)
+            {
+                return View();
+            }
         }
 
         [HttpPost]
@@ -169,13 +205,20 @@ namespace Project_Group3.Controllers
 
         public IActionResult Delete(int? id)
         {
-            if (id == null) return NotFound();
+            try
+            {
+                if (id == null) return NotFound();
 
-            var instructor = instructorRepository.GetInstructorByID(id.Value);
+                var instructor = instructorRepository.GetInstructorByID(id.Value);
 
-            if (instructor == null) return NotFound();
+                if (instructor == null) return NotFound();
 
-            return View(instructor);
+                return View(instructor);
+            }
+            catch (System.Exception)
+            {
+                return View();
+            }
         }
 
         [HttpPost]
@@ -197,16 +240,23 @@ namespace Project_Group3.Controllers
 
         public IActionResult Dashboard(int id)
         {
-            var ins = instructorRepository.GetInstructorByID(id);
-            var courseList = courseRepository.GetCourses();
-            var instructList = instructRepository.GetInstructs();
-            ModelsView modelsView = new ModelsView
+            try
             {
-                Instructor = ins,
-                CourseList = courseList.ToList(),
-                InstructsList = instructList.ToList(),
-            };
-            return View(modelsView);
+                var ins = instructorRepository.GetInstructorByID(id);
+                var courseList = courseRepository.GetCourses();
+                var instructList = instructRepository.GetInstructs();
+                ModelsView modelsView = new ModelsView
+                {
+                    Instructor = ins,
+                    CourseList = courseList.ToList(),
+                    InstructsList = instructList.ToList(),
+                };
+                return View(modelsView);
+            }
+            catch (System.Exception)
+            {
+                return View();
+            }
         }
     }
 }

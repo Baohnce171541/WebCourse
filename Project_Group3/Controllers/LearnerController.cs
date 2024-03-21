@@ -51,7 +51,7 @@ namespace Project_Group3.Controllers
         }
 
         public ActionResult Create() => View();
-       
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(Learner Learner)
@@ -128,13 +128,20 @@ namespace Project_Group3.Controllers
 
         public IActionResult Delete(int? id)
         {
-            if (id == null) return NotFound();
+            try
+            {
+                if (id == null) return NotFound();
 
-            var learner = learnerRepository.GetLearnerByID(id.Value);
-            
-            if (learner == null) return NotFound();
+                var learner = learnerRepository.GetLearnerByID(id.Value);
 
-            return View(learner);
+                if (learner == null) return NotFound();
+
+                return View(learner);
+            }
+            catch (System.Exception)
+            {
+                return View();
+            }
         }
 
         [HttpPost]

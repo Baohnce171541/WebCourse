@@ -24,32 +24,50 @@ namespace Project_Group3.Controllers
 
         public ActionResult Detail(int? id)
         {
-            if (id == null) return NotFound();
+            try
+            {
+                if (id == null) return NotFound();
 
-            var answer = answerRepository.GetAnswerByID(id.Value);
+                var answer = answerRepository.GetAnswerByID(id.Value);
 
-            if (answer == null) return NotFound();
+                if (answer == null) return NotFound();
 
-            return View(answer);
+                return View(answer);
+            }
+            catch (System.Exception)
+            {
+                return View();
+            }
+
         }
 
         public ActionResult Index(int courseId)
         {
-            ViewBag.CourseId = courseId;
-            var answerList = answerRepository.GetAnswers();
-            return View(answerList);
+            try
+            {
+                ViewBag.CourseId = courseId;
+                var answerList = answerRepository.GetAnswers();
+                return View(answerList);
+            }
+            catch (System.Exception)
+            {
+                return View(courseId);
+            }
         }
 
         public ActionResult Create(int courseId)
         {
-            ViewBag.CourseId = courseId;
-
-            return View();
+            try
+            {
+                ViewBag.CourseId = courseId;
+                return View();
+            }
+            catch (System.Exception)
+            {
+                return View();
+            }
         }
 
-
-
-        // POST: Answer/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(Answer answer, int courseId)
@@ -70,16 +88,22 @@ namespace Project_Group3.Controllers
 
         public ActionResult Edit(int? id)
         {
-            if (id == null) return NotFound();
+            try
+            {
+                if (id == null) return NotFound();
 
-            var answer = answerRepository.GetAnswerByID(id.Value);
+                var answer = answerRepository.GetAnswerByID(id.Value);
 
-            if (answer == null) return NotFound();
+                if (answer == null) return NotFound();
 
-            return View(answer);
+                return View(answer);
+            }
+            catch (System.Exception)
+            {
+                return View();
+            }
         }
 
-        // POST: Answer/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, Answer answer)
@@ -100,19 +124,21 @@ namespace Project_Group3.Controllers
         }
         public ActionResult Delete(int? id, int courseId)
         {
-            if (id == null)
+            try
             {
-                return NotFound();
-            }
+                if (id == null) return NotFound();
 
-            ViewBag.CourseId = courseId;
-            var answer = answerRepository.GetAnswerByID(id.Value);
-            if (answer == null)
+                ViewBag.CourseId = courseId;
+                var answer = answerRepository.GetAnswerByID(id.Value);
+
+                if (answer == null) return NotFound();
+
+                return View(answer);
+            }
+            catch (System.Exception)
             {
-                return NotFound();
+                return View();
             }
-
-            return View(answer);
         }
 
         [HttpPost]
