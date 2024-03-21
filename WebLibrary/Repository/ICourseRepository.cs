@@ -13,5 +13,6 @@ namespace WebLibrary.Repository
         void InsertCourse(Course course);
         void DeleteCourse(int courseId);
         void UpdateCourse(Course course);
+        bool EditStatus(int id, string status);
     }
 }
