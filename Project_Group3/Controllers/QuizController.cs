@@ -19,7 +19,8 @@ namespace Project_Group3.Controllers
         ICourseRepository courseRepository = null;
         ILessonRepository lessonRepository = null;
         ILessonProgressRepository lessonProgressRepository = null;
-
+        ILearnerRepository learnerRepository = null;
+        ISmtpRepository smtpRepository = null;
         public QuizController()
         {
             quizRepository = new QuizRepository();
@@ -28,6 +29,8 @@ namespace Project_Group3.Controllers
             courseRepository = new CourseRepository();
             lessonRepository = new LessonRepository();
             lessonProgressRepository = new LessonProgressRepository();
+            learnerRepository = new LearnerRepository();
+            smtpRepository = new StmpRepository();
         }
 
 

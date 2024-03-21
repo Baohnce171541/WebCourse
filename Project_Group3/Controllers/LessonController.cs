@@ -77,9 +77,7 @@ namespace Project_Group3.Controllers
             }
         }
 
-        public ActionResult Create(int chapterId, int courseId)
-        {
-            try
+            public ActionResult Create(int chapterId, int courseId)
             {
                 var chapter = chapterRepository.GetChapterByID(chapterId);
                 var course = courseRepository.GetCourseByID(courseId);
@@ -88,19 +86,20 @@ namespace Project_Group3.Controllers
 
                 ViewBag.ChapterName = chapter.ChapterName;
                 ViewBag.CourseName = course.CourseName;
+                // Lấy danh sách các index của existing lessons từ repository hoặc nguồn dữ liệu tương ứng.
+    var existingLessonIndexes = lessonRepository.GetLessons()
+        .Where(l => l.ChapterId == chapterId)
+        .Select(l => l.Index)
+        .OrderBy(index => index) // Sắp xếp theo thứ tự tăng dần index
+        .ToList();
+    // Đưa danh sách các index của existing lessons vào ViewBag.
+    ViewBag.ExistingLessonIndexes = existingLessonIndexes;
                 return View();
             }
-            catch (System.Exception)
-            {
-                return View();
-            }
-        }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(Lesson lesson, int chapterId, int courseId, IFormFile video)
-        {
-            try
+            [HttpPost]
+            [ValidateAntiForgeryToken]
+            public ActionResult Create(Lesson lesson, int chapterId, int courseId, IFormFile video)
             {
                 try
                 {
@@ -123,12 +122,24 @@ namespace Project_Group3.Controllers
                                         var urlAbsolute = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "video");
                                         var fileName = Guid.NewGuid() + Path.GetExtension(video.FileName);
                                         var filePath = Path.Combine(urlAbsolute, fileName);
+                                    if (ModelState.IsValid)
+                                    {
+                                        var urlRelative = "/video/";
+                                        var urlAbsolute = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "video");
+                                        var fileName = Guid.NewGuid() + Path.GetExtension(video.FileName);
+                                        var filePath = Path.Combine(urlAbsolute, fileName);
 
                                         using (var stream = new FileStream(filePath, FileMode.Create))
                                         {
                                             video.CopyTo(stream);
                                         }
+                                        using (var stream = new FileStream(filePath, FileMode.Create))
+                                        {
+                                            video.CopyTo(stream);
+                                        }
 
+                                        lesson.Content = Path.Combine(urlRelative, fileName);
+                                        lessonRepository.InsertLesson(lesson);
                                         lesson.Content = Path.Combine(urlRelative, fileName);
                                         lessonRepository.InsertLesson(lesson);
 
@@ -162,11 +173,8 @@ namespace Project_Group3.Controllers
                 ViewBag.ChapterName = chapter.ChapterName;
                 return View(lesson);
             }
-            catch (System.Exception)
-            {
-                return View();
-            }
-        }
+
+
 
         public IActionResult LearnerLesson(int courseId, int chapterId)
         {
