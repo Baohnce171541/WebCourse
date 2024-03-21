@@ -73,7 +73,6 @@ namespace Project_Group3.Controllers
 
                 if (instructor != null && instructor.Password == this.GetHashedPassword(model.Password))
                 {
-                    HttpContext.Session.SetInt32("InsID", instructor.InstructorId);
                     if (instructor.Status == "Wait")
                     {
                         ViewBag.err = "The account has not been moderated!!!";
@@ -84,16 +83,17 @@ namespace Project_Group3.Controllers
                         ViewBag.err = "The account no longer exists!!!";
                         return View();
                     }
+                    HttpContext.Session.SetInt32("InsID", instructor.InstructorId);
+                    HttpContext.Session.SetString("username", instructor.Username);
                     Response.Cookies.Append("Role", "instructor");
                     Response.Cookies.Append("Name", instructor.Username);
                     Response.Cookies.Append("ID", instructor.InstructorId.ToString());
                     return RedirectToAction("Index", "Home");
-
                 }
                 else if (learner != null && learner.Password == this.GetHashedPassword(model.Password))
                 {
-                    Console.WriteLine($"LearnerID: {HttpContext.Session.GetInt32("LearnerID")}");
                     HttpContext.Session.SetInt32("LearnerID", learner.LearnerId);
+                    HttpContext.Session.SetString("username", learner.Username);
                     Response.Cookies.Append("Role", "learner");
                     Response.Cookies.Append("Name", learner.Username);
                     Response.Cookies.Append("ID", learner.LearnerId.ToString());
@@ -190,15 +190,13 @@ namespace Project_Group3.Controllers
                     Password = this.GetHashedPassword(model.Password),
                     RegistrationDate = DateTime.Now.Date,
                     Status = "Active",
-
                     Picture = model.Picture,
                 };
                 learnerRepository.InsertLearner(LearnerModel);
                 ViewBag.UserId = LearnerModel.LearnerId.ToString();
                 ViewBag.Role = "Learner";
                 Response.Cookies.Append("MyCookie", LearnerModel.LearnerId.ToString());
-                // Điều hướng đến trang chính sau khi đăng ký thành công
-                return RedirectToAction("Login", "User", new { id = LearnerModel.LearnerId, role = "Learner" });
+                return RedirectToAction("Login", "User");
             }
             catch (Exception ex)
             {
@@ -316,7 +314,7 @@ namespace Project_Group3.Controllers
                 ViewBag.UserId = instructorModel.InstructorId;
                 ViewBag.Role = "Learner";
                 Response.Cookies.Append("MyCookie", instructorModel.InstructorId.ToString());
-                return RedirectToAction("Login", "User", new { id = instructorModel.InstructorId, role = "Instructor" });
+                return RedirectToAction("Login", "User");
             }
             catch (Exception ex)
             {
