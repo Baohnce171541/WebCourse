@@ -494,33 +494,7 @@ BEGIN
     DELETE FROM instructor WHERE instructorID IN (SELECT instructorID FROM deleted);
 END;
 GO
-
 ---
-CREATE TRIGGER delete_learner_trigger
-ON learner
-INSTEAD OF DELETE
-AS
-BEGIN
-    -- Xóa các bài đăng ký (enrollment) của người học (learner) bị xóa
-    DELETE FROM enrollment WHERE learnerID IN (SELECT learnerID FROM deleted);
-
-    -- Xóa các đánh giá (review) của người học (learner) bị xóa
-    DELETE FROM review WHERE learnerID IN (SELECT learnerID FROM deleted);
-
-    -- Xóa người học (learner) bị xóa
-    DELETE FROM learner WHERE learnerID IN (SELECT learnerID FROM deleted);
-END;
-go
----
-CREATE TRIGGER delete_cate_trigger
-ON categories
-INSTEAD OF DELETE
-AS
-BEGIN
-    DELETE FROM courses WHERE categoryID IN (SELECT categoryID FROM deleted);
-    DELETE FROM categories WHERE categoryID IN (SELECT categoryID FROM deleted);
-END;
-go
 CREATE TRIGGER delete_course_trigger
 ON courses
 INSTEAD OF DELETE
@@ -556,6 +530,32 @@ BEGIN
 	   DELETE FROM quiz WHERE chapterID IN (SELECT chapterID FROM deleted);
     -- Xóa các chương (chapters) thuộc về khóa học (course) bị xóa
     DELETE FROM chapter WHERE chapterID IN (SELECT chapterID FROM deleted);
+END;
+GO
+---
+CREATE TRIGGER delete_learner_trigger
+ON learner
+INSTEAD OF DELETE
+AS
+BEGIN
+    -- Xóa các bài đăng ký (enrollment) của người học (learner) bị xóa
+    DELETE FROM enrollment WHERE learnerID IN (SELECT learnerID FROM deleted);
+
+    -- Xóa các đánh giá (review) của người học (learner) bị xóa
+    DELETE FROM review WHERE learnerID IN (SELECT learnerID FROM deleted);
+
+    -- Xóa người học (learner) bị xóa
+    DELETE FROM learner WHERE learnerID IN (SELECT learnerID FROM deleted);
+END;
+GO
+CREATE TRIGGER delete_answer_trigger
+ON answer
+INSTEAD OF DELETE
+AS
+BEGIN
+    DELETE FROM quiz
+    WHERE answerID IN (SELECT answerID FROM deleted);
+	  DELETE FROM answer WHERE answerID IN (SELECT answerID FROM deleted);
 END;
 GO
 
