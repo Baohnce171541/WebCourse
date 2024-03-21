@@ -124,7 +124,7 @@ namespace Project_Group3.Controllers
                     System.Console.WriteLine(id + " " + models.Instructor.InstructorId);
                     return NotFound();
                 }
-                if (ModelState.IsValid)
+                if (ModelState.IsValid) 
                 {
                     if (picture != null && picture.Length > 0)
                     {

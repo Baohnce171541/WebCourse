@@ -221,7 +221,8 @@ namespace Project_Group3.DAO
                 throw new Exception("The learner does not exist.");
             }
         }
-            public bool EditStatus(int id, string status)
+
+        public bool EditStatus(int id, string status)
         {
             Instructor existingIns = GetInstructorByID(id);
             if (existingIns != null)

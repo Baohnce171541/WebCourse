@@ -151,6 +151,7 @@ namespace Project_Group3.Controllers
 
                         course.Picture = Path.Combine(urlRelative, fileName);
                         course.Status = "Wait";
+                        course.CreationDate = DateTime.Now;
                         courseRepository.InsertCourse(course);
 
                         var ins = instructorRepository.GetInstructorByID(HttpContext.Session.GetInt32("InsID").GetValueOrDefault());

@@ -8,6 +8,7 @@
 <div class="card bg-theme p-0 mt-2 mb-5">
     <div class="container my-3">
         <form asp-action="Create">
+            <input asp-for="AdminId" type="hidden" class="form-control">
             <div class="mb-3 text-theme">
                 <label asp-for="PercentDiscount" class="form-label">Percentage Discount</label>
                 <input asp-for="PercentDiscount" type="number" class="form-control">
@@ -23,8 +24,8 @@
                 <input asp-for="EndAt" type="datetime-local" class="form-control">
                 <span asp-validation-for="EndAt" class="text-danger"></span>
             </div>
-            <div class="mx-3 text-theme form-check">
-                <label asp-for="IsActive" class="form-check-label font-weight-bold mr-4">Active?</label>
+            <div class="mb-3 text-theme form-check" style="width: 20%; margin-left: -1rem;">
+                <label asp-for="IsActive" class="form-check-label font-weight-bold mr-4">Active</label>
                 <select asp-for="IsActive" class="form-control">
                     <option value="">-- Select --</option>
                     <option value="true">Yes</option>
@@ -34,7 +35,8 @@
             </div>
 
             <p class="text-danger">@ViewBag.err</p>
-            <button type="submit" class="btn btn-primary">Create</button>
+            <button type="submit" class="btn btn-success">Create</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
         </form>
     </div>
 </div>
