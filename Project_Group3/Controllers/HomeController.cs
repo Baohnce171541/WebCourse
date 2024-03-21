@@ -374,7 +374,18 @@ namespace Project_Group3.Controllers
                 var courseInfo = course.FirstOrDefault(c => c.CourseId == instruct.CourseId);
                 var instructorInfo = instructor.FirstOrDefault(i => i.InstructorId == instruct.InstructorId);
                 ViewBag.CourseID = id;
-                return View(Tuple.Create(courseInfo, instructorInfo, review, learner, chapter, lesson, enrollment));
+                ModelsView modelsView = new ModelsView
+                {
+                    Course = courseInfo,
+                    Instructor = instructorInfo,
+                    ReviewsList = review.ToList(),
+                    LearnersList = learner.ToList(),
+                    ChaptersList = chapter.ToList(),
+                    LessonsList = lesson.ToList(),
+                    EnrollmentList = enrollment.ToList(),
+                };
+               
+                return View(modelsView);
             }
             catch (System.Exception)
             {
