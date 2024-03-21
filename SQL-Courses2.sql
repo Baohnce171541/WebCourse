@@ -1,4 +1,4 @@
-CREATE DATABASE Project_Group03
+Create DATABASE Project_Group03
 GO
 
 USE Project_Group03
@@ -60,6 +60,7 @@ create TABLE [voucher](
     FOREIGN KEY (adminID) REFERENCES [voucher]([voucherID]),
 );
 GO
+
 CREATE TABLE VoucherUsage (
     Id INT IDENTITY (1,1) PRIMARY KEY,
     CodeVoucher nvarchar(50),
@@ -209,6 +210,7 @@ CREATE TABLE [lesson_progress]
   
 );
 GO
+
 CREATE TABLE answer (
 answerID INT IDENTITY (1,1) PRIMARY KEY,
 answer NVARCHAR(1)

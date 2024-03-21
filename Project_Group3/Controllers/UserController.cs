@@ -13,6 +13,8 @@ using Project_Group3.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Text;
 using System.Security.Cryptography;
+using System.IO;
+using System.Text.RegularExpressions;
 
 namespace Project_Group3.Controllers
 {
@@ -22,6 +24,7 @@ namespace Project_Group3.Controllers
         ILearnerRepository learnerRepository = null;
         IAdminRepository adminRepository = null;
         ISmtpRepository smtpRepository = null;
+
         private string tmpEmail;
         public UserController()
         {
@@ -46,10 +49,7 @@ namespace Project_Group3.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
-            else
-            {
-                return View();
-            }
+            else return View();
         }
 
 
@@ -65,8 +65,7 @@ namespace Project_Group3.Controllers
 
                 var learner = learnerRepository.GetLearnerByEmailOrUser(model.EmailOrUsername);
 
-
-                if (instructor != null && instructor.Password == model.Password)
+                if (instructor != null && instructor.Password == this.GetHashedPassword(model.Password))
                 {
                     HttpContext.Session.SetInt32("InsID", instructor.InstructorId);
                     if (instructor.Status == "Wait")
@@ -85,7 +84,7 @@ namespace Project_Group3.Controllers
                     return RedirectToAction("Index", "Home");
 
                 }
-                else if (learner != null && learner.Password == model.Password)
+                else if (learner != null && learner.Password == this.GetHashedPassword(model.Password))
                 {
                     Console.WriteLine($"LearnerID: {HttpContext.Session.GetInt32("LearnerID")}");
                     HttpContext.Session.SetInt32("LearnerID", learner.LearnerId);
@@ -107,15 +106,11 @@ namespace Project_Group3.Controllers
             }
         }
 
-
-        public IActionResult Register()
-        {
-            return View();
-        }
+        public IActionResult Register() => View();
 
      [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Register(RegisterViewModel model)
+        public ActionResult Register(RegisterViewModel model, IFormFile picture)
         {
             try
             {
@@ -140,6 +135,39 @@ namespace Project_Group3.Controllers
                     ViewBag.err = "Your year of birth is not old enough to register";
                     return View(model);
                 }
+                 if (model.Birthday.Year < 1000)
+                {
+                    ViewBag.err = "Year of birth must have at least 4 digits";
+                    return View(model);
+                }
+                if (!IsStrongPassword(model.Password))
+                {
+                    ViewBag.err = "Password must be at least 8 characters long and contain at least one letter and one number.";
+                    return View(model);
+                }
+                if (!IsValidPhoneNumber(model.PhoneNumber))
+                {
+                    ViewBag.err = "The phone number must be 10 digits long and start with 0.";
+                    return View(model);
+                }
+                if (!IsValidEmail(model.Email))
+                {
+                    ViewBag.err = "Invalid email address.";
+                return View(model);
+                }
+                if (picture != null && picture.Length > 0)
+                {
+                    var urlRelative = "/img/avatars/";
+                    var urlAbsolute = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "avatars");
+                    var fileName = Guid.NewGuid() + Path.GetExtension(picture.FileName);
+                    var filePath = Path.Combine(urlAbsolute, fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        picture.CopyTo(stream);
+                    }
+                    model.Picture = Path.Combine(urlRelative, fileName);
+                }
 
                 var LearnerModel = new Learner
                 {
@@ -152,9 +180,10 @@ namespace Project_Group3.Controllers
                     Country = model.Country,
                     Username = model.Username,
                     Password = this.GetHashedPassword(model.Password),
-                    Picture = model.Picture,
                     RegistrationDate = DateTime.Now.Date,
                     Status = "Active",
+                    
+                    Picture = model.Picture,
                 };
                 learnerRepository.InsertLearner(LearnerModel);
                 ViewBag.UserId = LearnerModel.LearnerId.ToString();
@@ -175,14 +204,31 @@ namespace Project_Group3.Controllers
             return View();
         }
 
+         private bool IsStrongPassword(string password)
+        {
+            // Kiểm tra mật khẩu có ít nhất 8 ký tự, chứa ít nhất một chữ cái và một số
+            return Regex.IsMatch(password, @"^(?=.*[A-Za-z])(?=.*\d).{8,}$");
+        }
+
+        private bool IsValidPhoneNumber(string phoneNumber)
+        {
+            // Kiểm tra số điện thoại có đúng định dạng (ví dụ: 10 chữ số) không
+            return Regex.IsMatch(phoneNumber, @"^(0)\d{9}$");
+        }
+        private bool IsValidEmail(string email)
+        {
+            // Kiểm tra địa chỉ email có đúng định dạng "tên@gmail.com" không
+            return Regex.IsMatch(email, @"^[a-zA-Z0-9._%+-]+@gmail.com$");
+        }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult InstructorRegister(RegisterViewModel model)
+        public ActionResult InstructorRegister(RegisterViewModel model, IFormFile picture)
         {
             try
             {
-if (!ModelState.IsValid)
+                if (!ModelState.IsValid)
                 {
                     return View(model);
                 }
@@ -195,7 +241,7 @@ if (!ModelState.IsValid)
 
                 DateTime currentDate = DateTime.Now;
                 DateTime minimumBirthDate = currentDate.AddYears(-21); // Ngày sinh tối thiểu để đủ 21 tuổi
-                                var learnerEmail = learnerRepository.GetLearnerByEmail(model.Email);
+                var learnerEmail = learnerRepository.GetLearnerByEmail(model.Email);
                 var learnerUsername = learnerRepository.GetLearnerByUser(model.Username);
                 var instructorEmail = instructorRepository.GetInstructorByEmail(model.Email);
                 var instructorUsername = instructorRepository.GetInstructorByUser(model.Username);
@@ -212,6 +258,39 @@ if (!ModelState.IsValid)
                 {
                     ViewBag.err = "Your year of birth is not old enough to register";
                     return View(model);
+                }
+                 if (model.Birthday.Year < 1000)
+                {
+                    ViewBag.err = "Year of birth must have at least 4 digits";
+                    return View(model);
+                }
+                if (!IsStrongPassword(model.Password))
+                {
+                    ViewBag.err = "Password must be at least 8 characters long and contain at least one letter and one number.";
+                    return View(model);
+                }
+                if (!IsValidPhoneNumber(model.PhoneNumber))
+                {
+                    ViewBag.err = "The phone number must be 10 digits long and start with 0.";
+                    return View(model);
+                }
+                if (!IsValidEmail(model.Email))
+                {
+                    ViewBag.err = "Invalid email address.";
+                return View(model);
+                }
+                if (picture != null && picture.Length > 0)
+                {
+                    var urlRelative = "/img/avatars/";
+                    var urlAbsolute = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "avatars");
+                    var fileName = Guid.NewGuid() + Path.GetExtension(picture.FileName);
+                    var filePath = Path.Combine(urlAbsolute, fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        picture.CopyTo(stream);
+                    }
+                    model.Picture = Path.Combine(urlRelative, fileName);
                 }
 
                 var instructorModel = new Instructor
@@ -334,12 +413,12 @@ if (!ModelState.IsValid)
                     var instructor = instructorRepository.GetInstructorByEmail(email);
                     if (learner != null)
                     {
-                        learnerRepository.UpdatePass(learner.LearnerId, password);
+                        learnerRepository.UpdatePass(learner.LearnerId, this.GetHashedPassword(password));
                     }
 
                     if (instructor != null)
                     {
-                        instructorRepository.UpdatePass(instructor.InstructorId, password);
+                        instructorRepository.UpdatePass(instructor.InstructorId, this.GetHashedPassword(password));
                     }
                 }
                 return RedirectToAction("Login");
@@ -398,7 +477,6 @@ if (!ModelState.IsValid)
                 {
                     sb.Append(hashBytes[i].ToString("x2"));
                 }
-
                 return sb.ToString();
             }
         }

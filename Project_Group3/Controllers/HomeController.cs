@@ -126,7 +126,7 @@ namespace Project_Group3.Controllers
                     System.Console.WriteLine(id + " " + models.Instructor.InstructorId);
                     return NotFound();
                 }
-                if (ModelState.IsValid)
+                if (ModelState.IsValid) 
                 {
                     if (picture != null && picture.Length > 0)
                     {
@@ -340,6 +340,7 @@ namespace Project_Group3.Controllers
 
         public IActionResult Learning(int lessonId, int chapterId, int courseId)
         {
+      
             var cookieValue = Request.Cookies["ID"];
             var learnerId = Convert.ToInt32(cookieValue);
                  

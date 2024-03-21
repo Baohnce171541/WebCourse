@@ -62,6 +62,8 @@ E:\2024\SP24\SWT\WebCourse\WebLibrary\obj\Debug\net5.0\WebLibrary.genruntimeconf
 E:\2024\SP24\SWT\WebCourse\WebLibrary\obj\Debug\net5.0\ref\WebLibrary.dll
 <<<<<<< HEAD
 D:\SWP\WebLibrary\obj\Debug\net5.0\WebLibrary.sourcelink.json
+<<<<<<< HEAD
+=======
 C:\Users\admin\Downloads\Project03\WebCourse\WebLibrary\bin\Debug\net5.0\WebLibrary.deps.json
 C:\Users\admin\Downloads\Project03\WebCourse\WebLibrary\bin\Debug\net5.0\WebLibrary.runtimeconfig.json
 C:\Users\admin\Downloads\Project03\WebCourse\WebLibrary\bin\Debug\net5.0\WebLibrary.runtimeconfig.dev.json
@@ -78,5 +80,25 @@ C:\Users\admin\Downloads\Project03\WebCourse\WebLibrary\obj\Debug\net5.0\refint\
 C:\Users\admin\Downloads\Project03\WebCourse\WebLibrary\obj\Debug\net5.0\WebLibrary.pdb
 C:\Users\admin\Downloads\Project03\WebCourse\WebLibrary\obj\Debug\net5.0\WebLibrary.genruntimeconfig.cache
 C:\Users\admin\Downloads\Project03\WebCourse\WebLibrary\obj\Debug\net5.0\ref\WebLibrary.dll
+<<<<<<< HEAD
 =======
 >>>>>>> 760e137cc537862bd8696d102f1062e51a4f76b9
+=======
+>>>>>>> a60ade273ac82bb63c58df1de82a2b1944157dd5
+E:\2024\SP24\WebCourse\WebLibrary\bin\Debug\net5.0\WebLibrary.deps.json
+E:\2024\SP24\WebCourse\WebLibrary\bin\Debug\net5.0\WebLibrary.runtimeconfig.json
+E:\2024\SP24\WebCourse\WebLibrary\bin\Debug\net5.0\WebLibrary.runtimeconfig.dev.json
+E:\2024\SP24\WebCourse\WebLibrary\bin\Debug\net5.0\WebLibrary.dll
+E:\2024\SP24\WebCourse\WebLibrary\bin\Debug\net5.0\WebLibrary.pdb
+E:\2024\SP24\WebCourse\WebLibrary\obj\Debug\net5.0\WebLibrary.csproj.AssemblyReference.cache
+E:\2024\SP24\WebCourse\WebLibrary\obj\Debug\net5.0\WebLibrary.GeneratedMSBuildEditorConfig.editorconfig
+E:\2024\SP24\WebCourse\WebLibrary\obj\Debug\net5.0\WebLibrary.AssemblyInfoInputs.cache
+E:\2024\SP24\WebCourse\WebLibrary\obj\Debug\net5.0\WebLibrary.AssemblyInfo.cs
+E:\2024\SP24\WebCourse\WebLibrary\obj\Debug\net5.0\WebLibrary.csproj.CoreCompileInputs.cache
+E:\2024\SP24\WebCourse\WebLibrary\obj\Debug\net5.0\WebLibrary.sourcelink.json
+E:\2024\SP24\WebCourse\WebLibrary\obj\Debug\net5.0\WebLibrary.dll
+E:\2024\SP24\WebCourse\WebLibrary\obj\Debug\net5.0\refint\WebLibrary.dll
+E:\2024\SP24\WebCourse\WebLibrary\obj\Debug\net5.0\WebLibrary.pdb
+E:\2024\SP24\WebCourse\WebLibrary\obj\Debug\net5.0\WebLibrary.genruntimeconfig.cache
+E:\2024\SP24\WebCourse\WebLibrary\obj\Debug\net5.0\ref\WebLibrary.dll
+>>>>>>> ea4ab36d9b2cf3e780dafbb9d8869ff50d334b91

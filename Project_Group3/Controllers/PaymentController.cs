@@ -111,7 +111,7 @@ namespace Project_Group3.Controllers
             {
                 var VnpayModel = new VnPaymentRequestModel
                 {
-                    Amount = (int)paymentViewModel.Price * 1000,
+                    Amount = (int)paymentViewModel.Price,
                     CreateDate = DateTime.Now,
                     Description = paymentViewModel.courseName,
                     Fullname = paymentViewModel.learnerName,
@@ -149,14 +149,13 @@ namespace Project_Group3.Controllers
                     VoucherUsageDAO.Instance.SaveVoucherUsage(voucher, paymentViewModel.LeanrerId);
                     var VnpayModel = new VnPaymentRequestModel
                     {
-                        Amount = ((int)paymentViewModel.Price * 1000) - ((int)paymentViewModel.Price * 1000 * v.PercentDiscount / 100),
+                        Amount = ((int)paymentViewModel.Price ) - ((int)paymentViewModel.Price * v.PercentDiscount / 100),
 
                         CreateDate = DateTime.Now,
                         Description = paymentViewModel.courseName,
                         Fullname = paymentViewModel.learnerName,
                         OrderId = new Random().Next(1000, 100000)
                     };
-
                     return Redirect(_vnpayService.CreatePaymentUrl(HttpContext, VnpayModel));
                 }
             }

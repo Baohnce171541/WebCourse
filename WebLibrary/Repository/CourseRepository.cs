@@ -14,5 +14,6 @@ namespace WebLibrary.Repository
         public void InsertCourse(Course course) => CourseDAO.Instance.AddNew(course);
         public void DeleteCourse(int courseId) => CourseDAO.Instance.Remove(courseId);
         public void UpdateCourse(Course course) => CourseDAO.Instance.Update(course); 
+        public bool EditStatus(int id, string status) => CourseDAO.Instance.EditStatus(id, status);
     }
 }
