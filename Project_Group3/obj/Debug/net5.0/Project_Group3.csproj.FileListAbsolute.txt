@@ -1273,6 +1273,14 @@ D:\Lĩnh\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Category\Delete.c
 D:\Lĩnh\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Category\Edit.cshtml.g.cs
 D:\Lĩnh\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Category\Index.cshtml.g.cs
 D:\Lĩnh\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Voucher\Delete.cshtml.g.cs
+<<<<<<< HEAD
+D:\SWP\Project_Group3\obj\Debug\net5.0\Razor\Views\Admin\CourseModeration.cshtml.g.cs
+D:\SWP\Project_Group3\obj\Debug\net5.0\Razor\Views\Category\Create.cshtml.g.cs
+D:\SWP\Project_Group3\obj\Debug\net5.0\Razor\Views\Category\Delete.cshtml.g.cs
+D:\SWP\Project_Group3\obj\Debug\net5.0\Razor\Views\Category\Edit.cshtml.g.cs
+D:\SWP\Project_Group3\obj\Debug\net5.0\Razor\Views\Category\Index.cshtml.g.cs
+D:\SWP\Project_Group3\obj\Debug\net5.0\Razor\Views\Voucher\Delete.cshtml.g.cs
+=======
 >>>>>>> 571805837e308bbafaf4853c884346bc1561edbf
 E:\2024\SP24\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Admin\CourseModeration.cshtml.g.cs
 E:\2024\SP24\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Category\Create.cshtml.g.cs
@@ -1287,3 +1295,4 @@ C:\Users\admin\Downloads\Project03\WebCourse\Project_Group3\obj\Debug\net5.0\Raz
 C:\Users\admin\Downloads\Project03\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Category\Edit.cshtml.g.cs
 C:\Users\admin\Downloads\Project03\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Category\Index.cshtml.g.cs
 C:\Users\admin\Downloads\Project03\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Voucher\Delete.cshtml.g.cs
+>>>>>>> ab42937dea4a889463aef79ca4671b7559628c88

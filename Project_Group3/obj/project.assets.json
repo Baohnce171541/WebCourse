@@ -6727,19 +6727,40 @@
     ]
   },
   "packageFolders": {
+<<<<<<< HEAD
+    "C:\\Users\\HP\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+=======
     "C:\\Users\\admin\\.nuget\\packages\\": {}
+>>>>>>> ab42937dea4a889463aef79ca4671b7559628c88
   },
   "project": {
     "version": "1.0.0",
     "restore": {
+<<<<<<< HEAD
+      "projectUniqueName": "D:\\SWP\\Project_Group3\\Project_Group3.csproj",
+      "projectName": "Project_Group3",
+      "projectPath": "D:\\SWP\\Project_Group3\\Project_Group3.csproj",
+      "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
+      "outputPath": "D:\\SWP\\Project_Group3\\obj\\",
+=======
       "projectUniqueName": "C:\\Users\\admin\\Downloads\\Project03\\WebCourse\\Project_Group3\\Project_Group3.csproj",
       "projectName": "Project_Group3",
       "projectPath": "C:\\Users\\admin\\Downloads\\Project03\\WebCourse\\Project_Group3\\Project_Group3.csproj",
       "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\admin\\Downloads\\Project03\\WebCourse\\Project_Group3\\obj\\",
+>>>>>>> ab42937dea4a889463aef79ca4671b7559628c88
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
+<<<<<<< HEAD
+        "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+=======
         "C:\\Users\\admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+>>>>>>> ab42937dea4a889463aef79ca4671b7559628c88
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
