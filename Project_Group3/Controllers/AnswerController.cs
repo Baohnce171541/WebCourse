@@ -33,24 +33,33 @@ namespace Project_Group3.Controllers
             return View(answer);
         }
 
-        public ActionResult Index()
+        public ActionResult Index(int courseId)
         {
+            ViewBag.CourseId = courseId;
             var answerList = answerRepository.GetAnswers();
             return View(answerList);
         }
 
-        public ActionResult Create() => View();
+        public ActionResult Create(int courseId)
+        {
+            ViewBag.CourseId = courseId;
+
+            return View();
+        }
+
+
 
         // POST: Answer/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Answer answer)
+        public ActionResult Create(Answer answer, int courseId)
         {
+            ViewBag.CourseId = courseId;
             try
             {
                 answerRepository.InsertAnswer(answer);
 
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { courseId = ViewBag.CourseId });
             }
             catch (Exception ex)
             {
@@ -89,32 +98,39 @@ namespace Project_Group3.Controllers
                 return View();
             }
         }
+public ActionResult Delete(int? id, int courseId)
+{
+    if (id == null)
+    {
+        return NotFound();
+    }
 
-        public ActionResult Delete(int? id)
-        {
-            if (id == null) return NotFound();
+    ViewBag.CourseId = courseId;
+    var answer = answerRepository.GetAnswerByID(id.Value);
+    if (answer == null)
+    {
+        return NotFound();
+    }
 
-            var answer = answerRepository.GetAnswerByID(id.Value);
+    return View(answer);
+}
 
-            if (answer == null) return NotFound();
-
-            return View(answer);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id)
-        {
-            try
-            {
-                answerRepository.DeleteAnswer(id);
-                return RedirectToAction(nameof(Index));
-            }
-            catch (Exception ex)
-            {
-                ViewBag.Message = ex.Message;
-                return View();
-            }
-        }
+[HttpPost]
+[ValidateAntiForgeryToken]
+public ActionResult Delete(int id, int courseId)
+{
+    ViewBag.CourseId = courseId;
+    try
+    {
+        answerRepository.DeleteAnswer(id);
+        return RedirectToAction("Index", "Answer", new { courseId = ViewBag.CourseId });
+    }
+    catch (Exception ex)
+    {
+        ViewBag.Message = ex.Message;
+        var answer = answerRepository.GetAnswerByID(id);
+        return View(answer);
+    }
+}
     }
 }

@@ -1,4 +1,4 @@
-CREATE DATABASE Project_Group03
+﻿CREATE DATABASE Project_Group03
 GO
 
 USE Project_Group03
@@ -493,33 +493,6 @@ BEGIN
 END;
 GO
 ---
-
-CREATE TRIGGER delete_learner_trigger
-ON learner
-INSTEAD OF DELETE
-AS
-BEGIN
-    -- Xóa các bài đăng ký (enrollment) của người học (learner) bị xóa
-    DELETE FROM enrollment WHERE learnerID IN (SELECT learnerID FROM deleted);
-
-    -- Xóa các đánh giá (review) của người học (learner) bị xóa
-    DELETE FROM review WHERE learnerID IN (SELECT learnerID FROM deleted);
-
-    -- Xóa người học (learner) bị xóa
-    DELETE FROM learner WHERE learnerID IN (SELECT learnerID FROM deleted);
-END;
-go
----
-CREATE TRIGGER delete_cate_trigger
-ON categories
-INSTEAD OF DELETE
-AS
-BEGIN
-    DELETE FROM courses WHERE categoryID IN (SELECT categoryID FROM deleted);
-    DELETE FROM categories WHERE categoryID IN (SELECT categoryID FROM deleted);
-END;
-go
-
 CREATE TRIGGER delete_course_trigger
 ON courses
 INSTEAD OF DELETE

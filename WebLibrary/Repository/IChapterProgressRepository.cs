@@ -13,5 +13,6 @@ namespace WebLibrary.Repository
         void InsertChapterProgress(ChapterProgress ChapterProgress);
         void DeleteChapterProgress(int ChapterProgressId);
         void UpdateChapterProgress(ChapterProgress ChapterProgress);
+        ChapterProgress GetChapterProgressByChapterAndCourseProgress(int chapterId, int courseProgressId);
     }
 }

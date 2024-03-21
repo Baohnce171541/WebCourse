@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using Project_Group3.Models;
 using WebLibrary.DAO;
@@ -81,36 +82,47 @@ namespace Project_Group3.Controllers
 
         }
 
-        public ActionResult Edit(int? id)
+         public ActionResult Edit(int? id)
         {
             if (id == null) return NotFound();
 
-            var Admin = adminRepository.GetAdminByID(id.Value);
+            var Course = courseRepository.GetCourseByID(id.Value);
 
-            if (Admin == null) return NotFound();
+            if (Course == null) return NotFound();
 
-            return View(Admin);
+            ModelsView modelsView = new ModelsView
+            {
+                Course = Course,
+            };
+            ViewBag.CategoryId = Course.CategoryId;
+            var categoryList = categoryRepository.GetCategorys();
+            ViewBag.CategoryList = new SelectList(categoryList, "CategoryId", "CategoryName");
+            return View(modelsView);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, Admin Admin)
+        public ActionResult Edit(ModelsView modelsView)
         {
             try
             {
-                if (id != Admin.AdminId) return NotFound();
 
-                if (ModelState.IsValid)
+                var course = courseRepository.GetCourseByID(modelsView.Course.CourseId);
+                if (course != null)
                 {
-                    adminRepository.UpdateAdmin(Admin);
+                    if (ModelState.IsValid)
+                    {
+                        course.CreationDate = DateTime.Now;
+                        courseRepository.UpdateCourse(modelsView.Course);
+                    }
+                return RedirectToAction("Course","Admin", new { id = Request.Cookies["ID"] });
                 }
-                return RedirectToAction(nameof(Index));
+                return View(modelsView);
             }
             catch (Exception ex)
             {
                 ViewBag.Message = ex.Message;
                 return View();
-
             }
         }
 

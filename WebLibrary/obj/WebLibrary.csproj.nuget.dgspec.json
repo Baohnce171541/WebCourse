@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "E:\\2024\\SP24\\SWT\\WebCourse\\WebLibrary\\WebLibrary.csproj": {}
+    "C:\\Users\\admin\\Downloads\\Project03\\WebCourse\\WebLibrary\\WebLibrary.csproj": {}
   },
   "projects": {
-    "E:\\2024\\SP24\\SWT\\WebCourse\\WebLibrary\\WebLibrary.csproj": {
+    "C:\\Users\\admin\\Downloads\\Project03\\WebCourse\\WebLibrary\\WebLibrary.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\2024\\SP24\\SWT\\WebCourse\\WebLibrary\\WebLibrary.csproj",
+        "projectUniqueName": "C:\\Users\\admin\\Downloads\\Project03\\WebCourse\\WebLibrary\\WebLibrary.csproj",
         "projectName": "WebLibrary",
-        "projectPath": "E:\\2024\\SP24\\SWT\\WebCourse\\WebLibrary\\WebLibrary.csproj",
-        "packagesPath": "C:\\Users\\ACER\\.nuget\\packages\\",
-        "outputPath": "E:\\2024\\SP24\\SWT\\WebCourse\\WebLibrary\\obj\\",
+        "projectPath": "C:\\Users\\admin\\Downloads\\Project03\\WebCourse\\WebLibrary\\WebLibrary.csproj",
+        "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\admin\\Downloads\\Project03\\WebCourse\\WebLibrary\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\ACER\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -34,11 +34,6 @@
           "warnAsError": [
             "NU1605"
           ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -82,7 +77,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101\\RuntimeIdentifierGraph.json"
         }
       }
     }
