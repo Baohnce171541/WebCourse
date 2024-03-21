@@ -130,5 +130,25 @@ namespace WebLibrary.DAO
                 throw new Exception(ex.Message);
             }
         }
+
+        public bool EditStatus(int id, string status)
+        {
+            Course existingIns = GetCourseByID(id);
+            if (existingIns != null)
+            {
+                existingIns.Status = status;
+
+                using (var context = new DBContext())
+                {
+                    context.Courses.Update(existingIns);
+                    context.SaveChanges();
+                    return true;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

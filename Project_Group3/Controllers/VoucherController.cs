@@ -77,16 +77,38 @@ namespace Project_Group3.Controllers
             }
         }
 
-        public IActionResult Delete(int id)
+        public IActionResult Delete(int? id)
         {
-            Voucher voucher = voucherRepository.GetVoucherByID(id);
-
-            if (voucher != null)
+            if (id == null)
             {
-                VoucherDAO.Instance.Remove(voucher.VoucherId);
-                return RedirectToAction("Index");
+                return NotFound();
             }
-            return RedirectToAction("Index");
+
+            var voucher = voucherRepository.GetVoucherByID(id.Value);
+
+            if (voucher == null)
+            {
+                return NotFound();
+            }
+
+            return View(voucher);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            try
+            {
+                voucherRepository.Remove(id);
+                TempData["DeleteSuccess"] = true;
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Message = ex.Message;
+                return View();
+            }
         }
     }
 }

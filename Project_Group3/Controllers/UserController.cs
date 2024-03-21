@@ -13,6 +13,7 @@ using Project_Group3.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Text;
 using System.Security.Cryptography;
+using System.IO;
 
 namespace Project_Group3.Controllers
 {
@@ -63,7 +64,7 @@ namespace Project_Group3.Controllers
 
                 var learner = learnerRepository.GetLearnerByEmailOrUser(model.EmailOrUsername);
 
-                if (instructor != null && instructor.Password == model.Password)
+                if (instructor != null && instructor.Password == this.GetHashedPassword(model.Password))
                 {
                     HttpContext.Session.SetInt32("InsID", instructor.InstructorId);
                     if (instructor.Status == "Wait")
@@ -82,7 +83,7 @@ namespace Project_Group3.Controllers
                     return RedirectToAction("Index", "Home");
 
                 }
-                else if (learner != null && learner.Password == model.Password)
+                else if (learner != null && learner.Password == this.GetHashedPassword(model.Password))
                 {
                     Console.WriteLine($"LearnerID: {HttpContext.Session.GetInt32("LearnerID")}");
                     HttpContext.Session.SetInt32("LearnerID", learner.LearnerId);
@@ -108,7 +109,7 @@ namespace Project_Group3.Controllers
 
      [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Register(RegisterViewModel model)
+        public ActionResult Register(RegisterViewModel model, IFormFile picture)
         {
             try
             {
@@ -133,6 +134,19 @@ namespace Project_Group3.Controllers
                     ViewBag.err = "Your year of birth is not old enough to register";
                     return View(model);
                 }
+                if (picture != null && picture.Length > 0)
+                {
+                    var urlRelative = "/img/avatars/";
+                    var urlAbsolute = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "avatars");
+                    var fileName = Guid.NewGuid() + Path.GetExtension(picture.FileName);
+                    var filePath = Path.Combine(urlAbsolute, fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        picture.CopyTo(stream);
+                    }
+                    model.Picture = Path.Combine(urlRelative, fileName);
+                }
 
                 var LearnerModel = new Learner
                 {
@@ -145,9 +159,10 @@ namespace Project_Group3.Controllers
                     Country = model.Country,
                     Username = model.Username,
                     Password = this.GetHashedPassword(model.Password),
-                    Picture = model.Picture,
                     RegistrationDate = DateTime.Now.Date,
                     Status = "Active",
+                    
+                    Picture = model.Picture,
                 };
                 learnerRepository.InsertLearner(LearnerModel);
                 ViewBag.UserId = LearnerModel.LearnerId.ToString();
@@ -171,11 +186,11 @@ namespace Project_Group3.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult InstructorRegister(RegisterViewModel model)
+        public ActionResult InstructorRegister(RegisterViewModel model, IFormFile picture)
         {
             try
             {
-if (!ModelState.IsValid)
+                if (!ModelState.IsValid)
                 {
                     return View(model);
                 }
@@ -188,7 +203,7 @@ if (!ModelState.IsValid)
 
                 DateTime currentDate = DateTime.Now;
                 DateTime minimumBirthDate = currentDate.AddYears(-21); // Ngày sinh tối thiểu để đủ 21 tuổi
-                                var learnerEmail = learnerRepository.GetLearnerByEmail(model.Email);
+                var learnerEmail = learnerRepository.GetLearnerByEmail(model.Email);
                 var learnerUsername = learnerRepository.GetLearnerByUser(model.Username);
                 var instructorEmail = instructorRepository.GetInstructorByEmail(model.Email);
                 var instructorUsername = instructorRepository.GetInstructorByUser(model.Username);
@@ -205,6 +220,19 @@ if (!ModelState.IsValid)
                 {
                     ViewBag.err = "Your year of birth is not old enough to register";
                     return View(model);
+                }
+                if (picture != null && picture.Length > 0)
+                {
+                    var urlRelative = "/img/avatars/";
+                    var urlAbsolute = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "avatars");
+                    var fileName = Guid.NewGuid() + Path.GetExtension(picture.FileName);
+                    var filePath = Path.Combine(urlAbsolute, fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        picture.CopyTo(stream);
+                    }
+                    model.Picture = Path.Combine(urlRelative, fileName);
                 }
 
                 var instructorModel = new Instructor
@@ -327,12 +355,12 @@ if (!ModelState.IsValid)
                     var instructor = instructorRepository.GetInstructorByEmail(email);
                     if (learner != null)
                     {
-                        learnerRepository.UpdatePass(learner.LearnerId, password);
+                        learnerRepository.UpdatePass(learner.LearnerId, this.GetHashedPassword(password));
                     }
 
                     if (instructor != null)
                     {
-                        instructorRepository.UpdatePass(instructor.InstructorId, password);
+                        instructorRepository.UpdatePass(instructor.InstructorId, this.GetHashedPassword(password));
                     }
                 }
                 return RedirectToAction("Login");

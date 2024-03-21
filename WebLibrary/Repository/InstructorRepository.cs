@@ -22,6 +22,6 @@ namespace WebLibrary.Repository
         public bool CheckEmailAndUser(string EmaiOrUser, string InstructEmail, string InstructorUserName) => InstructorDAO.Instance.CheckEmailAndUser(EmaiOrUser, InstructEmail, InstructorUserName);
         public Instructor GetInstructorByEmailOrUser(string EmailOrUserName) => InstructorDAO.Instance.Get1InstructorByEmailOrUser(EmailOrUserName);
         public void UpdatePass(int id, string pass) => InstructorDAO.Instance.UpdatePass(id, pass);
-    
+        public bool EditStatus(int id, string status) => InstructorDAO.Instance.EditStatus(id, status);
     }
 }
