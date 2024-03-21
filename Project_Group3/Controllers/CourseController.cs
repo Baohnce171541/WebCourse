@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualBasic;
 using Project_Group3.Models;
@@ -17,7 +18,6 @@ namespace Project_Group3.Controllers
 
     public class CourseController : Controller
     {
-
         ICourseRepository courseRepository = null;
         ICategoryRepository categoryRepository = null;
         IChapterRepository chapterRepository = null;
@@ -38,9 +38,9 @@ namespace Project_Group3.Controllers
 
         public IActionResult Index(int id, string search = "", int page = 1)
         {
-            idInstructor = int.Parse(HttpContext.Session.GetInt32("InsID").GetValueOrDefault().ToString());
             try
             {
+                idInstructor = int.Parse(HttpContext.Session.GetInt32("InsID").GetValueOrDefault().ToString());
                 var instructor = instructorRepository.GetInstructorByID(id);
                 if (instructor == null) return NotFound();
 
@@ -76,33 +76,47 @@ namespace Project_Group3.Controllers
             }
         }
 
-
         public ActionResult Detail(int? id)
         {
-            if (id == null) return NotFound();
+            try
+            {
+                if (id == null) return NotFound();
 
-            var course = courseRepository.GetCourseByID(id.Value);
+                var course = courseRepository.GetCourseByID(id.Value);
 
-            var chapterList = chapterRepository.GetChapters();
+                var chapterList = chapterRepository.GetChapters();
 
-            var lessonList = lessonRepository.GetLessons();
+                var lessonList = lessonRepository.GetLessons();
 
-            var categoryList = categoryRepository.GetCategorys();
+                var categoryList = categoryRepository.GetCategorys();
 
-            var instruct = instructRepository.GetInstructs();
+                var instruct = instructRepository.GetInstructs();
 
-            if (course == null) return NotFound();
+                if (course == null) return NotFound();
 
-            return View(Tuple.Create(course, chapterList, categoryList, instruct, lessonList));
+                return View(Tuple.Create(course, chapterList, categoryList, instruct, lessonList));
+            }
+            catch (System.Exception)
+            {
+                return View();
+            }
         }
 
         public ActionResult Create()
         {
-            var categoryList = categoryRepository.GetCategorys();
+            try
+            {
+                var categoryList = categoryRepository.GetCategorys();
 
-            ViewBag.CategoryList = new SelectList(categoryList, "CategoryId", "CategoryName");
+                ViewBag.CategoryList = new SelectList(categoryList, "CategoryId", "CategoryName");
 
-            return View();
+                return View();
+            }
+            catch (System.Exception)
+            {
+                return View();
+            }
+
         }
 
         [HttpPost]
@@ -178,20 +192,29 @@ namespace Project_Group3.Controllers
 
         public ActionResult Edit(int? id)
         {
-            if (id == null) return NotFound();
-
-            var Course = courseRepository.GetCourseByID(id.Value);
-
-            if (Course == null) return NotFound();
-
-            ModelsView modelsView = new ModelsView
+            try
             {
-                Course = Course,
-            };
-            ViewBag.CategoryId = Course.CategoryId;
-            var categoryList = categoryRepository.GetCategorys();
-            ViewBag.CategoryList = new SelectList(categoryList, "CategoryId", "CategoryName");
-            return View(modelsView);
+                if (id == null) return NotFound();
+
+                var Course = courseRepository.GetCourseByID(id.Value);
+
+                if (Course == null) return NotFound();
+
+                ModelsView modelsView = new ModelsView
+                {
+                    Course = Course,
+                };
+                ViewBag.CategoryId = Course.CategoryId;
+                var categoryList = categoryRepository.GetCategorys();
+                ViewBag.CategoryList = new SelectList(categoryList, "CategoryId", "CategoryName");
+                return View(modelsView);
+
+            }
+            catch (System.Exception)
+            {
+                return View(id);
+            }
+
         }
 
         [HttpPost]
@@ -200,7 +223,6 @@ namespace Project_Group3.Controllers
         {
             try
             {
-
                 var course = courseRepository.GetCourseByID(modelsView.Course.CourseId);
                 if (course != null)
                 {

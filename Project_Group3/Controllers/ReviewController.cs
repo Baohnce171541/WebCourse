@@ -18,18 +18,33 @@ namespace Project_Group3.Controllers
 
         public ActionResult Index()
         {
-            var Reviewlist = reviewRepository.GetReviews();
-            return View(Reviewlist);
+            try
+            {
+                var Reviewlist = reviewRepository.GetReviews();
+                return View(Reviewlist);
+            }
+            catch (System.Exception)
+            {
+                return View();
+            }
         }
+
         public ActionResult Detail(int? id)
         {
-            if (id == null) return NotFound();
+            try
+            {
+                if (id == null) return NotFound();
 
-            var Review = reviewRepository.GetReviewByID(id.Value);
+                var Review = reviewRepository.GetReviewByID(id.Value);
 
-            if (Review == null) return NotFound();
+                if (Review == null) return NotFound();
 
-            return View(Review);
+                return View(Review);
+            }
+            catch (System.Exception)
+            {
+                return View();
+            }
         }
 
         public ActionResult Create() => View();
@@ -38,38 +53,53 @@ namespace Project_Group3.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Review Review)
         {
-            var cookieValue = Request.Cookies["ID"];
-            var courseID = Review.CourseId;
             try
             {
-                if (ModelState.IsValid)
+                var cookieValue = Request.Cookies["ID"];
+                var courseID = Review.CourseId;
+                try
                 {
-                    Review.LearnerId = int.Parse(cookieValue);
-                    Review.ReviewDate = DateTime.Now;
-                    int? rating = Review.Rating;
+                    if (ModelState.IsValid)
+                    {
+                        Review.LearnerId = int.Parse(cookieValue);
+                        Review.ReviewDate = DateTime.Now;
+                        int? rating = Review.Rating;
 
-                    reviewRepository.InsertReview(Review);
-                    ViewBag.SuccessMessage = "Đánh giá đã được gửi thành công.";
+                        reviewRepository.InsertReview(Review);
+                        ViewBag.SuccessMessage = "Đánh giá đã được gửi thành công.";
 
-                    return RedirectToAction("CourseDetail", "Home", new { id = courseID });
+                        return RedirectToAction("CourseDetail", "Home", new { id = courseID });
+                    }
                 }
+                catch (Exception ex)
+                {
+                    ViewBag.ErrorMessage = "Đã xảy ra lỗi: " + ex.Message;
+                }
+                return View(Review);
             }
-            catch (Exception ex)
+            catch (System.Exception)
             {
-                ViewBag.ErrorMessage = "Đã xảy ra lỗi: " + ex.Message;
+                return View();
             }
-            return View(Review);
+
         }
 
         public ActionResult Edit(int? id)
         {
-            if (id == null) return NotFound();
+            try
+            {
+                if (id == null) return NotFound();
 
-            var Review = reviewRepository.GetReviewByID(id.Value);
+                var Review = reviewRepository.GetReviewByID(id.Value);
 
-            if (Review == null) return NotFound();
+                if (Review == null) return NotFound();
 
-            return View(Review);
+                return View(Review);
+            }
+            catch (System.Exception)
+            {
+                return View();
+            }
         }
 
         [HttpPost]
@@ -90,19 +120,25 @@ namespace Project_Group3.Controllers
             {
                 ViewBag.Message = ex.Message;
                 return View();
-
             }
         }
 
         public ActionResult Delete(int? id)
         {
-            if (id == null) return NotFound();
+            try
+            {
+                if (id == null) return NotFound();
 
-            var Review = reviewRepository.GetReviewByID(id.Value);
+                var Review = reviewRepository.GetReviewByID(id.Value);
 
-            if (Review == null) return NotFound();
+                if (Review == null) return NotFound();
 
-            return View(Review);
+                return View(Review);
+            }
+            catch (System.Exception)
+            {
+                return View();
+            }
         }
 
         [HttpPost]

@@ -23,8 +23,15 @@ namespace Project_Group3.Controllers
 
         public IActionResult Index()
         {
-            var list = voucherRepository.VouchersList();
-            return View(list);
+            try
+            {
+                var list = voucherRepository.VouchersList();
+                return View(list);
+            }
+            catch (System.Exception)
+            {
+                return View();
+            }
         }
 
         public IActionResult Create() => View();
@@ -79,19 +86,23 @@ namespace Project_Group3.Controllers
 
         public IActionResult Delete(int? id)
         {
-            if (id == null)
+            try
             {
-                return NotFound();
+                if (id == null) return NotFound();
+
+                var voucher = voucherRepository.GetVoucherByID(id.Value);
+
+                if (voucher == null)
+                {
+                    return NotFound();
+                }
+
+                return View(voucher);
             }
-
-            var voucher = voucherRepository.GetVoucherByID(id.Value);
-
-            if (voucher == null)
+            catch (System.Exception)
             {
-                return NotFound();
+                return View();
             }
-
-            return View(voucher);
         }
 
         [HttpPost]
