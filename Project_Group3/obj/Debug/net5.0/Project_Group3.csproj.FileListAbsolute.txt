@@ -734,7 +734,6 @@ C:\Users\admin\Downloads\Project03\WebCourse\Project_Group3\obj\Debug\net5.0\Raz
 C:\Users\admin\Downloads\Project03\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Answer\Create.cshtml.g.cs
 C:\Users\admin\Downloads\Project03\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Answer\Index.cshtml.g.cs
 C:\Users\admin\Downloads\Project03\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Chapter\Create.cshtml.g.cs
-C:\Users\admin\Downloads\Project03\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Chapter\Delete.cshtml.g.cs
 C:\Users\admin\Downloads\Project03\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Chapter\Edit.cshtml.g.cs
 C:\Users\admin\Downloads\Project03\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Chapter\Index.cshtml.g.cs
 C:\Users\admin\Downloads\Project03\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Chapter\LearnerChapter.cshtml.g.cs
@@ -963,6 +962,7 @@ E:\2024\SP24\SWT\WebCourse\Project_Group3\obj\Debug\net5.0\Project_Group3.genrun
 E:\2024\SP24\SWT\WebCourse\Project_Group3\obj\Debug\net5.0\ref\Project_Group3.dll
 >>>>>>> 760e137cc537862bd8696d102f1062e51a4f76b9
 C:\Users\admin\Downloads\Project03\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Admin\Edit.cshtml.g.cs
+C:\Users\admin\Downloads\Project03\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Chapter\Delete.cshtml.g.cs
 D:\SWP\Project_Group3\obj\Debug\net5.0\Razor\Views\Admin\Edit.cshtml.g.cs
 D:\SWP\Project_Group3\obj\Debug\net5.0\Razor\Views\Answer\Delete.cshtml.g.cs
 E:\2024\SP24\WebCourse\Project_Group3\bin\Debug\net5.0\appsettings.Development.json
@@ -1280,3 +1280,10 @@ E:\2024\SP24\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Category\Dele
 E:\2024\SP24\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Category\Edit.cshtml.g.cs
 E:\2024\SP24\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Category\Index.cshtml.g.cs
 E:\2024\SP24\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Voucher\Delete.cshtml.g.cs
+>>>>>>> ea4ab36d9b2cf3e780dafbb9d8869ff50d334b91
+C:\Users\admin\Downloads\Project03\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Admin\CourseModeration.cshtml.g.cs
+C:\Users\admin\Downloads\Project03\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Category\Create.cshtml.g.cs
+C:\Users\admin\Downloads\Project03\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Category\Delete.cshtml.g.cs
+C:\Users\admin\Downloads\Project03\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Category\Edit.cshtml.g.cs
+C:\Users\admin\Downloads\Project03\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Category\Index.cshtml.g.cs
+C:\Users\admin\Downloads\Project03\WebCourse\Project_Group3\obj\Debug\net5.0\Razor\Views\Voucher\Delete.cshtml.g.cs

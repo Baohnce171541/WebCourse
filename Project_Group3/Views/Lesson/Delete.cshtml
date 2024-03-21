@@ -34,9 +34,9 @@
                             <input asp-for="@Model.Lesson.PercentToPassed" class="form-control" readonly />
                             <span asp-validation-for="@Model.Lesson.PercentToPassed" class="text-danger"></span>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group"> 
                             <label asp-for="@Model.Lesson.Content" class="text-theme font-weight-bold"></label>
-                            <input asp-for="@Model.Lesson.Content" class="form-control" readonly />
+                            <input asp-for="@Model.Lesson.Content" name="video" class="form-control" style="width: 80%;"  readonly />
                             <span asp-validation-for="@Model.Lesson.Content" class="text-danger"></span>
                         </div>
                         <div class="form-group">

@@ -132,9 +132,9 @@ namespace Project_Group3.Controllers
                     {
                         ModelState.AddModelError("Price", "Price is required.");
                     }
-                    else if (course.Price < 0)
+                    else if (course.Price < 5000)
                     {
-                        ModelState.AddModelError("Price", "Price is not negative.");
+                        ModelState.AddModelError("Price", "Price is less 5000");
                     }
 
                     if (ModelState.IsValid)

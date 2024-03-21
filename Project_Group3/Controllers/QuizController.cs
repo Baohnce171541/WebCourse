@@ -127,8 +127,7 @@ namespace Project_Group3.Controllers
             var allQuizzes = quizRepository.GetQuizzes();
             var chapter = chapterRepository.GetChapterByID(chapterId);
             var course = courseRepository.GetCourseByID(courseId);
-            var lesson = lessonRepository.GetLessonByID(lessonId);
-            HttpContext.Session.SetInt32("lessonID", lessonId);
+           ViewBag.LessonId = lessonId;
             var answerList = answerRepository.GetAnswers();
             var quizList = allQuizzes.Where(q => q.ChapterId == chapterId && q.CourseId == courseId);
 
@@ -160,7 +159,6 @@ namespace Project_Group3.Controllers
             {
                 Chapter = chapter,
                 Course = course,
-                Lesson = lesson,
                 Quiz = selectedAnswers,
                 AnswerList = answerList.ToList(),
             };
@@ -172,29 +170,30 @@ namespace Project_Group3.Controllers
         }
 
         [HttpPost]
-        public IActionResult Test(AnswerViewModels model)
+        public IActionResult Test(AnswerViewModels model, int lessonId)
         {
             var chapter = chapterRepository.GetChapterByID(model.Chapter.ChapterId);
             var course = courseRepository.GetCourseByID(model.Course.CourseId);
             var quizList = model.Quiz;
             int correctCount = 0;
             int wrongCount = 0;
+ ViewBag.LessonId = lessonId;
+              foreach (var quiz in quizList)
+    {
+        var selectedAnswerId = quiz.AnswerId;
+        var correctAnswerId = quizRepository.GetQuizByID(quiz.QuizId)?.AnswerId;
+        quiz.IsCorrect = selectedAnswerId == correctAnswerId;
 
-            foreach (var quiz in quizList)
-            {
-                var selectedAnswerId = quiz.AnswerId;
-                var correctAnswerId = quizRepository.GetQuizByID(quiz.QuizId)?.AnswerId;
-                quiz.IsCorrect = selectedAnswerId == correctAnswerId;
-
-                if (quiz.IsCorrect.HasValue && quiz.IsCorrect.Value)
-                {
-                    correctCount++;
-                }
-                else
-                {
-                    wrongCount++;
-                }
-            }
+        if (quiz.IsCorrect.HasValue && quiz.IsCorrect.Value)
+        {
+            correctCount++;
+        }
+        else
+        {
+            wrongCount++;
+        }
+    }
+      model.UserCanSelectAnswer = false;
             var result = new QuizResultViewModel
             {
                 CorrectCount = correctCount,
@@ -206,74 +205,48 @@ namespace Project_Group3.Controllers
 
             return ProcessPostResult(result);
         }
-        public IActionResult ProcessPostResult(QuizResultViewModel model)
+      public IActionResult ProcessPostResult(QuizResultViewModel model)
+{
+
+    var chapters = chapterRepository.GetChapters()
+        .Where(c => c.CourseId == model.Course.CourseId)
+        .OrderBy(c => c.Index)
+        .ToList();
+    var lessonId = ViewBag.LessonId;
+    var currentChapterIndex = chapters.FindIndex(c => c.ChapterId == model.Chapter.ChapterId);
+
+    if (model.CorrectCount > model.WrongCount)
+    {
+        if (currentChapterIndex == chapters.Count - 1)
         {
-            var chapters = chapterRepository.GetChapters()
-                .Where(c => c.CourseId == model.Course.CourseId)
-                .OrderBy(c => c.Index)
-                .ToList();
-
-
-            var currentChapterIndex = chapters.FindIndex(c => c.ChapterId == model.Chapter.ChapterId);
-
-
-            if (model.CorrectCount > model.WrongCount)
-            {
-                if (currentChapterIndex == chapters.Count - 1)
-                {
-                    ViewBag.CompletionMessage = "Congratulations! You have completed the course.";
-                    return RedirectToAction("CourseDetail", "Home", new { Id = model.Course.CourseId });
-                }
-                else if (currentChapterIndex != -1 && currentChapterIndex < chapters.Count - 1)
-                {
-                    var nextChapter = chapters[currentChapterIndex + 1];
-                    var firstLessonOfNextChapter = lessonRepository.GetLessons()
-                        .FirstOrDefault(l => l.ChapterId == nextChapter.ChapterId);
-
-                    var learnerId = HttpContext.Session.GetInt32("learnerId");
-                    System.Console.WriteLine($"learnerId = {learnerId}");
-
-                    var lessonProgress = lessonProgressRepository.GetLessonProgressByLessonAndChapter(model.Lesson.LessonId, model.Chapter.ChapterId, (int)learnerId);
-                    if (lessonProgress == null)
-                    {
-                        // Tạo một bản ghi tiến trình mới cho bài học
-                        lessonProgress = new LessonProgress
-                        {
-                            LearnerId = learnerId,
-                            LessonId = model.Lesson.LessonId,
-                            ChapterId = model.Chapter.ChapterId,
-                            Completed = true,
-                            StartAt = DateTime.Now
-                        };
-                        System.Console.WriteLine("them progress thanh cong");
-                        System.Console.WriteLine(lessonProgress.LearnerId);
-                        lessonProgressRepository.InsertLessonProgress(lessonProgress);
-                    }
-
-
-                    if (firstLessonOfNextChapter != null)
-                    {
-                        return RedirectToAction("Learning", "Home", new { courseId = model.Course.CourseId, chapterId = nextChapter.ChapterId, lessonId = firstLessonOfNextChapter.LessonId });
-                    }
-                }
-            }
-            else
-            {
-                return RedirectToAction("Test", "Quiz", new
-                {
-                    chapterId = model.Chapter.ChapterId,
-                    courseId = model.Course.CourseId,
-                    lessonId = model.Lesson.LessonId
-                });
-            }
-
-            return RedirectToAction("Test", "Quiz", new
-            {
-                chapterId = model.Chapter.ChapterId,
-                courseId = model.Course.CourseId,
-                lessonId = model.Lesson.LessonId
-            });
+            TempData["CompletedCourse"] = true;
+            return RedirectToAction("CourseDetail", "Home", new { Id = model.Course.CourseId });
         }
+        else if (currentChapterIndex != -1 && currentChapterIndex < chapters.Count - 1)
+        {
+            var nextChapter = chapters[currentChapterIndex + 1];
+            var firstLessonOfNextChapter = lessonRepository.GetLessons()
+                .FirstOrDefault(l => l.ChapterId == nextChapter.ChapterId);
+
+            if (firstLessonOfNextChapter != null)
+{
+                return RedirectToAction("Learning", "Home", new { courseId = model.Course.CourseId, chapterId = nextChapter.ChapterId, lessonId = firstLessonOfNextChapter.LessonId });
+            }
+        }
+    }
+    else
+
+        ViewBag.WrongAnswerMessage = "Bạn có một số câu trả lời sai. Vui lòng làm lại bài test.";
+  return RedirectToAction("Test", "Quiz", new
+    {
+        chapterId = model.Chapter.ChapterId,
+        courseId = model.Course.CourseId,
+        lessonId = lessonId,
+        numberOfQuestions = model.QuizList.Count,
+        correctCount = model.CorrectCount,
+        totalCount = model.CorrectCount + model.WrongCount,
+    });
+}
         public ActionResult Edit(int? id)
         {
             if (id == null) return NotFound();
